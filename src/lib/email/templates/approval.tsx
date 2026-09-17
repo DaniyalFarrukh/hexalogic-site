@@ -6,7 +6,6 @@ import {
   Container,
   Section,
   Text,
-  Link,
   Img,
   Button
 } from '@react-email/components';
@@ -55,7 +54,7 @@ export const ApprovalEmail = ({
             {note && (
               <Section style={{ margin: '24px 0', padding: '16px', backgroundColor: '#F8F9FB', borderLeft: `4px solid ${isApproved ? '#1BB8A3' : '#3B82F6'}` }}>
                 <Text style={{ margin: 0, color: '#5B6B7C', fontSize: '15px', fontStyle: 'italic' }}>
-                  "{note}"
+                  &ldquo;{note}&rdquo;
                 </Text>
               </Section>
             )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Lenis from "lenis";
 
 export function SmoothScrollProvider({
@@ -8,14 +8,9 @@ export function SmoothScrollProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const lenisRef = useRef<Lenis | null>(null);
-
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    
-    // Disable smooth scrolling on mobile to prevent lag and battery drain
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Native scrolling on touch devices avoids lag and battery drain.
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
     if (prefersReducedMotion || isMobile) return;
@@ -26,16 +21,15 @@ export function SmoothScrollProvider({
       touchMultiplier: 2,
     });
 
-    lenisRef.current = lenis;
-
-    function raf(time: number) {
+    let frame = 0;
+    const raf = (time: number) => {
       lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
+      frame = requestAnimationFrame(raf);
+    };
+    frame = requestAnimationFrame(raf);
 
     return () => {
+      cancelAnimationFrame(frame);
       lenis.destroy();
     };
   }, []);

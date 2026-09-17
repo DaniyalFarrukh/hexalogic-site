@@ -1,8 +1,5 @@
-import dynamic from 'next/dynamic';
 import RedSunHero from "@/components/sections/RedSunHero";
-
-// Code-split below the fold components
-const RedSunFeatures = dynamic(() => import('@/components/sections/RedSunFeatures'), { ssr: true });
+import RedSunFeatures from "@/components/sections/RedSunFeatures";
 
 export default function Home() {
   return (

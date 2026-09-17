@@ -5,7 +5,7 @@ type LogLevel = 'info' | 'warn' | 'error'
 
 interface LogPayload {
   message: string
-  context?: Record<string, any>
+  context?: Record<string, unknown>
   error?: Error | unknown
 }
 
@@ -39,12 +39,12 @@ export const logger = {
     }
   },
   
-  info: (message: string, context?: Record<string, any>) => 
+  info: (message: string, context?: Record<string, unknown>) => 
     logger.log('info', { message, context }),
     
-  warn: (message: string, context?: Record<string, any>, error?: unknown) => 
+  warn: (message: string, context?: Record<string, unknown>, error?: unknown) => 
     logger.log('warn', { message, context, error }),
     
-  error: (message: string, error: unknown, context?: Record<string, any>) => 
+  error: (message: string, error: unknown, context?: Record<string, unknown>) => 
     logger.log('error', { message, context, error })
 }

@@ -3,25 +3,44 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
+export type EmailPrefs = {
+  every_update: boolean
+  weekly_digest: boolean
+}
+
+function isValidTimezone(tz: string) {
+  try {
+    Intl.DateTimeFormat(undefined, { timeZone: tz })
+    return true
+  } catch {
+    return false
+  }
+}
+
 export async function updateSettings(formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) return { error: 'Unauthorized' }
 
-  // We must use the update_own_profile RPC to respect RLS
-  const timezone = formData.get('timezone') as string
-  const fullName = formData.get('full_name') as string
-  const emailPrefsStr = formData.get('email_prefs') as string
-  
-  let emailPrefs: any;
+  const timezone = String(formData.get('timezone') || 'UTC')
+  const fullName = String(formData.get('full_name') || '').trim().slice(0, 120)
+  const emailPrefsStr = String(formData.get('email_prefs') || '')
+
+  if (!isValidTimezone(timezone)) return { error: 'Please choose a valid timezone' }
+
+  let emailPrefs: EmailPrefs
   try {
-    emailPrefs = JSON.parse(emailPrefsStr);
-  } catch (e) {
-    return { error: 'Invalid email preferences format' };
+    const parsed = JSON.parse(emailPrefsStr) as Partial<EmailPrefs>
+    emailPrefs = {
+      every_update: parsed.every_update === true,
+      weekly_digest: parsed.weekly_digest === true,
+    }
+  } catch {
+    return { error: 'Invalid email preferences format' }
   }
 
-  // Fetch existing profile to retain avatar_url (and fallback for full_name)
+  // Keep the existing avatar and fall back to the stored name if none was provided.
   const { data: profile } = await supabase
     .from('profiles')
     .select('full_name, avatar_url')
@@ -31,7 +50,7 @@ export async function updateSettings(formData: FormData) {
   const { error } = await supabase.rpc('update_own_profile', {
     p_full_name: fullName || profile?.full_name || '',
     p_avatar_url: profile?.avatar_url || '',
-    p_timezone: timezone || 'UTC',
+    p_timezone: timezone,
     p_email_prefs: emailPrefs
   })
 
@@ -40,6 +59,6 @@ export async function updateSettings(formData: FormData) {
     return { error: error.message }
   }
 
-  revalidatePath('/portal/settings')
+  revalidatePath('/portal', 'layout')
   return { success: true }
 }

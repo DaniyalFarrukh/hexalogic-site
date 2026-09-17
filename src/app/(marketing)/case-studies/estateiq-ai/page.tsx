@@ -2,8 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, BrainCircuit, Map, Calculator, Calendar, Heart, Shield, TrendingUp, Search, Smartphone, ArrowRight } from "lucide-react";
+import { ArrowLeft, BrainCircuit, Map, Calculator, Calendar, Heart, Shield, Search, Smartphone, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -41,7 +42,7 @@ export default function EstateIqCaseStudy() {
         
         {/* Back Button */}
         <div className="mb-12">
-          <Link href="/#readmore" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-bold uppercase tracking-wide">
+          <Link href="/case-studies" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-bold uppercase tracking-wide">
             <ArrowLeft className="w-4 h-4" />
             Back to Case Studies
           </Link>
@@ -101,7 +102,7 @@ export default function EstateIqCaseStudy() {
             >
               <div className="relative w-full aspect-[9/16] max-w-[400px] mx-auto rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center">
                  {/* Placeholder for Screenshot 1 */}
-                 <img src="/images/case-studies/main-page.jpeg" alt="EstateIQ AI Home Screen" className="w-full h-full object-cover" />
+                 <Image src="/images/case-studies/main-page.jpeg" alt="EstateIQ AI Home Screen" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
               </div>
               <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">Home Screen: &quot;Defining the future of luxury living&quot; with AI Concierge.</p>
             </motion.div>
@@ -163,7 +164,7 @@ export default function EstateIqCaseStudy() {
             >
               <div className="relative w-full aspect-[9/16] max-w-[400px] mx-auto rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center">
                  {/* Placeholder for Screenshot 2 */}
-                 <img src="/images/case-studies/estateiq-2.jpeg" alt="EstateIQ AI Property Listings" className="w-full h-full object-cover" />
+                 <Image src="/images/case-studies/estateiq-2.jpeg" alt="EstateIQ AI Property Listings" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
               </div>
               <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">Property Listings: Browsing through curated luxury architectural masterpieces.</p>
             </motion.div>
@@ -192,7 +193,7 @@ export default function EstateIqCaseStudy() {
             >
               <div className="relative w-full aspect-[9/16] max-w-[400px] mx-auto rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center">
                  {/* Placeholder for Screenshot 3 */}
-                 <img src="/images/case-studies/estateiq-3.jpeg" alt="EstateIQ AI Chatbot" className="w-full h-full object-cover" />
+                 <Image src="/images/case-studies/estateiq-3.jpeg" alt="EstateIQ AI Chatbot" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
               </div>
               <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">AI Concierge: Natural language search and personalized responses.</p>
             </motion.div>

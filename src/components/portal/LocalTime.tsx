@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useHydrated } from '@/lib/hooks'
 
 interface LocalTimeProps {
   utcString: string | null | undefined
@@ -9,40 +9,40 @@ interface LocalTimeProps {
   fallback?: string
 }
 
-export default function LocalTime({ 
-  utcString, 
-  timezone, 
-  formatOptions = { dateStyle: 'medium' },
+const DEFAULT_FORMAT: Intl.DateTimeFormatOptions = { dateStyle: 'medium' }
+
+function formatLocal(utcString: string, formatOptions: Intl.DateTimeFormatOptions, timezone?: string) {
+  try {
+    const date = new Date(utcString)
+    if (Number.isNaN(date.getTime())) return null
+    const options: Intl.DateTimeFormatOptions = { ...formatOptions }
+    if (timezone) options.timeZone = timezone
+    return { iso: date.toISOString(), text: new Intl.DateTimeFormat('en-US', options).format(date) }
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Renders a date in the visitor's local timezone. The server renders an
+ * invisible placeholder so hydration never mismatches.
+ */
+export default function LocalTime({
+  utcString,
+  timezone,
+  formatOptions = DEFAULT_FORMAT,
   fallback = 'TBD'
 }: LocalTimeProps) {
-  const [formatted, setFormatted] = useState<string>('')
-  
-  useEffect(() => {
-    if (!utcString) {
-      setFormatted(fallback)
-      return
-    }
+  const hydrated = useHydrated()
 
-    try {
-      const date = new Date(utcString)
-      
-      const options: Intl.DateTimeFormatOptions = { ...formatOptions }
-      if (timezone) {
-        options.timeZone = timezone
-      }
-      // If timezone is undefined, it falls back to the browser's local timezone automatically
-      
-      setFormatted(new Intl.DateTimeFormat('en-US', options).format(date))
-    } catch (e) {
-      setFormatted(fallback)
-    }
-  }, [utcString, timezone, formatOptions, fallback])
+  if (!utcString) return <span>{fallback}</span>
 
-  // To prevent hydration mismatch, we render empty or fallback on the server, 
-  // and update on the client.
-  if (!formatted) {
-    return <span className="opacity-0">{fallback}</span>
+  if (!hydrated) {
+    return <span className="opacity-0" aria-hidden="true">{fallback}</span>
   }
 
-  return <span>{formatted}</span>
+  const formatted = formatLocal(utcString, formatOptions, timezone)
+  if (!formatted) return <span>{fallback}</span>
+
+  return <time dateTime={formatted.iso}>{formatted.text}</time>
 }

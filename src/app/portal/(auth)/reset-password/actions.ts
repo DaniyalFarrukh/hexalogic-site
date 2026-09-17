@@ -10,8 +10,8 @@ export async function resetPassword(formData: FormData) {
     return { error: 'Password is required' }
   }
 
-  if (password.length < 6) {
-    return { error: 'Password must be at least 6 characters' }
+  if (password.length < 8) {
+    return { error: 'Password must be at least 8 characters' }
   }
 
   const supabase = await createClient()

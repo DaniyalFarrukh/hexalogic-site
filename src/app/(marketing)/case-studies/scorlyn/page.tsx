@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, LayoutGrid, Cpu, Wifi, Smartphone, TrendingUp, Zap, CheckCircle2, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -96,7 +97,7 @@ export default function ScorlynCaseStudy() {
               className="rounded-3xl overflow-hidden border border-white/10 bg-[#121214] p-3 shadow-2xl"
             >
               <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center">
-                 <img src="/images/case-studies/scorlyn-shop.png" alt="Scorlyn Shop Display" className="w-full h-full object-cover" />
+                 <Image src="/images/case-studies/scorlyn-shop.png" alt="Scorlyn Shop Display" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
               </div>
               <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">Scorlyn Shop Display: Bringing the integrated scoreboard hardware to the field.</p>
             </motion.div>
@@ -147,7 +148,7 @@ export default function ScorlynCaseStudy() {
               className="rounded-3xl overflow-hidden border border-white/10 bg-[#121214] p-3 shadow-2xl mt-16"
             >
               <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center">
-                 <img src="/images/case-studies/scorlyn-frontend.png" alt="Scorlyn Mobile App" className="w-full h-full object-cover opacity-90" />
+                 <Image src="/images/case-studies/scorlyn-frontend.png" alt="Scorlyn Mobile App" fill className="object-cover opacity-90" sizes="(max-width: 1024px) 100vw, 66vw" />
               </div>
               <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">The Phone Application: Controlling the scoreboard hardware wirelessly via WiFi.</p>
             </motion.div>

@@ -1,18 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { resetPassword } from './actions'
-import { useRouter } from 'next/navigation'
 
 export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
-
-  useEffect(() => {
-    // Optional: check if there's a hash in the URL to ensure Supabase auth picked it up
-    // Usually Supabase processes the hash automatically in the client side.
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

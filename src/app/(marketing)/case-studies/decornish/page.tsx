@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Settings, Mail, Tag, Package, Server, PenTool, TrendingUp, Zap, CheckCircle2, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -97,7 +98,7 @@ export default function DecornishCaseStudy() {
               className="rounded-3xl overflow-hidden border border-white/10 bg-[#121214] p-3 shadow-2xl"
             >
               <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center">
-                 <img src="/images/case-studies/decornish-admin.png" alt="Decornish Admin Dashboard" className="w-full h-full object-cover" />
+                 <Image src="/images/case-studies/decornish-admin.png" alt="Decornish Admin Dashboard" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
               </div>
               <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">Custom Admin Dashboard: Making daily sales and inventory management incredibly easy.</p>
             </motion.div>
@@ -135,7 +136,7 @@ export default function DecornishCaseStudy() {
                   {
                     icon: PenTool,
                     title: "Bespoke Design",
-                    desc: "Every single UI component was meticulously crafted according to the client's specific aesthetic demands."
+                    desc: "Every single UI component was meticulously crafted according to the client&apos;s specific aesthetic demands."
                   }
                 ].map((feature, idx) => (
                   <div key={idx} className="feature-card bg-[#0f0f12] border border-white/[0.06] p-8 rounded-[2rem] hover:border-amber-500/40 hover:bg-[#131316] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 group flex flex-col items-start">
@@ -158,9 +159,9 @@ export default function DecornishCaseStudy() {
               className="rounded-3xl overflow-hidden border border-white/10 bg-[#121214] p-3 shadow-2xl mt-16"
             >
               <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center">
-                 <img src="/images/case-studies/decornish-frontend.png" alt="Decornish Website Storefront" className="w-full h-full object-cover" />
+                 <Image src="/images/case-studies/decornish-frontend.png" alt="Decornish Website Storefront" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
               </div>
-              <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">Bespoke Storefront: Designed entirely around the client's aesthetic demands.</p>
+              <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">Bespoke Storefront: Designed entirely around the client&apos;s aesthetic demands.</p>
             </motion.div>
 
           </div>
@@ -220,9 +221,9 @@ export default function DecornishCaseStudy() {
 
                 {/* Client Quote */}
                 <div className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/20 relative group">
-                  <div className="text-amber-500/20 absolute top-2 right-4 font-serif text-6xl group-hover:scale-110 transition-transform">"</div>
+                  <div className="text-amber-500/20 absolute top-2 right-4 font-serif text-6xl group-hover:scale-110 transition-transform">&ldquo;</div>
                   <p className="text-sm text-gray-300 italic mb-5 relative z-10 leading-relaxed font-medium">
-                    "Hexalogic completely transformed our operations. The custom dashboard feels incredibly intuitive and tailored exactly to our needs."
+                    &ldquo;Hexalogic completely transformed our operations. The custom dashboard feels incredibly intuitive and tailored exactly to our needs.&rdquo;
                   </p>
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-500 font-bold text-sm">

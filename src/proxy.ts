@@ -2,8 +2,6 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function proxy(request: NextRequest) {
-  // Temporary log to verify middleware is invoked
-  console.log(`[Middleware] Invoked for path: ${request.nextUrl.pathname}`)
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -57,7 +55,9 @@ export async function proxy(request: NextRequest) {
   }
 
   // --- Already logged in, trying to visit a login page ---
-  if (user && isPortalAuthRoute) {
+  // The reset-password page must stay reachable for a logged-in recovery session.
+  const isResetRoute = pathname.startsWith('/portal/reset-password')
+  if (user && isPortalAuthRoute && !isResetRoute) {
     const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle()
     if (profile?.role !== 'admin') {
       return NextResponse.redirect(new URL('/portal', request.url))

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { adminLogin } from './actions'
 
 export default function AdminLoginPage() {
@@ -11,72 +12,77 @@ export default function AdminLoginPage() {
     e.preventDefault()
     setLoading(true)
     setError(null)
-    
+
     const formData = new FormData(e.currentTarget)
-    try {
-      const res = await adminLogin(formData)
-      if (res?.error) {
-        setError(res.error)
-        setLoading(false)
-      }
-    } catch (error) {
-      // Allow Next.js redirect to propagate
-      throw error
+    const res = await adminLogin(formData)
+    if (res?.error) {
+      setError(res.error)
+      setLoading(false)
     }
+    // On success the server action redirects.
   }
+
+  const inputClass =
+    'w-full bg-surface-darkest border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 transition-colors placeholder:text-gray-600'
 
   return (
     <div className="min-h-screen bg-surface-darkest flex items-center justify-center p-6">
       <div className="w-full max-w-md bg-surface-dark border border-white/10 rounded-2xl p-8 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)]">
-        
         <div className="flex flex-col items-center mb-8">
-          <div className="flex items-center gap-1 mb-2">
+          <Link href="/" className="flex items-center gap-1 mb-2" aria-label="HexaLogic home">
             <span className="text-white font-bold text-xl tracking-wider">HEXALOGIC</span>
             <div className="w-2 h-2 rounded-full bg-brand-primary" />
-          </div>
+          </Link>
           <p className="text-gray-500 text-sm font-semibold uppercase tracking-widest">Admin Console</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium text-center">
+          <div role="alert" className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium text-center">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-1">
-            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Email</label>
-            <input 
-              type="email" 
+            <label htmlFor="email" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Email</label>
+            <input
+              id="email"
+              type="email"
               name="email"
+              autoComplete="email"
               required
-              className="w-full bg-surface-darkest border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 transition-colors"
-              placeholder="admin@hexalogic.com"
+              className={inputClass}
+              placeholder="you@hexalogic.com"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Password</label>
-            <input 
-              type="password" 
+            <label htmlFor="password" className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Password</label>
+            <input
+              id="password"
+              type="password"
               name="password"
+              autoComplete="current-password"
               required
-              className="w-full bg-surface-darkest border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 transition-colors"
+              className={inputClass}
               placeholder="••••••••"
             />
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={loading}
             className="w-full bg-brand-primary text-white text-sm font-bold hover:bg-[#ff8947] rounded-lg px-4 py-3 transition-all shadow-lg shadow-brand-primary/20 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
           >
-            {loading ? 'Authenticating...' : 'Sign In to Admin'}
+            {loading ? 'Signing in...' : 'Sign In to Admin'}
           </button>
         </form>
 
-        <div className="mt-8 pt-6 border-t border-white/5 text-center">
+        <div className="mt-8 pt-6 border-t border-white/5 text-center space-y-2">
           <p className="text-[10px] text-gray-600 uppercase tracking-widest">Restricted Access</p>
+          <Link href="/portal/forgot-password" className="text-xs text-gray-500 hover:text-brand-primary transition-colors block">
+            Forgot password?
+          </Link>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,9 +16,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HexaLogic Tech Solutions — Smart Digital Solutions for Modern Businesses",
-  description:
-    "HexaLogic Tech Solutions provides premium web development, custom software, business automation, cloud solutions, and IT consulting for modern businesses.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — Smart Digital Solutions for Modern Businesses`,
+    template: `%s — ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
   keywords: [
     "web development",
     "software solutions",
@@ -26,12 +30,34 @@ export const metadata: Metadata = {
     "IT consulting",
     "HexaLogic",
   ],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "HexaLogic Tech Solutions",
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
     description:
       "Building smart solutions for modern businesses. Web development, custom software, automation & more.",
-    type: "website",
+    url: "/",
+    images: [{ url: "/hexalogic-logo.png", width: 360, height: 96, alt: SITE_NAME }],
   },
+  twitter: {
+    card: "summary",
+    title: SITE_NAME,
+    description:
+      "Building smart solutions for modern businesses. Web development, custom software, automation & more.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0a0a0c",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

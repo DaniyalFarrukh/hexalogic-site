@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Settings, Mail, Tag, Package, LayoutGrid, TrendingUp, Zap, CheckCircle2, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -96,7 +97,7 @@ export default function MystiqueTechCaseStudy() {
               className="rounded-3xl overflow-hidden border border-white/10 bg-[#121214] p-3 shadow-2xl"
             >
               <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center">
-                 <img src="/images/case-studies/mystique-admin.png" alt="Mystique Tech Admin Dashboard" className="w-full h-full object-cover" />
+                 <Image src="/images/case-studies/mystique-admin.png" alt="Mystique Tech Admin Dashboard" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
               </div>
               <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">Employee Admin Panel: Allowing full trace of inventory management, orders, and sales coupons.</p>
             </motion.div>
@@ -157,7 +158,7 @@ export default function MystiqueTechCaseStudy() {
               className="rounded-3xl overflow-hidden border border-white/10 bg-[#121214] p-3 shadow-2xl mt-16"
             >
               <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center">
-                 <img src="/images/case-studies/mystique-frontend.png" alt="Mystique Tech Storefront" className="w-full h-full object-cover opacity-90" />
+                 <Image src="/images/case-studies/mystique-frontend.png" alt="Mystique Tech Storefront" fill className="object-cover opacity-90" sizes="(max-width: 1024px) 100vw, 66vw" />
               </div>
               <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">The Customer Experience: An immersive full-stack web application designed for gamers.</p>
             </motion.div>

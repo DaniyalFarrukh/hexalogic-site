@@ -33,7 +33,7 @@ export async function GET(
   const { data: signedData, error: signError } = await supabase
     .storage
     .from('project-media')
-    .createSignedUrl(mediaRecord.path, 60)
+    .createSignedUrl(mediaRecord.path, 60 * 60)
 
   if (signError || !signedData) {
     return new NextResponse('Error generating signed URL', { status: 500 })

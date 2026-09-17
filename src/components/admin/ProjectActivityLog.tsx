@@ -1,18 +1,43 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { MessageSquare, CheckCircle, AlertCircle, Clock } from 'lucide-react'
+import { MessageSquare, CheckCircle, AlertCircle, Clock, FileUp, Send, LogIn, Megaphone } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { describeActivity } from '@/lib/activity'
 
-type ActivityItem = {
+export type ActivityItem = {
   id: string
-  type: 'comment' | 'milestone_approved' | 'milestone_changes_requested' | string
+  type: 'comment' | string
   created_at: string
   actorName: string
   actorRole?: string
   body?: string
-  targetName?: string // Optional context like which milestone
+  payload?: Record<string, unknown> | null
+}
+
+function iconFor(type: string) {
+  switch (type) {
+    case 'comment':
+    case 'comment_added':
+      return <MessageSquare className="w-4 h-4 text-blue-600" />
+    case 'milestone_approved':
+      return <CheckCircle className="w-4 h-4 text-emerald-600" />
+    case 'milestone_changes_requested':
+      return <AlertCircle className="w-4 h-4 text-rose-600" />
+    case 'approval_given':
+      return <CheckCircle className="w-4 h-4 text-emerald-600" />
+    case 'file_uploaded':
+      return <FileUp className="w-4 h-4 text-violet-600" />
+    case 'message_sent':
+      return <Send className="w-4 h-4 text-brand-primary" />
+    case 'client_logged_in':
+      return <LogIn className="w-4 h-4 text-gray-500" />
+    case 'update_published':
+      return <Megaphone className="w-4 h-4 text-brand-primary" />
+    default:
+      return <Clock className="w-4 h-4 text-gray-400" />
+  }
 }
 
 export default function ProjectActivityLog({
@@ -22,88 +47,69 @@ export default function ProjectActivityLog({
   projectId: string
   initialActivities: ActivityItem[]
 }) {
-  const [activities, setActivities] = useState<ActivityItem[]>(initialActivities)
-  const supabase = createClient()
   const router = useRouter()
 
+  // Refresh the server-rendered list whenever new comments or activity arrive.
   useEffect(() => {
-    setActivities(initialActivities)
-  }, [initialActivities])
-
-  // Listen for real-time changes
-  useEffect(() => {
-    // When comments are added, refresh to get new activities
-    const commentsChannel = supabase.channel(`activity-comments-${projectId}`)
+    const supabase = createClient()
+    const channel = supabase.channel(`activity-${projectId}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'comments', filter: `project_id=eq.${projectId}` }, () => {
         router.refresh()
       })
-      .subscribe()
-
-    // When activity_log is added (milestone updates), refresh
-    const activityChannel = supabase.channel(`activity-log-${projectId}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'activity_log', filter: `project_id=eq.${projectId}` }, () => {
         router.refresh()
       })
       .subscribe()
 
     return () => {
-      supabase.removeChannel(commentsChannel)
-      supabase.removeChannel(activityChannel)
+      supabase.removeChannel(channel)
     }
-  }, [supabase, projectId, router])
-
-  const renderIcon = (type: string) => {
-    switch (type) {
-      case 'comment': return <MessageSquare className="w-4 h-4 text-blue-400" />
-      case 'milestone_approved': return <CheckCircle className="w-4 h-4 text-emerald-400" />
-      case 'milestone_changes_requested': return <AlertCircle className="w-4 h-4 text-rose-400" />
-      default: return <Clock className="w-4 h-4 text-gray-400" />
-    }
-  }
+  }, [projectId, router])
 
   return (
-    <div className="bg-surface-dark/90 border border-white/10 rounded-2xl flex flex-col h-[calc(100vh-10rem)] min-h-[800px] overflow-hidden sticky top-8 shadow-2xl">
-      <div className="p-8 border-b border-white/5 bg-black/40 flex-shrink-0">
-        <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-          <Clock className="w-6 h-6 text-brand-primary" />
+    <div className="bg-white border border-gray-200 rounded-2xl flex flex-col overflow-hidden shadow-sm">
+      <div className="p-5 sm:p-6 border-b border-gray-100 bg-gray-50/60">
+        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-3">
+          <Clock className="w-5 h-5 text-brand-primary" />
           Project Activity
         </h2>
-        <p className="text-sm text-gray-400 mt-2">Recent messages and milestone actions.</p>
+        <p className="text-sm text-gray-500 mt-1">Comments, messages, uploads and milestone decisions, newest first.</p>
       </div>
-      
-      <div className="flex-1 overflow-y-auto p-8 space-y-8">
-        {activities.length === 0 ? (
+
+      <div className="p-5 sm:p-6 space-y-5 max-h-[70vh] overflow-y-auto">
+        {initialActivities.length === 0 ? (
           <p className="text-sm text-gray-500 text-center py-8">No activity yet.</p>
         ) : (
-          activities.map((item) => (
-            <div key={item.id} className="flex gap-4 items-start group">
-              <div className="mt-1 bg-black/60 p-3 rounded-full border border-white/5 group-hover:border-white/20 group-hover:shadow-[0_0_15px_rgba(255,115,36,0.1)] transition-all">
-                {renderIcon(item.type)}
-              </div>
-              <div className="flex-1 min-w-0 bg-black/20 rounded-xl p-4 border border-white/5">
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="font-semibold text-base text-gray-200">
-                    {item.actorName}
-                    {item.actorRole === 'admin' && <span className="ml-2 px-2 py-0.5 bg-brand-primary/10 rounded-full text-xs text-brand-primary font-bold tracking-wide">HexaLogic</span>}
-                  </span>
-                  <span className="text-xs text-gray-500 font-medium bg-black/40 px-2 py-1 rounded-md">
-                    {new Date(item.created_at).toLocaleDateString()} {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
+          initialActivities.map((item) => {
+            const date = new Date(item.created_at)
+            return (
+              <div key={item.id} className="flex gap-3 sm:gap-4 items-start">
+                <div className="mt-0.5 bg-gray-50 p-2.5 rounded-full border border-gray-200 shrink-0">
+                  {iconFor(item.type)}
                 </div>
-                <div className="text-base text-gray-300 mt-1 leading-relaxed">
-                  {item.type === 'comment' && (
-                    <span className="block whitespace-pre-wrap">"{item.body}"</span>
-                  )}
-                  {item.type === 'milestone_approved' && (
-                    <span className="text-emerald-400 font-medium">Approved a milestone</span>
-                  )}
-                  {item.type === 'milestone_changes_requested' && (
-                    <span className="text-rose-400 font-medium">Requested milestone changes</span>
-                  )}
+                <div className="flex-1 min-w-0 bg-gray-50 rounded-xl p-4 border border-gray-100">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+                    <span className="font-semibold text-sm text-gray-900">
+                      {item.actorName}
+                      {item.actorRole === 'admin' && (
+                        <span className="ml-2 px-2 py-0.5 bg-brand-primary/10 rounded-full text-[10px] text-brand-primary font-bold tracking-wide uppercase">HexaLogic</span>
+                      )}
+                    </span>
+                    <time dateTime={item.created_at} className="text-xs text-gray-500 font-medium">
+                      {date.toLocaleDateString()} {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </time>
+                  </div>
+                  <div className="text-sm text-gray-700 leading-relaxed">
+                    {item.type === 'comment' ? (
+                      <span className="block whitespace-pre-wrap break-words">&ldquo;{item.body}&rdquo;</span>
+                    ) : (
+                      describeActivity(item.type, item.actorName, item.payload)
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            )
+          })
         )}
       </div>
     </div>

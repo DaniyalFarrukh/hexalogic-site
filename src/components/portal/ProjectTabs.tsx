@@ -13,7 +13,7 @@ export default function ProjectTabs({
   const pathname = usePathname()
 
   return (
-    <div className="flex items-center gap-6 md:gap-8 border-b border-gray-100 px-4 md:px-8 overflow-x-auto whitespace-nowrap scrollbar-hide">
+    <div className="flex items-center gap-1 sm:gap-2 border-b border-gray-100 px-2 sm:px-4 overflow-x-auto whitespace-nowrap scrollbar-hide md:flex-wrap md:overflow-visible">
       {tabs.map(t => {
         const href = `/portal/${projectSlug}/${t}`
         const isActive = pathname === href || pathname?.startsWith(href + '/')
@@ -22,7 +22,7 @@ export default function ProjectTabs({
           <Link 
             key={t}
             href={href}
-            className={`py-5 text-sm font-bold capitalize relative transition-colors ${
+            className={`px-3 py-4 text-sm font-bold capitalize relative transition-colors min-h-[44px] flex items-center ${
               isActive ? 'text-brand-secondary' : 'text-gray-500 hover:text-gray-900'
             }`}
           >

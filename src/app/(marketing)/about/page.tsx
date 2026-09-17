@@ -1,7 +1,8 @@
 import AboutSection from "@/components/sections/AboutSection";
 
 export const metadata = {
-  title: "About Us — HexaLogic Tech Solutions",
+  title: "About Us",
+  alternates: { canonical: "/about" },
   description: "Learn more about our mission, vision, and core values at HexaLogic Tech Solutions.",
 };
 

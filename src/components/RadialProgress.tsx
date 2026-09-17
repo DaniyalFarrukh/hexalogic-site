@@ -4,7 +4,6 @@ export default function RadialProgress({
   progress, 
   size = 120, 
   strokeWidth = 10,
-  mode = 'admin'
 }: { 
   progress: number
   size?: number

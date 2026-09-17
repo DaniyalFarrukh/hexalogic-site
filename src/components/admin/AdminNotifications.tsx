@@ -50,7 +50,7 @@ export default function AdminNotifications() {
             (t) => (
               <div className="flex flex-col gap-1">
                 <span className="font-bold text-white">{authorName} commented</span>
-                <span className="text-sm text-gray-300">"{comment.body.substring(0, 50)}{comment.body.length > 50 ? '...' : ''}"</span>
+                <span className="text-sm text-gray-300">&ldquo;{comment.body.substring(0, 50)}{comment.body.length > 50 ? '...' : ''}&rdquo;</span>
                 {project && (
                   <Link 
                     href={`/admin/${project.slug}`} 

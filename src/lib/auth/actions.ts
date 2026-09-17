@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { rateLimit } from '@/lib/rate-limit'
 import { headers } from 'next/headers'
+import { SITE_URL } from '@/lib/site'
 
 export async function sharedSignIn(email: string, password: string, rateLimitKey: string) {
   const headersList = await headers()
@@ -52,12 +53,13 @@ export async function resetPasswordForEmail(formData: FormData) {
   const supabase = await createClient()
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/portal/reset-password`,
+    redirectTo: `${SITE_URL}/auth/confirm?next=/portal/reset-password`,
   })
 
   if (error) {
     return { error: error.message }
   }
 
-  return { success: 'Check your email for the reset link' }
+  // Always return the same message so the form cannot be used to probe which emails exist.
+  return { success: 'If an account exists for that email, a reset link is on its way.' }
 }

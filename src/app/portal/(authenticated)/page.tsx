@@ -38,7 +38,7 @@ export default async function PortalIndex() {
       <div className="p-6 min-h-[50vh] flex flex-col items-center justify-center text-center">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome</h2>
         <p className="text-gray-500 text-sm max-w-md">
-          You don't have any active projects yet. Your team will set one up for you shortly.
+          You don&apos;t have any active projects yet. Your team will set one up for you shortly.
         </p>
       </div>
     )

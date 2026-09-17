@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { createClient as createAdminClient } from '@supabase/supabase-js'
+import { createAdminClient } from '@/lib/supabase/admin'
 import crypto from 'crypto'
 import { revalidatePath } from 'next/cache'
 import { sendEmail } from '@/lib/email/resend'
@@ -9,51 +9,136 @@ import { WelcomeEmail } from '@/lib/email/templates/welcome'
 import { NewUpdateEmail } from '@/lib/email/templates/new-update'
 import { ProjectCompleteEmail } from '@/lib/email/templates/project-complete'
 import { MilestoneDoneEmail } from '@/lib/email/templates/milestone-done'
+import { SITE_URL } from '@/lib/site'
 
-const adminClient = createAdminClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
+const adminClient = createAdminClient()
+
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+const RESERVED_SLUGS = new Set(['new', 'login', 'change-password', 'settings', 'forgot-password', 'reset-password'])
+
+export type MilestoneInput = {
+  id?: string
+  title: string
+  description?: string | null
+  status: 'pending' | 'in_progress' | 'done'
+  position: number
+  due_date?: string | null
+}
+
+export type ProjectDetailsInput = {
+  title?: string
+  description?: string | null
+  status?: 'planning' | 'in_progress' | 'review' | 'on_hold' | 'completed' | 'archived'
+  progress?: number
+  start_date?: string | null
+  due_date?: string | null
+}
+
+export type MediaInput = {
+  path: string
+  kind: 'image' | 'video' | 'file'
+  size_bytes: number
+  mime_type: string
+  caption: string | null
+}
+
+type MemberRow = { profile_id: string; profiles: { email_prefs: { every_update?: boolean } | null } | null }
+
+function errorMessage(error: unknown, fallback = 'An unexpected error occurred') {
+  if (error && typeof error === 'object' && 'message' in error && typeof (error as { message: unknown }).message === 'string') {
+    return (error as { message: string }).message
   }
-)
+  return fallback
+}
 
-export async function createClientAndProject(formData: FormData) {
+function friendlyDbError(error: { code?: string; message: string }) {
+  if (error.code === '23505') return 'That slug is already in use. Please choose a different one.'
+  return error.message
+}
+
+/** Verifies the caller is a signed-in admin. */
+async function requireAdmin() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { supabase, user: null, error: 'Unauthorized' as const }
 
-  if (!user) {
-    return { error: 'Unauthorized' }
-  }
-
-  // Authorize
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  if (profile?.role !== 'admin') {
-    return { error: 'Forbidden' }
-  }
+  if (profile?.role !== 'admin') return { supabase, user: null, error: 'Forbidden' as const }
 
-  const email = formData.get('email') as string
-  const fullName = formData.get('full_name') as string
-  const company = formData.get('company') as string
-  const title = formData.get('title') as string
-  const description = formData.get('description') as string
-  const slug = formData.get('slug') as string
-  const startDate = formData.get('start_date') as string
-  const dueDate = formData.get('due_date') as string
+  return { supabase, user, error: null }
+}
+
+/** Looks a user up by email, paging through the auth user list. */
+async function findAuthUserByEmail(email: string) {
+  const target = email.toLowerCase()
+  const perPage = 1000
+  for (let page = 1; page <= 50; page++) {
+    const { data, error } = await adminClient.auth.admin.listUsers({ page, perPage })
+    if (error) throw error
+    const match = data.users.find(u => u.email?.toLowerCase() === target)
+    if (match) return match
+    if (data.users.length < perPage) break
+  }
+  return null
+}
+
+/** Resolves the notification emails of project members who opted into instant updates. */
+async function getSubscribedMemberEmails(projectId: string) {
+  const { data: members } = await adminClient
+    .from('project_members')
+    .select('profile_id, profiles!inner ( email_prefs )')
+    .eq('project_id', projectId)
+
+  const rows = (members || []) as unknown as MemberRow[]
+  const subscribed = rows.filter(m => m.profiles?.email_prefs?.every_update === true)
+
+  const emails: string[] = []
+  for (const member of subscribed) {
+    const { data } = await adminClient.auth.admin.getUserById(member.profile_id)
+    if (data?.user?.email) emails.push(data.user.email)
+  }
+  return emails
+}
+
+/** Creates a long-lived signed URL for private media so it can be embedded in an email. */
+async function signedMediaUrl(path: string) {
+  if (path.startsWith('http://') || path.startsWith('https://')) return path
+  const { data } = await adminClient.storage.from('project-media').createSignedUrl(path, 60 * 60 * 24 * 7)
+  return data?.signedUrl
+}
+
+export async function createClientAndProject(formData: FormData) {
+  const auth = await requireAdmin()
+  if (auth.error || !auth.user) return { error: auth.error || 'Unauthorized' }
+  const { user } = auth
+
+  const email = String(formData.get('email') || '').trim()
+  const fullName = String(formData.get('full_name') || '').trim()
+  const company = String(formData.get('company') || '').trim()
+  const title = String(formData.get('title') || '').trim()
+  const description = String(formData.get('description') || '').trim()
+  const slug = String(formData.get('slug') || '').trim().toLowerCase()
+  const startDate = String(formData.get('start_date') || '')
+  const dueDate = String(formData.get('due_date') || '')
 
   if (!email || !fullName || !title || !slug) {
     return { error: 'Missing required fields' }
   }
+  if (!SLUG_PATTERN.test(slug) || slug.length > 80) {
+    return { error: 'Slug may only contain lowercase letters, numbers and single hyphens.' }
+  }
+  if (RESERVED_SLUGS.has(slug)) {
+    return { error: 'That slug is reserved. Please choose a different one.' }
+  }
 
   try {
-    // 1. Check if user already exists
-    const { data: usersData, error: listError } = await adminClient.auth.admin.listUsers()
-    if (listError) throw listError
+    const { data: existingProject } = await adminClient.from('projects').select('id').eq('slug', slug).maybeSingle()
+    if (existingProject) {
+      return { error: 'That slug is already in use. Please choose a different one.' }
+    }
 
-    const existingUser = usersData.users.find(u => u.email?.toLowerCase() === email.toLowerCase())
+    // 1. Find or create the client account
+    const existingUser = await findAuthUserByEmail(email)
     let clientId = existingUser?.id
     const isNewUser = !existingUser
     let tempPassword = ''
@@ -69,10 +154,9 @@ export async function createClientAndProject(formData: FormData) {
 
       if (createError) throw createError
       if (!newAuth.user) throw new Error('User creation failed without throwing an error')
-      
+
       clientId = newAuth.user.id
 
-      // Create profile for new user
       const { error: profileError } = await adminClient.from('profiles').insert({
         id: clientId,
         full_name: fullName,
@@ -84,22 +168,18 @@ export async function createClientAndProject(formData: FormData) {
 
     if (!clientId) throw new Error('Failed to determine client ID')
 
-    // 2. Create Project
+    // 2. Create the project
     const { data: project, error: projectError } = await adminClient.from('projects').insert({
       title,
       slug,
-      description,
+      description: description || null,
       start_date: startDate || null,
       due_date: dueDate || null
     }).select('id').single()
 
-    if (projectError) {
-      // If project creation fails, we might leave a dangling user. 
-      // In a real app we'd clean it up or use a transaction, but RPC is best for transactions.
-      throw projectError
-    }
+    if (projectError) throw new Error(friendlyDbError(projectError))
 
-    // 3. Add Client to Project
+    // 3. Add the client as owner and the admin as a viewer
     const { error: memberError } = await adminClient.from('project_members').insert({
       project_id: project.id,
       profile_id: clientId,
@@ -107,366 +187,339 @@ export async function createClientAndProject(formData: FormData) {
     })
     if (memberError) throw memberError
 
-    // 4. Add Admin (Self) to Project
     await adminClient.from('project_members').insert({
       project_id: project.id,
       profile_id: user.id,
       role: 'viewer'
     })
 
-    // 5. Seed Default Milestones
+    // 4. Seed default milestones
     const milestones = [
       { title: 'Discovery', description: 'Requirements and initial planning', position: 1 },
       { title: 'Design', description: 'UI/UX design phase', position: 2 },
       { title: 'Development', description: 'Core implementation', position: 3 },
       { title: 'Testing', description: 'QA and user acceptance testing', position: 4 },
       { title: 'Launch', description: 'Final deployment', position: 5 }
-    ].map(m => ({
-      project_id: project.id,
-      ...m
-    }))
+    ].map(m => ({ project_id: project.id, ...m }))
 
     const { error: msError } = await adminClient.from('milestones').insert(milestones)
     if (msError) throw msError
 
-    // Send Welcome Email for new users
+    await adminClient.from('activity_log').insert({
+      project_id: project.id,
+      actor_id: user.id,
+      event_type: 'project_created'
+    })
+
+    // 5. Welcome email for new users (errors are logged, not surfaced)
     if (isNewUser) {
-      // Intentionally not awaiting to prevent blocking the response, or use Promise.allSettled
-      // Wait, Next.js server actions should await or the process might end. We'll await but swallow errors.
-      await Promise.allSettled([
-        sendEmail({
-          to: email,
-          subject: 'Welcome to the HexaLogic Portal',
-          template: WelcomeEmail({ email, tempPassword })
-        })
-      ])
+      const result = await sendEmail({
+        to: email,
+        subject: 'Welcome to the HexaLogic Portal',
+        template: WelcomeEmail({ email, tempPassword })
+      })
+      if (!result.success) console.error('Welcome email failed:', result.error)
     }
 
     revalidatePath('/admin')
 
-    return { 
-      success: true, 
-      isNewUser, 
+    return {
+      success: true,
+      isNewUser,
       credentials: isNewUser ? { email, tempPassword } : undefined,
       slug
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error creating client/project:', error)
-    return { error: error.message || 'An unexpected error occurred' }
+    return { error: errorMessage(error) }
   }
 }
 
 export async function softDeleteUpdate(updateId: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const auth = await requireAdmin()
+  if (auth.error) return { error: auth.error }
 
-  if (!user) return { error: 'Unauthorized' }
+  const { data: update } = await auth.supabase.from('updates').select('project_id').eq('id', updateId).single()
 
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  if (profile?.role !== 'admin') return { error: 'Forbidden' }
-
-  const { error } = await supabase
+  const { error } = await auth.supabase
     .from('updates')
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', updateId)
 
   if (error) return { error: error.message }
-  
-  revalidatePath('/admin')
+
+  if (update?.project_id) {
+    const { data: project } = await auth.supabase.from('projects').select('slug').eq('id', update.project_id).single()
+    if (project?.slug) {
+      revalidatePath(`/admin/${project.slug}/updates`)
+      revalidatePath(`/portal/${project.slug}/updates`)
+    }
+  }
   return { success: true }
 }
 
-export async function updateProjectDetails(projectId: string, data: any) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+export async function updateProjectDetails(projectId: string, data: ProjectDetailsInput) {
+  const auth = await requireAdmin()
+  if (auth.error) return { error: auth.error }
+  const { supabase } = auth
 
-  if (!user) return { error: 'Unauthorized' }
-
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  if (profile?.role !== 'admin') return { error: 'Forbidden' }
-
-  // Check if status is transitioning to 'completed'
-  const isCompleting = data.status === 'completed'
-  let oldProjectData = null
-
-  if (isCompleting) {
-    const { data: oldProj } = await supabase.from('projects').select('status, title, start_date, hours_logged, slug').eq('id', projectId).single()
-    oldProjectData = oldProj
+  const payload: ProjectDetailsInput = {}
+  if (typeof data.title === 'string') {
+    const title = data.title.trim()
+    if (!title) return { error: 'Title cannot be empty' }
+    payload.title = title
   }
+  if (data.description !== undefined) payload.description = data.description?.trim() || null
+  if (data.status !== undefined) payload.status = data.status
+  if (data.progress !== undefined) {
+    const progress = Number(data.progress)
+    if (!Number.isFinite(progress) || progress < 0 || progress > 100) return { error: 'Progress must be between 0 and 100' }
+    payload.progress = Math.round(progress)
+  }
+  if (data.start_date !== undefined) payload.start_date = data.start_date || null
+  if (data.due_date !== undefined) payload.due_date = data.due_date || null
+
+  const { data: oldProject } = await supabase
+    .from('projects')
+    .select('status, title, start_date, hours_logged, slug')
+    .eq('id', projectId)
+    .single()
+
+  if (!oldProject) return { error: 'Project not found' }
 
   const { error } = await supabase
     .from('projects')
-    .update(data)
+    .update(payload)
     .eq('id', projectId)
 
-  if (error) return { error: error.message }
-  
-  if (isCompleting && oldProjectData && oldProjectData.status !== 'completed') {
-    try {
-      // Fetch members with every_update enabled
-      const { data: members } = await adminClient
-        .from('project_members')
-        .select(`
-          profile_id,
-          profiles!inner ( email_prefs )
-        `)
-        .eq('project_id', projectId)
+  if (error) return { error: friendlyDbError(error) }
 
-      if (members && members.length > 0) {
-        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-        const updateLink = `${baseUrl}/portal/${oldProjectData.slug}`
-        
-        const emailPromises = members
-          .filter(m => {
-            const prefs = (m.profiles as any)?.email_prefs
-            return prefs && prefs.every_update === true
+  const isCompleting = payload.status === 'completed' && oldProject.status !== 'completed'
+  if (isCompleting) {
+    try {
+      const emails = await getSubscribedMemberEmails(projectId)
+      const updateLink = `${SITE_URL}/portal/${oldProject.slug}`
+      await Promise.allSettled(emails.map(email =>
+        sendEmail({
+          to: email,
+          subject: `Project Completed: ${payload.title || oldProject.title}`,
+          template: ProjectCompleteEmail({
+            projectName: payload.title || oldProject.title,
+            totalHours: oldProject.hours_logged || 0,
+            startDate: oldProject.start_date || 'N/A',
+            endDate: new Date().toISOString().split('T')[0],
+            updateLink
           })
-          .map(async (member) => {
-            const { data: userData } = await adminClient.auth.admin.getUserById(member.profile_id)
-            const email = userData?.user?.email
-            
-            if (email) {
-              return sendEmail({
-                to: email,
-                subject: `Project Completed: ${oldProjectData.title}`,
-                template: ProjectCompleteEmail({
-                  projectName: oldProjectData.title,
-                  totalHours: oldProjectData.hours_logged || 0,
-                  startDate: oldProjectData.start_date || 'N/A',
-                  endDate: new Date().toISOString().split('T')[0],
-                  updateLink
-                })
-              })
-            }
-          })
-          
-        await Promise.allSettled(emailPromises)
-      }
+        })
+      ))
     } catch (emailError) {
       console.error('Failed to send project complete emails:', emailError)
     }
   }
 
   revalidatePath('/admin')
-  revalidatePath(`/admin/${projectId}`) // Actually we need slug, but revalidatePath('/admin', 'layout') handles it
+  revalidatePath(`/admin/${oldProject.slug}`, 'layout')
+  revalidatePath(`/portal/${oldProject.slug}`, 'layout')
   return { success: true }
 }
 
 export async function removeClientAccess(projectId: string, profileId: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const auth = await requireAdmin()
+  if (auth.error) return { error: auth.error }
 
-  if (!user) return { error: 'Unauthorized' }
-
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  if (profile?.role !== 'admin') return { error: 'Forbidden' }
-
-  const { error } = await supabase
+  const { error } = await auth.supabase
     .from('project_members')
     .delete()
     .match({ project_id: projectId, profile_id: profileId })
 
   if (error) return { error: error.message }
-  
+
   revalidatePath('/admin')
   return { success: true }
 }
 
-export async function updateMilestones(projectId: string, milestones: any[]) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) return { error: 'Unauthorized' }
-
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  if (profile?.role !== 'admin') return { error: 'Forbidden' }
+/**
+ * Saves the milestone list for a project.
+ *
+ * Existing milestones are updated in place (keeping their comments and approval
+ * history), new ones are inserted, and only milestones the admin removed are
+ * deleted.
+ */
+export async function updateMilestones(projectId: string, milestones: MilestoneInput[]) {
+  const auth = await requireAdmin()
+  if (auth.error) return { error: auth.error }
+  const { supabase } = auth
 
   const { data: project } = await supabase.from('projects').select('id, title, slug').eq('id', projectId).single()
   if (!project) return { error: 'Project not found' }
 
-  // 1. Fetch old milestones to check status transitions
-  const { data: oldMilestones } = await supabase.from('milestones').select('id, status').eq('project_id', projectId)
-
-  // 2. Delete all existing milestones for this project
-  const { error: deleteError } = await supabase
-    .from('milestones')
-    .delete()
-    .eq('project_id', projectId)
-
-  if (deleteError) return { error: deleteError.message }
-
-  // 3. Insert new milestones
-  if (milestones.length > 0) {
-    const { data, error: insertError } = await supabase
-      .from('milestones')
-      .insert(milestones)
-      .select('*')
-      .order('position', { ascending: true })
-      
-    if (insertError) return { error: insertError.message }
-    
-    // Check for newly completed milestones
-    if (oldMilestones) {
-      const newlyDone = data.filter((m: any) => 
-        m.status === 'done' && 
-        oldMilestones.find(om => om.id === m.id && om.status !== 'done')
-      )
-
-      if (newlyDone.length > 0) {
-        // Fetch project members with every_update enabled
-        const { data: members } = await adminClient
-          .from('project_members')
-          .select(`profile_id, profiles!inner ( email_prefs )`)
-          .eq('project_id', projectId)
-
-        if (members && members.length > 0) {
-          const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-          const updateLink = `${baseUrl}/portal/${project.slug}`
-          
-          const emailPromises = members
-            .filter(m => (m.profiles as any)?.email_prefs?.every_update === true)
-            .map(async (member) => {
-              const { data: userData } = await adminClient.auth.admin.getUserById(member.profile_id)
-              if (userData?.user?.email) {
-                return newlyDone.map((md: any) => 
-                  sendEmail({
-                    to: userData.user.email as string,
-                    subject: `Milestone Completed: ${md.title}`,
-                    template: MilestoneDoneEmail({
-                      projectName: project.title,
-                      milestoneName: md.title,
-                      nextSteps: 'Please review the deliverables and approve this milestone or request changes in the portal.',
-                      updateLink
-                    })
-                  })
-                )
-              }
-            }).flat()
-            
-          await Promise.allSettled(emailPromises)
-        }
-      }
-    }
-    
-    revalidatePath(`/admin/${project.slug}`)
-    return { success: true, data }
+  for (const m of milestones) {
+    if (!m.title || !m.title.trim()) return { error: 'Every milestone needs a title' }
   }
-  
-  revalidatePath(`/admin/${project.slug}`)
-  return { success: true, data: [] }
+
+  const { data: existing } = await supabase.from('milestones').select('id, status').eq('project_id', projectId)
+  const existingById = new Map((existing || []).map(m => [m.id, m]))
+  const submittedIds = new Set(milestones.filter(m => m.id).map(m => m.id as string))
+
+  // 1. Delete milestones the admin removed
+  const toDelete = (existing || []).filter(m => !submittedIds.has(m.id)).map(m => m.id)
+  if (toDelete.length > 0) {
+    const { error: deleteError } = await supabase.from('milestones').delete().in('id', toDelete)
+    if (deleteError) return { error: deleteError.message }
+  }
+
+  // 2. Update existing milestones
+  const newlyDone: { title: string }[] = []
+  for (const m of milestones) {
+    const base = {
+      title: m.title.trim(),
+      description: m.description?.trim() || null,
+      status: m.status,
+      position: m.position,
+      due_date: m.due_date || null,
+    }
+
+    if (m.id && existingById.has(m.id)) {
+      const { error: updateError } = await supabase.from('milestones').update(base).eq('id', m.id)
+      if (updateError) return { error: updateError.message }
+      if (m.status === 'done' && existingById.get(m.id)?.status !== 'done') newlyDone.push({ title: base.title })
+    } else {
+      const { error: insertError } = await supabase.from('milestones').insert({ ...base, project_id: projectId })
+      if (insertError) return { error: insertError.message }
+      if (m.status === 'done') newlyDone.push({ title: base.title })
+    }
+  }
+
+  // 3. Notify subscribed members about newly completed milestones
+  if (newlyDone.length > 0) {
+    try {
+      const emails = await getSubscribedMemberEmails(projectId)
+      const updateLink = `${SITE_URL}/portal/${project.slug}/milestones`
+      const jobs = emails.flatMap(email => newlyDone.map(md =>
+        sendEmail({
+          to: email,
+          subject: `Milestone Completed: ${md.title}`,
+          template: MilestoneDoneEmail({
+            projectName: project.title,
+            milestoneName: md.title,
+            nextSteps: 'Please review the deliverables and approve this milestone or request changes in the portal.',
+            updateLink
+          })
+        })
+      ))
+      await Promise.allSettled(jobs)
+    } catch (emailError) {
+      console.error('Failed to send milestone emails:', emailError)
+    }
+  }
+
+  // 4. Return the fresh list, including comments, so the UI stays in sync
+  const { data } = await supabase
+    .from('milestones')
+    .select(`
+      *,
+      comments(
+        id, body, created_at, deleted_at,
+        author:profiles(full_name, avatar_url, role),
+        media(id, path, kind)
+      )
+    `)
+    .eq('project_id', projectId)
+    .order('position', { ascending: true })
+
+  revalidatePath(`/admin/${project.slug}`, 'layout')
+  revalidatePath(`/portal/${project.slug}`, 'layout')
+  return { success: true, data: data || [] }
 }
 
-export async function generateUploadUrl(slug: string, fileName: string, contentType: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Unauthorized' }
+export async function generateUploadUrl(slug: string, fileName: string) {
+  const auth = await requireAdmin()
+  if (auth.error) return { error: auth.error }
 
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  if (profile?.role !== 'admin') return { error: 'Forbidden' }
-
-  const { data: project } = await supabase.from('projects').select('id').eq('slug', slug).single()
+  const { data: project } = await auth.supabase.from('projects').select('id').eq('slug', slug).single()
   if (!project) return { error: 'Project not found' }
-  const projectId = project.id
 
-  const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.\-_]/g, '_')
-  const path = `${projectId}/${crypto.randomUUID()}-${sanitizedFileName}`
+  const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.\-_]/g, '_').slice(0, 120)
+  const path = `${project.id}/${crypto.randomUUID()}-${sanitizedFileName}`
 
-  const { data, error } = await supabase.storage.from('project-media').createSignedUploadUrl(path)
-  
+  const { data, error } = await auth.supabase.storage.from('project-media').createSignedUploadUrl(path)
+
   if (error) return { error: error.message }
   return { success: true, signedUrl: data.signedUrl, path: data.path }
 }
 
-export async function publishProjectUpdate(
-  slug: string, 
-  title: string, 
-  body: string, 
-  hours: number, 
-  mediaArray: any[]
-) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Unauthorized' }
+/** Guesses the media kind of an external link so the gallery can render it sensibly. */
+export async function classifyExternalUrl(url: string): Promise<MediaInput['kind']> {
+  const lower = url.toLowerCase()
+  if (/\.(png|jpe?g|gif|webp|avif|svg)(\?|$)/.test(lower)) return 'image'
+  if (/\.(mp4|webm|mov|m4v)(\?|$)/.test(lower) || /youtube\.com|youtu\.be|vimeo\.com|loom\.com/.test(lower)) return 'video'
+  return 'file'
+}
 
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  if (profile?.role !== 'admin') return { error: 'Forbidden' }
+export async function publishProjectUpdate(
+  slug: string,
+  title: string,
+  body: string,
+  hours: number,
+  mediaArray: MediaInput[]
+) {
+  const auth = await requireAdmin()
+  if (auth.error) return { error: auth.error }
+  const { supabase } = auth
+
+  const cleanTitle = title.trim()
+  const cleanBody = body.trim()
+  if (!cleanTitle || !cleanBody) return { error: 'Title and details are required' }
+  const safeHours = Number.isFinite(hours) && hours >= 0 ? hours : 0
 
   const { data: project } = await supabase.from('projects').select('id, title, progress').eq('slug', slug).single()
   if (!project) return { error: 'Project not found' }
 
   const { error } = await supabase.rpc('publish_project_update', {
     p_project_id: project.id,
-    p_title: title,
-    p_body: body,
-    p_hours: hours,
+    p_title: cleanTitle,
+    p_body: cleanBody,
+    p_hours: safeHours,
     p_progress: project.progress,
     p_media: mediaArray
   })
 
   if (error) return { error: error.message }
-  
+
   try {
-    // Fetch members with every_update enabled
-    const { data: members } = await adminClient
-      .from('project_members')
-      .select(`
-        profile_id,
-        profiles!inner ( email_prefs )
-      `)
-      .eq('project_id', project.id)
+    const emails = await getSubscribedMemberEmails(project.id)
+    if (emails.length > 0) {
+      const updateLink = `${SITE_URL}/portal/${slug}/updates`
+      const firstImage = mediaArray.find(m => m.kind === 'image')
+      const thumbnailUrl = firstImage ? await signedMediaUrl(firstImage.path) : undefined
 
-    if (members && members.length > 0) {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-      const updateLink = `${baseUrl}/portal/${slug}`
-      const thumbnailUrl = mediaArray.length > 0 ? mediaArray[0].path : undefined
-      const resolvedThumbnailUrl = thumbnailUrl 
-        ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/project-media/${thumbnailUrl}`
-        : undefined
-
-      const emailPromises = members
-        .filter(m => {
-          const prefs = (m.profiles as any)?.email_prefs
-          return prefs && prefs.every_update === true
+      await Promise.allSettled(emails.map(email =>
+        sendEmail({
+          to: email,
+          subject: `New Update: ${cleanTitle} - ${project.title}`,
+          template: NewUpdateEmail({
+            projectName: project.title,
+            updateTitle: cleanTitle,
+            updateBody: cleanBody.substring(0, 150) + (cleanBody.length > 150 ? '...' : ''),
+            progressPercent: project.progress || 0,
+            thumbnailUrl,
+            updateLink
+          })
         })
-        .map(async (member) => {
-          // Resolve actual email from auth.users via adminClient
-          const { data: userData } = await adminClient.auth.admin.getUserById(member.profile_id)
-          const email = userData?.user?.email
-          
-          if (email) {
-            return sendEmail({
-              to: email,
-              subject: `New Update: ${title} - ${project.title}`,
-              template: NewUpdateEmail({
-                projectName: project.title,
-                updateTitle: title,
-                updateBody: body.substring(0, 150) + (body.length > 150 ? '...' : ''),
-                progressPercent: project.progress || 0,
-                thumbnailUrl: resolvedThumbnailUrl,
-                updateLink
-              })
-            })
-          }
-        })
-        
-      await Promise.allSettled(emailPromises)
+      ))
     }
   } catch (emailError) {
     console.error('Failed to send update emails:', emailError)
   }
 
-  revalidatePath(`/admin/${slug}`)
+  revalidatePath(`/admin/${slug}`, 'layout')
+  revalidatePath(`/portal/${slug}`, 'layout')
   return { success: true }
 }
 
 export async function deleteProject(projectId: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) return { error: 'Unauthorized' }
-
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  if (profile?.role !== 'admin') return { error: 'Forbidden' }
+  const auth = await requireAdmin()
+  if (auth.error) return { error: auth.error }
 
   const { error } = await adminClient
     .from('projects')
@@ -474,7 +527,7 @@ export async function deleteProject(projectId: string) {
     .eq('id', projectId)
 
   if (error) return { error: error.message }
-  
+
   revalidatePath('/admin')
   return { success: true }
 }

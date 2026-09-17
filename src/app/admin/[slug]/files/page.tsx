@@ -27,7 +27,7 @@ export default async function AdminFilesPage(
     supabase.from('media').select('*, comments!inner(project_id)').eq('comments.project_id', project.id)
   ])
 
-  let allMedia = [
+  const allMedia = [
     ...(directMedia || []),
     ...(updateMedia || []),
     ...(commentMedia || [])
@@ -47,7 +47,7 @@ export default async function AdminFilesPage(
       const { data: signedUrls } = await supabase
         .storage
         .from('project-media')
-        .createSignedUrls(internalPaths, 60)
+        .createSignedUrls(internalPaths, 60 * 60)
       
       if (signedUrls) {
         galleryMedia = galleryMedia.map(m => {
