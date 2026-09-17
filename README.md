@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HexaLogic Tech Solutions
 
-## Getting Started
+Company website and client portal for HexaLogic, built with Next.js 16, Tailwind CSS and Supabase.
 
-First, run the development server:
+Live site: https://www.hexalogictechandsolutions.com
+
+## What is in this repo
+
+- `src/app/(marketing)` – public website (home, services, case studies, about, contact, legal pages)
+- `src/app/admin` – admin console for managing clients, projects, milestones and updates
+- `src/app/portal` – client portal where clients follow progress, message the team and share files
+- `src/lib` – shared config (`site.ts` holds the domain and contact details), services data, helpers
+- `supabase/migrations` – database schema and row-level security policies
+
+## Running locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create a `.env.local` with:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_SITE_URL=https://www.hexalogictechandsolutions.com
+RESEND_API_KEY=
+EMAIL_FROM=
+GMAIL_USER=
+GMAIL_APP_PASSWORD=
+CRON_SECRET=
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`npm run lint` and `npm run build` must both pass; CI runs them on every push.
 
-## Learn More
+## Changes made in September 2026
 
-To learn more about Next.js, take a look at the following resources:
+A full audit of the site, admin and portal, followed by fixes:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Security**
+- Removed passwords and debug files that had been committed to the repo
+- Fixed the password reset flow (reset links now sign the user in)
+- Saving milestones no longer deletes their comments
+- Contact form protected against spam and unsafe input
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Public website**
+- Services pages created and linked from the menu and footer (links used to go nowhere)
+- New domain set up for SEO: sitemap, robots, page titles, social previews
+- Custom 404 page, fixed footer links, real content instead of placeholders
+- Faster hero video with MP4 fallback, cleaner animations on mobile
 
-## Deploy on Vercel
+**Admin and client portal**
+- Client project pages now have the sidebar, header and mobile navigation
+- Everything uses one light theme (some pages were dark on light)
+- Dashboard shows real activity instead of dummy data
+- Milestones support "in progress" and due dates; timeline shows real data
+- Chat, files, credentials, bugs and settings pages cleaned up and made usable on phones
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Layout**
+- Spacing, text sizes and image ratios tuned for both phone and desktop
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Code quality**
+- Old template files and unused code removed
+- ESLint errors reduced from 91 to 0
