@@ -57,6 +57,19 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  /* Momentum scrolling for iOS */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─── Mobile Accessibility & Fixes ─── */
+/* Fix iOS Safari Auto-Zoom on form inputs */
+input, textarea, select {
+  font-size: 16px !important;
+}
+
+/* Optimize touch interactions */
+button, a, input, select, textarea {
+  touch-action: manipulation;
 }
 
 /* ─── Glow Utilities ─── */

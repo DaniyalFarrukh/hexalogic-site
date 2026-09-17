@@ -125,12 +125,12 @@ export default function Footer() {
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse"></span>
                 {category}
               </h3>
-              <ul className="space-y-3.5">
+              <ul className="space-y-1">
                 {links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm font-medium text-gray-400 hover:text-brand-primary hover:translate-x-1 inline-block transition-all duration-200"
+                      className="text-sm font-medium text-gray-400 hover:text-brand-primary hover:translate-x-1 inline-flex items-center min-h-[44px] transition-all duration-200"
                     >
                       {link.label}
                     </Link>
@@ -143,17 +143,17 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-20 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <p className="text-sm text-gray-500 font-medium">
+          <p className="text-sm text-gray-500 font-medium text-center sm:text-left">
             © {new Date().getFullYear()} HexaLogic Tech Solutions. All rights reserved.
           </p>
-          <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-            <Link href="/privacy" className="text-sm font-medium text-gray-500 hover:text-white transition-colors duration-200">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+            <Link href="/privacy" className="text-sm font-medium text-gray-500 hover:text-white transition-colors duration-200 flex items-center min-h-[44px]">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="text-sm font-medium text-gray-500 hover:text-white transition-colors duration-200">
+            <Link href="/terms" className="text-sm font-medium text-gray-500 hover:text-white transition-colors duration-200 flex items-center min-h-[44px]">
               Terms of Service
             </Link>
-            <Link href="/privacy" className="text-sm font-medium text-gray-500 hover:text-white transition-colors duration-200">
+            <Link href="/privacy" className="text-sm font-medium text-gray-500 hover:text-white transition-colors duration-200 flex items-center min-h-[44px]">
               Cookie Settings
             </Link>
           </div>

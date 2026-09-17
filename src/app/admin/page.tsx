@@ -81,7 +81,7 @@ export default async function AdminDashboardPage() {
           </span>
           <Link 
             href="/admin/new"
-            className="bg-brand-secondary hover:bg-[#ff8947] text-white px-5 py-2.5 text-sm font-semibold rounded-lg transition-colors shadow-[0_0_15px_rgba(255,115,36,0.2)]"
+            className="bg-brand-secondary hover:bg-[#ff8947] text-white px-5 py-2.5 min-h-[44px] flex items-center justify-center text-sm font-semibold rounded-lg transition-colors shadow-[0_0_15px_rgba(255,115,36,0.2)]"
           >
             + New Project
           </Link>
@@ -143,8 +143,8 @@ export default async function AdminDashboardPage() {
             <h2 className="text-lg font-bold text-gray-900">Projects Overview</h2>
             <Link href="/admin" className="text-sm text-brand-secondary hover:text-[#ff8947] font-medium">View All &rarr;</Link>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-700">
+          <div className="overflow-x-auto hide-scrollbar">
+            <table className="w-full min-w-[800px] text-left text-sm text-gray-700">
               <thead className="bg-gray-50 border-b border-gray-100 text-gray-500 text-xs uppercase tracking-wider font-semibold">
                 <tr>
                   <th className="px-6 py-4 font-semibold">Project</th>

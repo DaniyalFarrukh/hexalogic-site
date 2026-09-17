@@ -158,7 +158,7 @@ export default function RedSunFeatures() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_80%,transparent_100%)] pointer-events-none" />
         
         <div className="container mx-auto px-6 max-w-7xl text-center mb-16 relative z-10">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight text-white drop-shadow-md">
+          <h2 className="text-[clamp(2rem,4vw+1rem,3rem)] font-bold tracking-tight mb-4 leading-tight text-white drop-shadow-md">
             The Right Tech For Every Challenge
           </h2>
           <p className="text-blue-100/90 text-base md:text-lg max-w-2xl mx-auto drop-shadow-sm font-medium">
@@ -268,14 +268,14 @@ export default function RedSunFeatures() {
         {/* Carousel Header & Controls */}
         <div className="flex items-end justify-between mb-8 relative z-10">
           <div>
-            <h3 className="text-3xl font-black text-white tracking-tight">Core Capabilities</h3>
+            <h3 className="text-[clamp(1.875rem,3vw+1rem,2.25rem)] font-black text-white tracking-tight">Core Capabilities</h3>
             <p className="text-gray-400 mt-2">Swipe or scroll to explore our specialized tech foundations.</p>
           </div>
           <div className="hidden md:flex items-center gap-3">
-            <button onClick={scrollLeft} className="w-10 h-10 rounded-full border border-white/10 bg-surface-darkest flex items-center justify-center text-white hover:bg-white/10 hover:border-white/20 transition-all">
+            <button onClick={scrollLeft} className="w-11 h-11 rounded-full border border-white/10 bg-surface-darkest flex items-center justify-center text-white hover:bg-white/10 hover:border-white/20 transition-all">
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <button onClick={scrollRight} className="w-10 h-10 rounded-full border border-white/10 bg-surface-darkest flex items-center justify-center text-white hover:bg-white/10 hover:border-white/20 transition-all">
+            <button onClick={scrollRight} className="w-11 h-11 rounded-full border border-white/10 bg-surface-darkest flex items-center justify-center text-white hover:bg-white/10 hover:border-white/20 transition-all">
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
@@ -365,7 +365,7 @@ export default function RedSunFeatures() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="max-w-2xl slide-up">
-            <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-6 tracking-tight">
+            <h2 className="text-[clamp(2.5rem,5vw,3rem)] font-extrabold text-white mb-6 tracking-tight">
               Successful Projects
             </h2>
             <p className="text-gray-400 text-lg leading-relaxed">
@@ -377,7 +377,7 @@ export default function RedSunFeatures() {
           <div className="flex bg-[#121214] border border-white/5 p-1.5 rounded-xl shrink-0 overflow-x-auto">
             <button
               onClick={() => setActiveMainTab("web")}
-              className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 whitespace-nowrap ${
+              className={`px-6 py-2.5 min-h-[44px] rounded-lg text-sm font-bold transition-all duration-200 whitespace-nowrap flex items-center justify-center ${
                 activeMainTab === "web"
                   ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20"
                   : "text-gray-400 hover:text-white"
@@ -387,7 +387,7 @@ export default function RedSunFeatures() {
             </button>
             <button
               onClick={() => setActiveMainTab("mobile")}
-              className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 whitespace-nowrap ${
+              className={`px-6 py-2.5 min-h-[44px] rounded-lg text-sm font-bold transition-all duration-200 whitespace-nowrap flex items-center justify-center ${
                 activeMainTab === "mobile"
                   ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20"
                   : "text-gray-400 hover:text-white"
@@ -397,7 +397,7 @@ export default function RedSunFeatures() {
             </button>
             <button
               onClick={() => setActiveMainTab("ai")}
-              className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 whitespace-nowrap ${
+              className={`px-6 py-2.5 min-h-[44px] rounded-lg text-sm font-bold transition-all duration-200 whitespace-nowrap flex items-center justify-center ${
                 activeMainTab === "ai"
                   ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20"
                   : "text-gray-400 hover:text-white"

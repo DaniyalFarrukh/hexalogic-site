@@ -105,7 +105,7 @@ export default function AboutSection() {
           >
             {/* Header Text */}
             <div>
-              <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black text-white mb-8 tracking-tighter leading-[1.1]">
+              <h2 className="text-[clamp(3rem,6vw+1rem,4.5rem)] font-black text-white mb-8 tracking-tighter leading-[1.1]">
                 We Are <br className="hidden lg:block" /><span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7324] via-[#ff9b66] to-[#FF7324] bg-[length:200%_auto] animate-gradient">HexaLogic</span>
               </h2>
               <div className="space-y-6 text-gray-400 leading-relaxed text-lg font-medium max-w-3xl">
@@ -157,7 +157,7 @@ export default function AboutSection() {
             <div className="pt-6">
               <Link 
                 href="/contact" 
-                className="inline-flex items-center gap-2 px-8 py-4 bg-brand-primary hover:bg-[#ff8947] text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(255,115,36,0.25)] hover:shadow-[0_0_30px_rgba(255,115,36,0.4)] hover:-translate-y-1"
+                className="inline-flex items-center justify-center gap-2 px-8 min-h-[44px] bg-brand-primary hover:bg-[#ff8947] text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(255,115,36,0.25)] hover:shadow-[0_0_30px_rgba(255,115,36,0.4)] hover:-translate-y-1"
               >
                 Learn More About Us
               </Link>

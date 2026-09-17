@@ -39,19 +39,19 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-darkest flex items-center justify-center p-6">
-      <div className="w-full max-w-md bg-surface-dark border border-white/5 rounded-2xl p-8 shadow-[0_20px_60px_rgba(15,44,76,0.08)]">
+    <div className="min-h-screen bg-surface-light flex items-center justify-center p-6">
+      <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
         
         <div className="flex flex-col items-center mb-8">
           <div className="flex items-center gap-1 mb-2">
-            <span className="text-white font-bold text-xl tracking-wider">HEXALOGIC</span>
+            <span className="text-gray-900 font-bold text-xl tracking-wider">HEXALOGIC</span>
             <div className="w-2 h-2 rounded-full bg-brand-primary" />
           </div>
-          <p className="text-gray-400 text-sm">Create New Password</p>
+          <p className="text-gray-500 text-sm">Create New Password</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-medium text-center">
+          <div className="mb-6 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-xs font-medium text-center">
             {error}
           </div>
         )}
@@ -64,7 +64,7 @@ export default function ResetPasswordPage() {
               name="password"
               required
               minLength={6}
-              className="w-full bg-surface-darkest border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 transition-colors"
+              className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 transition-colors placeholder:text-gray-400"
               placeholder="••••••••"
             />
           </div>
@@ -76,7 +76,7 @@ export default function ResetPasswordPage() {
               name="confirm_password"
               required
               minLength={6}
-              className="w-full bg-surface-darkest border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 transition-colors"
+              className="w-full bg-white border border-gray-200 rounded-lg px-4 py-2.5 text-gray-900 text-sm focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/50 transition-colors placeholder:text-gray-400"
               placeholder="••••••••"
             />
           </div>
@@ -84,7 +84,7 @@ export default function ResetPasswordPage() {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-brand-primary text-white text-sm font-bold hover:bg-[#ff8947] rounded-lg px-4 py-3 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+            className="w-full bg-brand-primary text-white text-sm font-bold hover:bg-[#ff8947] rounded-lg px-4 py-3 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed mt-2"
           >
             {loading ? 'Saving...' : 'Update Password'}
           </button>

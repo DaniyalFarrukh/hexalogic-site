@@ -121,7 +121,7 @@ export default function ChatInterface({
   }
 
   return (
-    <div className="flex flex-col h-[600px] bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+    <div className="flex flex-col h-[calc(100vh-16rem)] min-h-[400px] md:h-[600px] bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
       {/* Chat Messages Area */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {messages.length === 0 ? (
@@ -187,7 +187,7 @@ export default function ChatInterface({
           <button
             type="submit"
             disabled={isSubmitting || !body.trim()}
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center hover:bg-[#ff8947] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-brand-primary text-white flex items-center justify-center hover:bg-[#ff8947] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <Send className="w-4 h-4 ml-0.5" />
           </button>

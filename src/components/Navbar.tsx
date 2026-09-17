@@ -173,10 +173,10 @@ export default function Navbar() {
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: 10, scale: 0.98 }}
                           transition={{ duration: 0.2, ease: "easeOut" }}
-                          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[850px] bg-[#0c0c0e] rounded-2xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden"
+                          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[calc(100vw-2rem)] max-w-[850px] bg-[#0c0c0e] rounded-2xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden"
                         >
-                          <div className="p-8">
-                            <div className="grid grid-cols-3 gap-6">
+                          <div className="p-4 md:p-8">
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                               {link.items?.map((item) => (
                                 <Link
                                   key={item.title}
@@ -184,24 +184,24 @@ export default function Navbar() {
                                   onClick={(e) => handleNavClick(e, "/#services")}
                                   className="group block relative rounded-xl overflow-hidden bg-[#16161a] border border-white/5 hover:border-brand-primary/40 hover:bg-[#1c1c22] hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                                 >
-                                  <div className="relative w-full h-32 overflow-hidden bg-surface-darkest">
+                                  <div className="relative w-full h-24 md:h-32 overflow-hidden bg-surface-darkest">
                                     <Image
                                       src={item.image}
                                       alt={item.title}
                                       fill
                                       className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                      sizes="300px"
+                                      sizes="(max-width: 768px) 150px, 300px"
                                       priority
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                   </div>
-                                  <div className="p-4 relative">
+                                  <div className="p-3 md:p-4 relative">
                                     <div className="mb-1.5">
                                       <h3 className="text-sm font-bold text-white group-hover:text-brand-primary transition-colors duration-200">
                                         {item.title}
                                       </h3>
                                     </div>
-                                    <p className="text-xs text-gray-300 group-hover:text-white leading-relaxed transition-colors duration-200">
+                                    <p className="text-xs text-gray-300 group-hover:text-white leading-relaxed transition-colors duration-200 hidden md:block">
                                       {item.desc}
                                     </p>
                                   </div>
@@ -209,12 +209,12 @@ export default function Navbar() {
                               ))}
                             </div>
                           </div>
-                          <div className="bg-[#111114] px-8 py-4 border-t border-white/5 flex justify-between items-center">
-                            <p className="text-xs text-gray-300">Looking for something else? We build custom solutions.</p>
+                          <div className="bg-[#111114] px-4 md:px-8 py-4 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-2">
+                            <p className="text-xs text-gray-300 text-center md:text-left">Looking for something else? We build custom solutions.</p>
                             <Link
                               href="/contact"
                               onClick={(e) => handleNavClick(e, "/contact")}
-                              className="text-sm font-semibold text-brand-primary hover:text-white transition-colors duration-200 flex items-center gap-1"
+                              className="text-sm font-semibold text-brand-primary hover:text-white transition-colors duration-200 flex items-center gap-1 min-h-[44px] min-w-[44px] justify-center"
                             >
                               Get in touch <span aria-hidden="true">&rarr;</span>
                             </Link>
@@ -228,7 +228,7 @@ export default function Navbar() {
                     key={link.label}
                     href={link.href}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    className="px-4 py-2.5 text-sm font-medium transition-colors duration-200 rounded-lg text-white hover:text-brand-primary hover:bg-white/5"
+                    className="px-4 py-2.5 text-sm font-medium transition-colors duration-200 rounded-lg text-white hover:text-brand-primary hover:bg-white/5 min-h-[44px] flex items-center"
                   >
                     {link.label}
                   </Link>
@@ -237,7 +237,7 @@ export default function Navbar() {
               <Link
                 href="/contact"
                 onClick={(e) => handleNavClick(e, "/contact")}
-                className="ml-4 px-6 py-3 bg-brand-primary text-white text-sm font-bold rounded-xl hover:bg-[#ff8947] transition-all duration-200 hover:shadow-lg hover:shadow-brand-primary/25 hover:-translate-y-0.5"
+                className="ml-4 px-6 py-3 bg-brand-primary text-white text-sm font-bold rounded-xl hover:bg-[#ff8947] transition-all duration-200 hover:shadow-lg hover:shadow-brand-primary/25 hover:-translate-y-0.5 min-h-[44px] flex items-center justify-center"
               >
                 Get Started
               </Link>
@@ -246,7 +246,7 @@ export default function Navbar() {
             {/* Mobile Burger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2.5 rounded-lg hover:bg-white/10 transition-colors duration-200"
+              className="lg:hidden p-2.5 rounded-lg hover:bg-white/10 transition-colors duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center"
               aria-label="Toggle menu"
             >
               <div className="w-6 h-5 flex flex-col justify-between">

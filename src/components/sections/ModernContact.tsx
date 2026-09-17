@@ -123,7 +123,7 @@ ${form.message}
               <span className="text-xs font-medium text-gray-300 uppercase tracking-wider">Contact Us</span>
             </div>
             
-            <h1 className="text-5xl sm:text-6xl font-bold text-white mb-6 tracking-tight leading-tight">
+            <h1 className="text-[clamp(2.5rem,5vw,3.75rem)] font-bold text-white mb-6 tracking-tight leading-tight">
               Let&apos;s build something <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7324] to-[#ff9b66]">amazing</span> together.
             </h1>
             
@@ -256,7 +256,7 @@ ${form.message}
                               setIsCountryOpen(false);
                               setCountrySearch("");
                             }}
-                            className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 text-sm text-left transition-colors"
+                            className="w-full flex items-center justify-between px-4 py-3 min-h-[44px] hover:bg-white/5 text-sm text-left transition-colors"
                           >
                             <span className="flex items-center gap-3 text-gray-300 truncate pr-2">
                               <img src={`https://flagcdn.com/w20/${c.code}.png`} alt={c.code} className="w-5 h-auto object-contain rounded-[2px]" />
@@ -307,7 +307,7 @@ ${form.message}
                 <button
                   type="button"
                   onClick={() => setShowProjectDetails(!showProjectDetails)}
-                  className="flex items-center gap-2 text-sm font-medium text-gray-400 hover:text-brand-primary transition-colors group"
+                  className="flex items-center gap-2 text-sm font-medium text-gray-400 hover:text-brand-primary transition-colors group min-h-[44px]"
                 >
                   <div className={`w-5 h-5 rounded-md border border-gray-600 flex items-center justify-center transition-colors group-hover:border-brand-primary ${showProjectDetails ? 'bg-brand-primary border-brand-primary text-white' : ''}`}>
                     <Plus className={`w-3.5 h-3.5 transition-transform duration-300 ${showProjectDetails ? 'rotate-45' : ''}`} />
@@ -349,7 +349,7 @@ ${form.message}
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="w-full py-4 bg-brand-primary text-white font-bold rounded-xl text-sm shadow-[0_0_20px_rgba(255,115,36,0.3)] hover:bg-[#ff8947] transition-all duration-300 disabled:opacity-70 flex items-center justify-center gap-2 group/btn hover:-translate-y-0.5"
+                  className="w-full py-4 min-h-[44px] bg-brand-primary text-white font-bold rounded-xl text-sm shadow-[0_0_20px_rgba(255,115,36,0.3)] hover:bg-[#ff8947] transition-all duration-300 disabled:opacity-70 flex items-center justify-center gap-2 group/btn hover:-translate-y-0.5"
                 >
                   {status === "loading" ? (
                     "Sending..."

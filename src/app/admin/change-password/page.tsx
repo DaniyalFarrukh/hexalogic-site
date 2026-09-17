@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { resetPassword } from '@/app/portal/reset-password/actions'
+import { resetPassword } from '@/app/portal/(auth)/reset-password/actions'
 
 export default function ChangePasswordPage() {
   const [error, setError] = useState<string | null>(null)

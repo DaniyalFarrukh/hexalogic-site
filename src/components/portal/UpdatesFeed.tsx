@@ -68,7 +68,7 @@ export default function UpdatesFeed({
             {isAdmin && (
               <button 
                 onClick={() => handleDelete(u.id)}
-                className="absolute top-6 right-6 text-gray-500 hover:text-red-500 transition-colors"
+                className="absolute top-6 right-6 text-gray-500 hover:text-red-500 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center -mt-2 -mr-2"
                 title="Delete Update"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -233,7 +233,7 @@ export function CommentSection({
               <div className="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-md px-3 py-1.5 pr-2">
                 <ImageIcon className="w-4 h-4 text-brand-primary" />
                 <span className="text-sm text-gray-700 truncate max-w-[200px]">{file.name}</span>
-                <button type="button" onClick={() => setFile(null)} className="p-1 hover:bg-gray-200 rounded-md transition-colors text-gray-400 hover:text-gray-600">
+                <button type="button" onClick={() => setFile(null)} className="p-1 hover:bg-gray-200 rounded-md transition-colors text-gray-400 hover:text-gray-600 min-w-[44px] min-h-[44px] flex items-center justify-center">
                   <X className="w-4 h-4" />
                 </button>
               </div>
@@ -252,7 +252,7 @@ export function CommentSection({
             <button 
               type="button" 
               onClick={() => fileInputRef.current?.click()}
-              className="text-gray-400 hover:text-brand-primary transition-colors flex items-center gap-2 text-sm font-medium"
+              className="text-gray-400 hover:text-brand-primary transition-colors flex items-center gap-2 text-sm font-medium min-h-[44px]"
               disabled={isSubmitting}
             >
               <ImageIcon className="w-4 h-4" />
@@ -261,7 +261,7 @@ export function CommentSection({
             <button 
               type="submit" 
               disabled={isSubmitting || (!body.trim() && !file)}
-              className="bg-brand-primary hover:bg-brand-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-1.5 px-4 rounded-lg transition-colors flex items-center gap-2 text-sm"
+              className="bg-brand-primary hover:bg-brand-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium py-1.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm min-h-[44px]"
             >
               {isSubmitting ? 'Posting...' : 'Post Comment'}
               <Send className="w-4 h-4" />

@@ -13,7 +13,7 @@ export default function AdminProjectTabs({
   const pathname = usePathname()
 
   return (
-    <div className="flex items-center gap-8 border-b border-gray-200 px-8">
+    <div className="flex items-center gap-6 md:gap-8 border-b border-gray-200 px-4 md:px-8 overflow-x-auto whitespace-nowrap scrollbar-hide">
       {tabs.map(t => {
         const href = `/admin/${projectSlug}/${t}`
         const isActive = pathname === href || pathname?.startsWith(href + '/')

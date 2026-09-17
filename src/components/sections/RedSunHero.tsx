@@ -210,7 +210,7 @@ export default function RedSunHero({}: Record<string, never>) {
       {/* RedSun Hero Content */}
       <div ref={textSectionRef} className="container mx-auto px-6 max-w-7xl relative z-20 flex flex-col items-start pt-24 md:pt-40 shrink-0">
         {/* Title */}
-        <h1 className="text-4xl sm:text-5xl md:text-[72px] font-bold tracking-tight mb-6 leading-[1.1] max-w-4xl text-white min-h-[180px] sm:min-h-[150px] md:min-h-[180px]">
+        <h1 className="text-[clamp(2.5rem,5vw+1rem,4.5rem)] font-bold tracking-tight mb-6 leading-[1.1] max-w-4xl text-white min-h-[180px] sm:min-h-[150px] md:min-h-[180px]">
           {(() => {
             return HERO_PHRASES[phraseIndex].split(" ").map((word, i, arr) => {
               const isHighlight = i === arr.length - 1 || word === "AI";
@@ -268,25 +268,25 @@ export default function RedSunHero({}: Record<string, never>) {
               <div className="hidden lg:flex items-center gap-8 text-xs font-medium text-gray-400">
                 <button 
                   onClick={() => { setActiveTab("analytics"); setActiveCaseStudy(null); }}
-                  className={`flex items-center gap-2 transition-colors group ${activeTab === "analytics" ? "text-white font-semibold" : "hover:text-white"}`}
+                  className={`flex items-center gap-2 transition-colors group min-h-[44px] ${activeTab === "analytics" ? "text-white font-semibold" : "hover:text-white"}`}
                 >
                   <BarChart3 className={`w-4 h-4 transition-transform duration-200 group-hover:scale-110 ${activeTab === "analytics" ? "text-brand-primary" : "text-gray-500"}`} /> Analytics
                 </button>
                 <button 
                   onClick={() => { setActiveTab("solutions"); setActiveCaseStudy(null); }}
-                  className={`flex items-center gap-2 transition-colors group ${activeTab === "solutions" ? "text-white font-semibold" : "hover:text-white"}`}
+                  className={`flex items-center gap-2 transition-colors group min-h-[44px] ${activeTab === "solutions" ? "text-white font-semibold" : "hover:text-white"}`}
                 >
                   <ShoppingBag className={`w-4 h-4 transition-transform duration-200 group-hover:scale-110 ${activeTab === "solutions" ? "text-brand-primary" : "text-gray-500"}`} /> Solutions
                 </button>
                 <button 
                   onClick={() => { setActiveTab("partners"); setActiveCaseStudy(null); }}
-                  className={`flex items-center gap-2 transition-colors group ${activeTab === "partners" ? "text-white font-semibold" : "hover:text-white"}`}
+                  className={`flex items-center gap-2 transition-colors group min-h-[44px] ${activeTab === "partners" ? "text-white font-semibold" : "hover:text-white"}`}
                 >
                   <Users className={`w-4 h-4 transition-transform duration-200 group-hover:scale-110 ${activeTab === "partners" ? "text-brand-primary" : "text-gray-500"}`} /> Partners
                 </button>
                 <button 
                   onClick={() => setActiveTab("settings")}
-                  className={`flex items-center gap-2 transition-colors group ${activeTab === "settings" ? "text-white font-semibold" : "hover:text-white"}`}
+                  className={`flex items-center gap-2 transition-colors group min-h-[44px] ${activeTab === "settings" ? "text-white font-semibold" : "hover:text-white"}`}
                 >
                   <Settings className={`w-4 h-4 transition-transform duration-200 group-hover:scale-110 ${activeTab === "settings" ? "text-brand-primary" : "text-gray-500"}`} /> Settings
                 </button>
@@ -312,7 +312,7 @@ export default function RedSunHero({}: Record<string, never>) {
                       <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white">Impact Analytics</h2>
                       <p className="text-[10px] sm:text-xs text-gray-500 mt-1">Real-time performance measurements of our client ecosystems.</p>
                     </div>
-                    <button className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-brand-primary text-white text-xs font-bold hover:bg-[#ff8947] transition-all shadow-[0_0_15px_rgba(255,115,36,0.2)]">
+                    <button className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-brand-primary text-white text-xs font-bold hover:bg-[#ff8947] transition-all shadow-[0_0_15px_rgba(255,115,36,0.2)] min-h-[44px]">
                       <Plus className="w-3.5 h-3.5" /> Connect Platform
                     </button>
                   </div>

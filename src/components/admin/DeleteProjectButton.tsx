@@ -30,7 +30,7 @@ export default function DeleteProjectButton({ projectId, projectTitle }: { proje
     <>
       <button 
         onClick={() => setIsOpen(true)}
-        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+        className="min-w-[44px] min-h-[44px] flex items-center justify-center p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
         title="Delete Project"
       >
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -62,7 +62,7 @@ export default function DeleteProjectButton({ projectId, projectTitle }: { proje
                   setIsOpen(false)
                   setConfirmText('')
                 }}
-                className="px-4 py-2 text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors"
+                className="px-4 py-2 text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors min-h-[44px] flex items-center"
                 disabled={isDeleting}
               >
                 Cancel
@@ -70,7 +70,7 @@ export default function DeleteProjectButton({ projectId, projectTitle }: { proje
               <button 
                 onClick={handleDelete}
                 disabled={confirmText !== `"${projectTitle}"` || isDeleting}
-                className="px-6 py-2 bg-red-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-red-700 disabled:opacity-50 transition-colors"
+                className="px-6 py-2 bg-red-600 text-white rounded-lg text-sm font-bold shadow-sm hover:bg-red-700 disabled:opacity-50 transition-colors min-h-[44px] flex items-center"
               >
                 {isDeleting ? 'Deleting...' : 'Delete Project'}
               </button>
