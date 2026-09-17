@@ -458,3 +458,23 @@ export async function publishProjectUpdate(
   revalidatePath(`/admin/${slug}`)
   return { success: true }
 }
+
+export async function deleteProject(projectId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: 'Unauthorized' }
+
+  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+  if (profile?.role !== 'admin') return { error: 'Forbidden' }
+
+  const { error } = await adminClient
+    .from('projects')
+    .delete()
+    .eq('id', projectId)
+
+  if (error) return { error: error.message }
+  
+  revalidatePath('/admin')
+  return { success: true }
+}

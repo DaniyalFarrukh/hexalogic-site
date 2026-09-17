@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import LocalTime from '@/components/portal/LocalTime'
+import DeleteProjectButton from '@/components/admin/DeleteProjectButton'
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient()
@@ -150,6 +151,7 @@ export default async function AdminDashboardPage() {
                   <th className="px-6 py-4 font-semibold">Progress</th>
                   <th className="px-6 py-4 font-semibold text-center">Status</th>
                   <th className="px-6 py-4 font-semibold">Due Date</th>
+                  <th className="px-6 py-4 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -191,11 +193,14 @@ export default async function AdminDashboardPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-400 font-medium">
                       {project.due_date ? <LocalTime utcString={project.due_date} /> : 'TBD'}
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <DeleteProjectButton projectId={project.id} projectTitle={project.title} />
+                    </td>
                   </tr>
                 ))}
                 {(!enhancedProjects || enhancedProjects.length === 0) && (
                   <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
+                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                       No active projects found.
                     </td>
                   </tr>
