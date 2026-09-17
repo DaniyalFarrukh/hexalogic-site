@@ -59,5 +59,5 @@ export default async function AdminFilesPage(
     }
   }
 
-  return <MediaGallery media={galleryMedia} projectId={project.id} />
+  return <MediaGallery media={galleryMedia} projectId={project.id} isAdmin={true} />
 }

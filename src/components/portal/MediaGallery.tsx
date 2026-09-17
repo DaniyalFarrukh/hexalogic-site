@@ -3,12 +3,14 @@
 import { useState, useRef } from 'react'
 import LocalTime from './LocalTime'
 import Image from 'next/image'
-import { getFileUploadUrl, saveFileRecord } from '@/app/portal/[slug]/files/actions'
+import { getFileUploadUrl, saveFileRecord, deleteMediaRecord } from '@/app/portal/[slug]/files/actions'
 import { useRouter } from 'next/navigation'
 
-export default function MediaGallery({ media, projectId }: { media: any[], projectId?: string }) {
+export default function MediaGallery({ media, projectId, isAdmin }: { media: any[], projectId?: string, isAdmin?: boolean }) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [isDeletingId, setIsDeletingId] = useState<string | null>(null)
+  const [isDeleteMode, setIsDeleteMode] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
 
@@ -70,14 +72,54 @@ export default function MediaGallery({ media, projectId }: { media: any[], proje
     }
   }
 
+  const handleDelete = async (mediaId: string) => {
+    if (!confirm('Are you sure you want to delete this file? This action cannot be undone.')) return
+    
+    setIsDeletingId(mediaId)
+    try {
+      const { success, error } = await deleteMediaRecord(mediaId)
+      if (!success) throw new Error(error || 'Failed to delete media')
+      
+      if (lightboxIndex !== null && media[lightboxIndex]?.id === mediaId) {
+        setLightboxIndex(null)
+      }
+      
+      router.refresh()
+    } catch (err) {
+      console.error('Delete failed:', err)
+      alert('Delete failed. Please try again.')
+    } finally {
+      setIsDeletingId(null)
+    }
+  }
+
   const activeMedia = lightboxIndex !== null ? media[lightboxIndex] : null
 
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-bold text-gray-900">Project Files & Media</h2>
-        {projectId && (
-          <div>
+        {projectId && isAdmin && (
+          <div className="flex items-center gap-3">
+            {media && media.length > 0 && (
+              <button
+                onClick={() => setIsDeleteMode(!isDeleteMode)}
+                className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors shadow-sm border flex items-center gap-2 ${
+                  isDeleteMode 
+                    ? 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100' 
+                    : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                {isDeleteMode ? 'Done' : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Delete Files
+                  </>
+                )}
+              </button>
+            )}
             <input 
               type="file" 
               ref={fileInputRef} 
@@ -124,12 +166,51 @@ export default function MediaGallery({ media, projectId }: { media: any[], proje
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {media.map((item, index) => (
-            <button
+            <div
               key={item.id}
-              onClick={() => setLightboxIndex(index)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  setLightboxIndex(index)
+                }
+              }}
+              onClick={(e) => {
+                if (isDeleteMode) return // Prevent lightbox in delete mode
+                setLightboxIndex(index)
+              }}
               aria-label={`View ${item.caption || item.kind}`}
-              className="aspect-square relative rounded-xl overflow-hidden border border-gray-200 hover:border-brand-secondary/50 focus:outline-none focus:ring-2 focus:ring-brand-secondary transition-all group bg-gray-50 shadow-sm hover:shadow-md hover:-translate-y-1"
+              className={`aspect-square relative rounded-xl overflow-hidden border transition-all group bg-gray-50 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-secondary ${
+                isDeleteMode ? 'border-red-300 ring-2 ring-red-500/20' : 'border-gray-200 hover:border-brand-secondary/50 hover:shadow-md hover:-translate-y-1 cursor-pointer'
+              }`}
             >
+              {isAdmin && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleDelete(item.id)
+                  }}
+                  disabled={isDeletingId === item.id}
+                  className={`absolute top-2 right-2 z-10 p-2 rounded-lg transition-all focus:opacity-100 ${
+                    isDeleteMode 
+                      ? 'opacity-100 bg-red-500 text-white shadow-lg hover:bg-red-600' 
+                      : 'opacity-0 group-hover:opacity-100 bg-black/50 hover:bg-red-500 text-white'
+                  }`}
+                  aria-label="Delete file"
+                >
+                  {isDeletingId === item.id ? (
+                    <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <circle cx="12" cy="12" r="10" strokeWidth="4" className="opacity-25" />
+                      <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" className="opacity-75" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  )}
+                </button>
+              )}
               {item.kind === 'image' ? (
                 <Image 
                   src={item.signedUrl || `/api/media/${item.id}`} 
@@ -156,7 +237,7 @@ export default function MediaGallery({ media, projectId }: { media: any[], proje
                   <span className="text-[9px] uppercase tracking-wider text-gray-500 mt-1">{item.mime_type?.split('/')[1] || 'FILE'}</span>
                 </div>
               )}
-            </button>
+            </div>
           ))}
         </div>
       )}
@@ -181,6 +262,25 @@ export default function MediaGallery({ media, projectId }: { media: any[], proje
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
             </a>
+            {isAdmin && (
+              <button
+                onClick={() => handleDelete(activeMedia.id)}
+                disabled={isDeletingId === activeMedia.id}
+                className="text-gray-400 hover:text-red-500 transition-colors p-2 hover:bg-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                aria-label="Delete media"
+              >
+                {isDeletingId === activeMedia.id ? (
+                  <svg className="animate-spin w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10" strokeWidth="4" className="opacity-25" />
+                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" className="opacity-75" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                )}
+              </button>
+            )}
             <button 
               onClick={() => setLightboxIndex(null)}
               className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-secondary"

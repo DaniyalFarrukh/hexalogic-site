@@ -104,7 +104,7 @@ export default async function ProjectLayout(
           {/* Tabs */}
           <ProjectTabs 
             projectSlug={project.slug} 
-            tabs={['messages', 'updates', 'milestones', 'files', 'details']} 
+            tabs={['messages', 'updates', 'milestones', 'files', 'credentials', 'bugs', 'details']} 
           />
 
           <div className="p-8 flex-1">

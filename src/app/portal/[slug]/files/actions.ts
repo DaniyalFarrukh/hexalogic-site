@@ -85,3 +85,38 @@ export async function saveFileRecord(
 
   return { success: true }
 }
+
+export async function deleteMediaRecord(mediaId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Unauthorized' }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (profile?.role !== 'admin') {
+    return { error: 'Forbidden. Only admins can delete media.' }
+  }
+
+  const { data: media } = await supabase
+    .from('media')
+    .select('path')
+    .eq('id', mediaId)
+    .single()
+
+  if (media && media.path && !media.path.startsWith('http')) {
+    await supabase.storage.from('project-media').remove([media.path])
+  }
+
+  const { error } = await supabase.from('media').delete().eq('id', mediaId)
+
+  if (error) {
+    console.error('Error deleting file record:', error)
+    return { error: error.message }
+  }
+
+  return { success: true }
+}

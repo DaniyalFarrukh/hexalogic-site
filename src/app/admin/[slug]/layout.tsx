@@ -116,7 +116,7 @@ export default async function AdminProjectLayout(
         {/* Tab Navigation */}
         <AdminProjectTabs 
           projectSlug={project.slug} 
-          tabs={['messages', 'milestones', 'updates', 'files', 'activity']} 
+          tabs={['messages', 'milestones', 'updates', 'files', 'credentials', 'bugs', 'activity']} 
         />
 
         {/* Tab Content */}
