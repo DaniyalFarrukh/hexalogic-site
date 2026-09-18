@@ -158,6 +158,16 @@
 .dark .border-green-200 { border-color: color-mix(in oklab, var(--color-green-500) 35%, transparent); }
 .dark .text-green-700 { color: var(--color-green-400); }
 
+.dark .bg-violet-50 { background-color: color-mix(in oklab, var(--color-violet-500) 15%, transparent); }
+.dark .border-violet-200 { border-color: color-mix(in oklab, var(--color-violet-500) 35%, transparent); }
+.dark .text-violet-600,
+.dark .text-violet-700 { color: var(--color-violet-400); }
+
+.dark .bg-rose-50 { background-color: color-mix(in oklab, var(--color-rose-500) 15%, transparent); }
+.dark .border-rose-200 { border-color: color-mix(in oklab, var(--color-rose-500) 35%, transparent); }
+.dark .text-rose-600,
+.dark .text-rose-700 { color: var(--color-rose-400); }
+
 /* ─── Base Styles ─── */
 * {
   box-sizing: border-box;
