@@ -191,7 +191,7 @@ export default function ModernContact() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium mb-1">Call Us</p>
-                  <a href="https://wa.me/923377079748" target="_blank" rel="noopener noreferrer" className="text-lg sm:text-xl font-semibold text-white hover:text-blue-400 transition-colors">+92 3377079748</a>
+                  <a href={`https://wa.me/${CONTACT_PHONE_TEL.replace('+', '')}`} target="_blank" rel="noopener noreferrer" className="text-lg sm:text-xl font-semibold text-white hover:text-blue-400 transition-colors">{CONTACT_PHONE_DISPLAY}</a>
                 </div>
               </div>
 

@@ -14,8 +14,8 @@ export const SITE_DESCRIPTION =
   'HexaLogic Tech Solutions provides premium web development, custom software, business automation, cloud solutions, and IT consulting for modern businesses.'
 
 export const CONTACT_EMAIL = 'hexalogict@gmail.com'
-export const CONTACT_PHONE_DISPLAY = '+92 328 4552495'
-export const CONTACT_PHONE_TEL = '+923284552495'
+export const CONTACT_PHONE_DISPLAY = '+92 3377079748'
+export const CONTACT_PHONE_TEL = '+923377079748'
 export const CONTACT_LOCATION = 'Lahore, Pakistan'
 
 export const SOCIAL_LINKS = {
