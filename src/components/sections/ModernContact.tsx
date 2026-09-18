@@ -191,7 +191,7 @@ export default function ModernContact() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium mb-1">Call Us</p>
-                  <a href={`tel:${CONTACT_PHONE_TEL}`} className="text-lg sm:text-xl font-semibold text-white hover:text-blue-400 transition-colors">{CONTACT_PHONE_DISPLAY}</a>
+                  <a href="https://wa.me/923377079748" target="_blank" rel="noopener noreferrer" className="text-lg sm:text-xl font-semibold text-white hover:text-blue-400 transition-colors">+92 3377079748</a>
                 </div>
               </div>
 
@@ -272,7 +272,7 @@ export default function ModernContact() {
                     aria-label={`Country code ${selectedCountry.dial}, ${selectedCountry.name}`}
                     className="h-full flex items-center gap-2 px-4 sm:px-5 min-h-[56px] hover:bg-white/5 transition-colors rounded-l-xl"
                   >
-                    <CountryCode code={selectedCountry.code} />
+                    <span className="text-xl leading-none">{selectedCountry.flag}</span>
                     <span className="text-base text-gray-300 font-medium">{selectedCountry.dial}</span>
                     <ChevronDown className={`w-3.5 h-3.5 text-gray-500 transition-transform ${isCountryOpen ? "rotate-180" : ""}`} aria-hidden="true" />
                   </button>
@@ -303,7 +303,7 @@ export default function ModernContact() {
                               className="w-full flex items-center justify-between px-4 py-3 min-h-[44px] hover:bg-white/5 text-sm text-left transition-colors"
                             >
                               <span className="flex items-center gap-3 text-gray-300 truncate pr-2">
-                                <CountryCode code={c.code} />
+                                <span className="text-lg leading-none">{c.flag}</span>
                                 <span className="truncate">{c.name}</span>
                               </span>
                               <span className="text-gray-500 shrink-0">{c.dial}</span>
@@ -323,7 +323,7 @@ export default function ModernContact() {
                   autoComplete="tel-national"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  placeholder="Phone (optional)"
+                  placeholder="Phone"
                   className="w-full flex-1 px-5 py-4 bg-transparent text-base tracking-wide text-white focus:outline-none placeholder:text-gray-500 min-w-0"
                 />
               </div>
