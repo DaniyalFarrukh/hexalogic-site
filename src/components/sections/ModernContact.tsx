@@ -272,7 +272,7 @@ export default function ModernContact() {
                     aria-label={`Country code ${selectedCountry.dial}, ${selectedCountry.name}`}
                     className="h-full flex items-center gap-2 px-4 sm:px-5 min-h-[56px] hover:bg-white/5 transition-colors rounded-l-xl"
                   >
-                    <span className="text-xl leading-none">{selectedCountry.flag}</span>
+                    <img src={`https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.4/flags/4x3/${selectedCountry.code.toLowerCase()}.svg`} alt="" className="w-5 h-auto rounded-[2px] object-cover" />
                     <span className="text-base text-gray-300 font-medium">{selectedCountry.dial}</span>
                     <ChevronDown className={`w-3.5 h-3.5 text-gray-500 transition-transform ${isCountryOpen ? "rotate-180" : ""}`} aria-hidden="true" />
                   </button>
@@ -303,7 +303,7 @@ export default function ModernContact() {
                               className="w-full flex items-center justify-between px-4 py-3 min-h-[44px] hover:bg-white/5 text-sm text-left transition-colors"
                             >
                               <span className="flex items-center gap-3 text-gray-300 truncate pr-2">
-                                <span className="text-lg leading-none">{c.flag}</span>
+                                <img src={`https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.4/flags/4x3/${c.code.toLowerCase()}.svg`} alt="" className="w-5 h-auto rounded-[2px] object-cover" />
                                 <span className="truncate">{c.name}</span>
                               </span>
                               <span className="text-gray-500 shrink-0">{c.dial}</span>
