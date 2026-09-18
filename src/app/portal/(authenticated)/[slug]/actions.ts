@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
-import { sendEmail } from '@/lib/email/resend'
+import { sendEmail } from '@/lib/email/mailer'
 import { NewCommentEmail } from '@/lib/email/templates/new-comment'
 import { ApprovalEmail } from '@/lib/email/templates/approval'
 import { SITE_URL } from '@/lib/site'
