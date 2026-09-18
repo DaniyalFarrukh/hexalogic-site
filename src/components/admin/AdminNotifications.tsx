@@ -76,6 +76,57 @@ export default function AdminNotifications() {
       )
       .on(
         'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'messages' },
+        async (payload) => {
+          const message = payload.new
+
+          if (message.sender_id === userId) return
+
+          const { data: project } = await supabase
+            .from('projects')
+            .select('slug, title')
+            .eq('id', message.project_id)
+            .single()
+
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('full_name')
+            .eq('id', message.sender_id)
+            .single()
+
+          const senderName = profile?.full_name || 'A client'
+          const projectName = project?.title || 'a project'
+
+          toast(
+            (t) => (
+              <div className="flex flex-col gap-1">
+                <span className="font-bold text-white">{senderName} sent a message</span>
+                <span className="text-sm text-gray-300">&ldquo;{message.body.substring(0, 50)}{message.body.length > 50 ? '...' : ''}&rdquo;</span>
+                {project && (
+                  <Link
+                    href={`/admin/${project.slug}/messages`}
+                    className="text-xs text-brand-primary hover:underline mt-1"
+                    onClick={() => toast.dismiss(t.id)}
+                  >
+                    Reply in {projectName}
+                  </Link>
+                )}
+              </div>
+            ),
+            {
+              duration: 5000,
+              position: 'bottom-right',
+              style: {
+                background: '#141417',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: '#fff',
+              },
+            }
+          )
+        }
+      )
+      .on(
+        'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'milestones' },
         async (payload) => {
           const newMilestone = payload.new

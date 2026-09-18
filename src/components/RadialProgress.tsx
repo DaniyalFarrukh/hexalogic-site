@@ -15,17 +15,18 @@ export default function RadialProgress({
   const offset = circumference - (progress / 100) * circumference
   
   const primaryColor = '#FF7324'
-  const trackColor = 'rgba(0,0,0,0.1)'
 
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
       <svg className="transform -rotate-90 w-full h-full">
-        {/* Track */}
+        {/* Track — currentColor + opacity so it picks up the existing dark-mode text-color
+            override instead of a fixed rgba() that's invisible against a dark background. */}
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={trackColor}
+          stroke="currentColor"
+          className="text-gray-900 opacity-10"
           strokeWidth={strokeWidth}
           fill="transparent"
         />

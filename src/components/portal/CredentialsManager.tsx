@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { Eye, EyeOff, Copy, Pencil, Trash2, KeyRound } from 'lucide-react'
 import { addCredential, updateCredential, deleteCredential, type CredentialInput } from '@/app/portal/(authenticated)/[slug]/credentials/actions'
+import { DECRYPT_FAILED_SENTINEL } from '@/lib/crypto/sentinel'
 
 export type Credential = {
   id: string
@@ -82,11 +83,14 @@ export default function CredentialsManager({ credentials, projectId }: { credent
   }
 
   const startEditing = (cred: Credential) => {
+    const decryptFailed = cred.password === DECRYPT_FAILED_SENTINEL
     setFormData({
       title: cred.title,
       url: cred.url || '',
       username: cred.username,
-      password: cred.password,
+      // Never pre-fill the sentinel — leave it blank so a save requires a real new password
+      // instead of silently re-encrypting the "could not decrypt" placeholder.
+      password: decryptFailed ? '' : cred.password,
       notes: cred.notes || ''
     })
     setEditingId(cred.id)
@@ -212,19 +216,25 @@ export default function CredentialsManager({ credentials, projectId }: { credent
 
                 <div>
                   <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Password</div>
-                  <div className="flex items-center justify-between gap-2 bg-gray-50 p-2.5 rounded-lg border border-gray-100">
-                    <span className="text-sm font-medium text-gray-900 tracking-wider truncate font-mono">
-                      {visiblePasswords[cred.id] ? cred.password : '••••••••••••'}
-                    </span>
-                    <div className="flex items-center shrink-0">
-                      <button type="button" onClick={() => togglePassword(cred.id)} className="text-gray-400 hover:text-gray-700 p-2 min-w-[36px] min-h-[36px] flex items-center justify-center" aria-label={visiblePasswords[cred.id] ? 'Hide password' : 'Show password'}>
-                        {visiblePasswords[cred.id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
-                      <button type="button" onClick={() => copyToClipboard(cred.password, 'Password')} className="text-gray-400 hover:text-gray-700 p-2 min-w-[36px] min-h-[36px] flex items-center justify-center" aria-label="Copy password">
-                        <Copy className="w-4 h-4" />
-                      </button>
+                  {cred.password === DECRYPT_FAILED_SENTINEL ? (
+                    <div className="text-sm font-medium text-red-600 bg-red-50 border border-red-200 p-2.5 rounded-lg">
+                      Could not decrypt — check CREDENTIALS_ENCRYPTION_KEY, or edit this credential to set a new password.
                     </div>
-                  </div>
+                  ) : (
+                    <div className="flex items-center justify-between gap-2 bg-gray-50 p-2.5 rounded-lg border border-gray-100">
+                      <span className="text-sm font-medium text-gray-900 tracking-wider truncate font-mono">
+                        {visiblePasswords[cred.id] ? cred.password : '••••••••••••'}
+                      </span>
+                      <div className="flex items-center shrink-0">
+                        <button type="button" onClick={() => togglePassword(cred.id)} className="text-gray-400 hover:text-gray-700 p-2 min-w-[36px] min-h-[36px] flex items-center justify-center" aria-label={visiblePasswords[cred.id] ? 'Hide password' : 'Show password'}>
+                          {visiblePasswords[cred.id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                        <button type="button" onClick={() => copyToClipboard(cred.password, 'Password')} className="text-gray-400 hover:text-gray-700 p-2 min-w-[36px] min-h-[36px] flex items-center justify-center" aria-label="Copy password">
+                          <Copy className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

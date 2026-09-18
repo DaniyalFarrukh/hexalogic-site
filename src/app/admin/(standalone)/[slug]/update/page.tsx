@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 import imageCompression from 'browser-image-compression'
-import { generateUploadUrl, publishProjectUpdate, type MediaInput } from '@/app/admin/admin-actions'
+import { generateUploadUrl, publishProjectUpdate, deleteUploadedFiles, type MediaInput } from '@/app/admin/admin-actions'
 import { kindFromMime, kindFromUrl } from '@/lib/media'
 
 const MAX_VIDEO_BYTES = 100 * 1024 * 1024
@@ -45,9 +45,9 @@ export default function PostUpdatePage({
     setLoading(true)
     setError(null)
 
-    try {
-      const mediaArray: MediaInput[] = []
+    const mediaArray: MediaInput[] = []
 
+    try {
       for (const [index, file] of files.entries()) {
         let uploadFile = file
         setProgressText(`Uploading ${index + 1} of ${files.length}: ${file.name}`)
@@ -99,6 +99,13 @@ export default function PostUpdatePage({
       setError(message)
       setLoading(false)
       setProgressText('')
+
+      // Files already uploaded to storage in this attempt never got a DB row (the RPC
+      // never ran) — clean them up so a failed submission doesn't orphan them.
+      const uploadedPaths = mediaArray.map(m => m.path).filter(p => !p.startsWith('http'))
+      if (uploadedPaths.length > 0) {
+        deleteUploadedFiles(uploadedPaths).catch(() => {})
+      }
     }
   }
 

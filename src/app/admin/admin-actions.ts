@@ -448,6 +448,19 @@ export async function generateUploadUrl(slug: string, fileName: string) {
   return { success: true, signedUrl: data.signedUrl, path: data.path }
 }
 
+/** Best-effort cleanup for files uploaded to storage during an update draft that never got published (e.g. a later file in the batch failed). */
+export async function deleteUploadedFiles(paths: string[]) {
+  const auth = await requireAdmin()
+  if (auth.error) return { error: auth.error }
+
+  const cleanPaths = paths.filter(p => p && !p.startsWith('http'))
+  if (cleanPaths.length === 0) return { success: true }
+
+  const { error } = await auth.supabase.storage.from('project-media').remove(cleanPaths)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
 /** Guesses the media kind of an external link so the gallery can render it sensibly. */
 export async function classifyExternalUrl(url: string): Promise<MediaInput['kind']> {
   const lower = url.toLowerCase()
@@ -520,6 +533,42 @@ export async function publishProjectUpdate(
 export async function deleteProject(projectId: string) {
   const auth = await requireAdmin()
   if (auth.error) return { error: auth.error }
+
+  const [
+    { data: directMedia, error: directMediaError },
+    { data: updateRows, error: updateRowsError },
+    { data: commentRows, error: commentRowsError },
+  ] = await Promise.all([
+    adminClient.from('media').select('path').eq('project_id', projectId),
+    adminClient.from('updates').select('id').eq('project_id', projectId),
+    adminClient.from('comments').select('id').eq('project_id', projectId),
+  ])
+  if (directMediaError) console.error('deleteProject: failed to list direct media:', directMediaError)
+  if (updateRowsError) console.error('deleteProject: failed to list updates:', updateRowsError)
+  if (commentRowsError) console.error('deleteProject: failed to list comments:', commentRowsError)
+
+  const updateIds = (updateRows ?? []).map(r => r.id)
+  const commentIds = (commentRows ?? []).map(r => r.id)
+
+  const [{ data: updateMedia, error: updateMediaError }, { data: commentMedia, error: commentMediaError }] = await Promise.all([
+    updateIds.length ? adminClient.from('media').select('path').in('update_id', updateIds) : Promise.resolve({ data: [] as { path: string }[], error: null }),
+    commentIds.length ? adminClient.from('media').select('path').in('comment_id', commentIds) : Promise.resolve({ data: [] as { path: string }[], error: null }),
+  ])
+  if (updateMediaError) console.error('deleteProject: failed to list update media:', updateMediaError)
+  if (commentMediaError) console.error('deleteProject: failed to list comment media:', commentMediaError)
+
+  const storagePaths = [...new Set(
+    [...(directMedia ?? []), ...(updateMedia ?? []), ...(commentMedia ?? [])]
+      .map(m => m.path)
+      .filter((path): path is string => !!path && !path.startsWith('http'))
+  )]
+
+  if (storagePaths.length > 0) {
+    const { error: storageError } = await adminClient.storage.from('project-media').remove(storagePaths)
+    // Best-effort: don't block the (irreversible, user-confirmed) delete on a storage hiccup.
+    // The sweep-orphans cron is the safety net for anything left behind here.
+    if (storageError) console.error('Failed to remove some project files from storage:', storageError)
+  }
 
   const { error } = await adminClient
     .from('projects')

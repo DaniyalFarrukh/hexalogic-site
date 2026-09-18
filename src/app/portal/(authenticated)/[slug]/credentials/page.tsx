@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import CredentialsManager from '@/components/portal/CredentialsManager'
+import { decryptCredential } from '@/lib/crypto/credentials'
 
 export default async function PortalCredentialsPage(
   props: { params: Promise<{ slug: string }> }
@@ -26,6 +27,8 @@ export default async function PortalCredentialsPage(
     console.error('Error fetching credentials:', error)
   }
 
+  const decrypted = (credentials || []).map(c => ({ ...c, password: decryptCredential(c.password) }))
+
   // Clients can add credentials, but they are not admins
-  return <CredentialsManager credentials={credentials || []} projectId={project.id} isAdmin={false} />
+  return <CredentialsManager credentials={decrypted} projectId={project.id} isAdmin={false} />
 }

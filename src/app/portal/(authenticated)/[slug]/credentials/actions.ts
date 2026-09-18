@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { encryptCredential, DECRYPT_FAILED_SENTINEL } from '@/lib/crypto/credentials'
 
 export type CredentialInput = {
   title: string
@@ -21,8 +22,22 @@ function sanitize(data: CredentialInput) {
   if (!title) return { error: 'Please give this credential a title' }
   if (!username) return { error: 'Username or email is required' }
   if (!password) return { error: 'Password is required' }
+  // The UI substitutes this for a password it failed to decrypt (wrong/rotated key). Refuse to
+  // save it back as a "real" password — that would permanently overwrite the original ciphertext.
+  if (password === DECRYPT_FAILED_SENTINEL) {
+    return { error: 'This password could not be decrypted, so it can’t be re-saved as-is. Fix CREDENTIALS_ENCRYPTION_KEY, or enter a new password to replace it.' }
+  }
 
   return { value: { title, url: url || null, username, password, notes: notes || null } }
+}
+
+function encryptOrError(password: string): { value: string } | { error: string } {
+  try {
+    return { value: encryptCredential(password) }
+  } catch (err) {
+    console.error('Failed to encrypt credential:', err)
+    return { error: 'Could not save this credential — encryption is not configured correctly (CREDENTIALS_ENCRYPTION_KEY).' }
+  }
 }
 
 async function revalidateCredentialPages(supabase: Awaited<ReturnType<typeof createClient>>, projectId: string) {
@@ -41,7 +56,14 @@ export async function addCredential(projectId: string, data: CredentialInput) {
   const parsed = sanitize(data)
   if ('error' in parsed) return { error: parsed.error }
 
-  const { error } = await supabase.from('credentials').insert({ project_id: projectId, ...parsed.value })
+  const encrypted = encryptOrError(parsed.value.password)
+  if ('error' in encrypted) return { error: encrypted.error }
+
+  const { error } = await supabase.from('credentials').insert({
+    project_id: projectId,
+    ...parsed.value,
+    password: encrypted.value,
+  })
   if (error) return { error: error.message }
 
   await revalidateCredentialPages(supabase, projectId)
@@ -56,7 +78,13 @@ export async function updateCredential(id: string, data: CredentialInput) {
   const parsed = sanitize(data)
   if ('error' in parsed) return { error: parsed.error }
 
-  const { data: row, error } = await supabase.from('credentials').update(parsed.value).eq('id', id).select('project_id').single()
+  const encrypted = encryptOrError(parsed.value.password)
+  if ('error' in encrypted) return { error: encrypted.error }
+
+  const { data: row, error } = await supabase.from('credentials').update({
+    ...parsed.value,
+    password: encrypted.value,
+  }).eq('id', id).select('project_id').single()
   if (error) return { error: error.message }
 
   await revalidateCredentialPages(supabase, row.project_id)

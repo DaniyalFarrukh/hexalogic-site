@@ -2,11 +2,14 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Toaster } from 'react-hot-toast'
+import { LogOut } from 'lucide-react'
 import AdminNotifications from '@/components/admin/AdminNotifications'
 import Sidebar from '@/components/Sidebar'
 import MobileBottomNav from '@/components/MobileBottomNav'
 import NotificationsDropdown from '@/components/portal/NotificationsDropdown'
 import ChangePasswordForm from '@/components/auth/ChangePasswordForm'
+import { ThemeProvider } from '@/components/ThemeProvider'
+import ThemeToggle from '@/components/ThemeToggle'
 
 export const metadata: Metadata = {
   title: {
@@ -38,7 +41,7 @@ export default async function AdminLayout({
   const mustChangePassword = user.user_metadata?.force_password_change === true
 
   return (
-    <div className="h-dvh overflow-hidden bg-surface-light text-gray-900 flex font-sans">
+    <ThemeProvider className="h-dvh overflow-hidden bg-surface-light text-gray-900 flex font-sans">
       <AdminNotifications />
       <Toaster position="bottom-right" />
 
@@ -54,7 +57,18 @@ export default async function AdminLayout({
             HEXALOGIC <span className="text-brand-primary">ADMIN</span>
           </span>
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <NotificationsDropdown mode="admin" />
+            <form action="/auth/signout" method="post" className="md:hidden">
+              <button
+                type="submit"
+                aria-label="Sign out"
+                title="Sign out"
+                className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors rounded-lg hover:bg-gray-100"
+              >
+                <LogOut className="w-5 h-5" aria-hidden="true" />
+              </button>
+            </form>
           </div>
         </header>
 
@@ -71,6 +85,6 @@ export default async function AdminLayout({
 
       {/* Mobile Bottom Navigation */}
       <MobileBottomNav mode="admin" />
-    </div>
+    </ThemeProvider>
   )
 }
