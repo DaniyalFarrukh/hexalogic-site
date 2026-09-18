@@ -113,6 +113,51 @@
 .dark .hover\:text-gray-600:hover { color: var(--dm-text-4); }
 .dark .group:hover .group-hover\:text-gray-600 { color: var(--dm-text-4); }
 
+/* Orange-tinted light accents (badges, alert boxes, a decorative header gradient, icon
+   chips) — a different color family from the gray/white/black sweep above, so they weren't
+   caught by it. Left as light orange-50/orange-200 they read as a near-invisible light patch
+   on a dark card. */
+.dark .bg-orange-50,
+.dark .hover\:bg-orange-50:hover { background-color: rgba(255, 115, 36, 0.12); }
+/* Was a barely-there wash on a white card; at the same opacity against near-black it read as a
+   loud, hard-edged brown block instead of a subtle blend. Toned way down. */
+.dark .from-orange-50 { --tw-gradient-from: rgba(255, 115, 36, 0.04); }
+.dark .border-orange-200 { border-color: rgba(255, 115, 36, 0.3); }
+.dark .text-orange-700 { color: #ffb37a; }
+.dark .text-orange-800 { color: #ffa866; }
+
+/* Same light-tint alert/badge/status-pill pattern in every other accent color used across
+   admin/portal (severity badges, success/error/info boxes, status dots). Backgrounds/borders
+   are mixed from the color's own mid shade so they stay recognizably "that color" rather than
+   turning gray; text moves to a brighter shade of the same hue for contrast on a dark card. */
+.dark .bg-red-50,
+.dark .bg-red-100 { background-color: color-mix(in oklab, var(--color-red-500) 15%, transparent); }
+.dark .border-red-200 { border-color: color-mix(in oklab, var(--color-red-500) 35%, transparent); }
+.dark .text-red-600,
+.dark .text-red-700 { color: var(--color-red-400); }
+
+.dark .bg-emerald-50 { background-color: color-mix(in oklab, var(--color-emerald-500) 15%, transparent); }
+.dark .border-emerald-200 { border-color: color-mix(in oklab, var(--color-emerald-500) 35%, transparent); }
+.dark .text-emerald-600,
+.dark .text-emerald-700 { color: var(--color-emerald-400); }
+
+.dark .bg-blue-50 { background-color: color-mix(in oklab, var(--color-blue-500) 15%, transparent); }
+.dark .border-blue-200 { border-color: color-mix(in oklab, var(--color-blue-500) 35%, transparent); }
+.dark .text-blue-600,
+.dark .text-blue-700 { color: var(--color-blue-400); }
+
+.dark .bg-amber-50 { background-color: color-mix(in oklab, var(--color-amber-500) 15%, transparent); }
+.dark .border-amber-200 { border-color: color-mix(in oklab, var(--color-amber-500) 35%, transparent); }
+.dark .text-amber-600,
+.dark .text-amber-700 { color: var(--color-amber-400); }
+
+.dark .bg-indigo-50 { background-color: color-mix(in oklab, var(--color-indigo-500) 15%, transparent); }
+.dark .text-indigo-600 { color: var(--color-indigo-400); }
+
+.dark .bg-green-50 { background-color: color-mix(in oklab, var(--color-green-500) 15%, transparent); }
+.dark .border-green-200 { border-color: color-mix(in oklab, var(--color-green-500) 35%, transparent); }
+.dark .text-green-700 { color: var(--color-green-400); }
+
 /* ─── Base Styles ─── */
 * {
   box-sizing: border-box;
