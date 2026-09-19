@@ -5,9 +5,8 @@ import { ArrowRight } from "lucide-react";
 import { SERVICES } from "@/lib/services";
 
 export const metadata: Metadata = {
-  title: "Services",
-  description:
-    "Web development, custom software, UI/UX design, cloud solutions, IT consulting and business automation from HexaLogic Tech Solutions.",
+  title: "Our Services | Web Development, Cloud Solutions & Business Automation",
+  description: "Explore HexaLogic's comprehensive IT services including custom web development, business automation, UI/UX design, and scalable cloud solutions for modern businesses.",
   alternates: { canonical: "/services" },
 };
 

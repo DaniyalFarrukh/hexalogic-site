@@ -30,9 +30,7 @@ export const metadata: Metadata = {
     "IT consulting",
     "HexaLogic",
   ],
-  alternates: {
-    canonical: "/",
-  },
+  
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
@@ -70,6 +68,31 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "HexaLogic Tech Solutions",
+              "image": "https://www.hexalogictechandsolutions.com/hexalogic-logo.png",
+              "url": "https://www.hexalogictechandsolutions.com",
+              "telephone": "+923377079748",
+              "email": "hexalogict@gmail.com",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Lahore",
+                "addressCountry": "PK"
+              },
+              "sameAs": [
+                "https://www.linkedin.com/company/hexaloigc-and-tech/",
+                "https://github.com/DaniyalFarrukh"
+              ]
+            })
+          }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   );

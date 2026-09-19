@@ -1,9 +1,9 @@
 import AboutSection from "@/components/sections/AboutSection";
 
 export const metadata = {
-  title: "About Us",
+  title: "About Us | IT Consulting & Software Development in Lahore",
   alternates: { canonical: "/about" },
-  description: "Learn more about our mission, vision, and core values at HexaLogic Tech Solutions.",
+  description: "Learn about HexaLogic Tech Solutions. We deliver premium IT consulting, custom software, and digital transformation services to modernize your business in Pakistan and globally.",
 };
 
 export default function AboutPage() {
