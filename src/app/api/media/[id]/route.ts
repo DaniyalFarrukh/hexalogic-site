@@ -16,7 +16,7 @@ export async function GET(
   // RLS protects this query: user can only select media linked to projects they are members of.
   const { data: mediaRecord, error } = await supabase
     .from('media')
-    .select('path')
+    .select('path, caption')
     .eq('id', id)
     .single()
 
@@ -29,11 +29,16 @@ export async function GET(
     return NextResponse.redirect(mediaRecord.path, 307)
   }
 
+  const searchParams = new URL(request.url).searchParams
+  const isDownload = searchParams.get('download') === 'true'
+
   // 2. Supabase Storage Branch (Short-lived signed URL, MUST NOT BE CACHED)
   const { data: signedData, error: signError } = await supabase
     .storage
     .from('project-media')
-    .createSignedUrl(mediaRecord.path, 60 * 60)
+    .createSignedUrl(mediaRecord.path, 60 * 60, {
+      download: isDownload ? (mediaRecord.caption || true) : false
+    })
 
   if (signError || !signedData) {
     return new NextResponse('Error generating signed URL', { status: 500 })

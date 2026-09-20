@@ -112,6 +112,34 @@ export default function MediaGallery({ media, projectId, isAdmin }: { media: Med
     }
   }
 
+  const handleDownload = async (e: React.MouseEvent<HTMLAnchorElement>, mediaId: string, filename: string) => {
+    e.preventDefault()
+    
+    // Show a loading toast for larger files
+    const toastId = toast.loading(`Downloading ${filename}...`)
+    
+    try {
+      const response = await fetch(`/api/media/${mediaId}?download=true`)
+      if (!response.ok) throw new Error('Download failed')
+      
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.style.display = 'none'
+      a.href = url
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+      
+      toast.success('Download complete', { id: toastId })
+    } catch (err) {
+      console.error('Download error:', err)
+      toast.error('Failed to download file', { id: toastId })
+    }
+  }
+
   const mediaSrc = (item: MediaItem) => item.signedUrl || `/api/media/${item.id}`
 
   return (
@@ -217,10 +245,8 @@ export default function MediaGallery({ media, projectId, isAdmin }: { media: Med
         >
           <div className="absolute top-4 right-4 md:top-6 md:right-6 flex items-center gap-2 z-[110]" onClick={(e) => e.stopPropagation()}>
             <a
-              href={mediaSrc(activeMedia)}
-              download
-              target="_blank"
-              rel="noreferrer"
+              href={`/api/media/${activeMedia.id}?download=true`}
+              onClick={(e) => handleDownload(e, activeMedia.id, activeMedia.caption || 'download')}
               className="text-gray-300 hover:text-white transition-colors p-2.5 hover:bg-white/10 rounded-lg"
               aria-label="Download media"
             >
@@ -283,9 +309,8 @@ export default function MediaGallery({ media, projectId, isAdmin }: { media: Med
                   <h3 className="text-xl font-bold text-gray-900 mb-2 break-words">{activeMedia.caption || 'Document'}</h3>
                   <p className="text-gray-500 text-sm mb-8">{activeMedia.mime_type || 'Unknown format'}</p>
                   <a
-                    href={mediaSrc(activeMedia)}
-                    target="_blank"
-                    rel="noreferrer"
+                    href={`/api/media/${activeMedia.id}?download=true`}
+                    onClick={(e) => handleDownload(e, activeMedia.id, activeMedia.caption || 'download')}
                     className="inline-flex items-center gap-2 bg-brand-secondary text-white font-bold py-3 px-8 rounded-xl hover:bg-[#ff8947] transition-all shadow-lg"
                   >
                     <Download className="w-5 h-5" aria-hidden="true" />
