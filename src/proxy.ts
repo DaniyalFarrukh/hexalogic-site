@@ -2,6 +2,17 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function proxy(request: NextRequest) {
+  const { pathname, searchParams } = request.nextUrl
+
+  // Intercept Supabase Auth redirects that fell back to the Site URL.
+  if (pathname === '/' && searchParams.has('code')) {
+    const code = searchParams.get('code')
+    const confirmUrl = new URL('/auth/confirm', request.url)
+    confirmUrl.searchParams.set('code', code!)
+    confirmUrl.searchParams.set('next', '/portal/reset-password')
+    return NextResponse.redirect(confirmUrl)
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   })
