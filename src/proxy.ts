@@ -38,7 +38,6 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  const pathname = request.nextUrl.pathname
   const isPortal = pathname.startsWith('/portal')
   const isAdmin = pathname.startsWith('/admin')
 
