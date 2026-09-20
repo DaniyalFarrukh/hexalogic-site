@@ -15,7 +15,7 @@ import { EmailTailwind, HEXALOGIC_LOGO, HEXALOGIC_URL } from './theme';
 interface WelcomeEmailProps {
   email: string;
   password?: string;
-  loginUrl: string;
+  loginUrl?: string;
 }
 
 export const WelcomeEmail = ({

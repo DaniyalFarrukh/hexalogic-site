@@ -103,10 +103,10 @@ export async function postComment(formData: FormData) {
           to: email,
           subject: `New Comment from ${profile?.full_name || 'Client'} - ${project.title}`,
           template: NewCommentEmail({
-            clientName: profile?.full_name || 'Client',
+            senderName: profile?.full_name || 'Client',
             projectName: project.title,
-            commentBody: body || 'Uploaded an image.',
-            adminLink
+            commentPreview: body || 'Uploaded an image.',
+            link: adminLink
           })
         })
       ))

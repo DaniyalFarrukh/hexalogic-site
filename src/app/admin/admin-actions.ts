@@ -216,7 +216,7 @@ export async function createClientAndProject(formData: FormData) {
       const result = await sendEmail({
         to: email,
         subject: 'Welcome to the HexaLogic Portal',
-        template: WelcomeEmail({ email, tempPassword })
+        template: WelcomeEmail({ email, password: tempPassword })
       })
       if (!result.success) console.error('Welcome email failed:', result.error)
     }
@@ -305,10 +305,7 @@ export async function updateProjectDetails(projectId: string, data: ProjectDetai
           subject: `Project Completed: ${payload.title || oldProject.title}`,
           template: ProjectCompleteEmail({
             projectName: payload.title || oldProject.title,
-            totalHours: oldProject.hours_logged || 0,
-            startDate: oldProject.start_date || 'N/A',
-            endDate: new Date().toISOString().split('T')[0],
-            updateLink
+            portalLink: updateLink
           })
         })
       ))
