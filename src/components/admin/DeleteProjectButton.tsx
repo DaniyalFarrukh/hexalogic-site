@@ -77,8 +77,11 @@ export default function DeleteProjectButton({ projectId, projectTitle }: { proje
             </p>
 
             <div className="mb-6">
-              <label htmlFor={inputId} className="block text-sm font-medium text-gray-700 mb-2 break-words">
-                Type <strong className="select-all">{projectTitle}</strong> to confirm.
+              <label htmlFor={inputId} className="block text-sm font-medium text-gray-700 mb-2">
+                Type the following project name to confirm:
+                <strong className="block mt-2 p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 select-all break-words font-mono text-sm overflow-hidden">
+                  {projectTitle}
+                </strong>
               </label>
               <input
                 id={inputId}
