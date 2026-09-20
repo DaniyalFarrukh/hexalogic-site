@@ -201,9 +201,21 @@ export default function MediaGallery({ media, projectId, isAdmin }: { media: Med
                     <span className="text-[10px] font-bold uppercase tracking-widest truncate w-full text-center">{item.caption || 'Video'}</span>
                   </div>
                 ) : item.mime_type?.includes('pdf') ? (
-                  <PdfThumbnail url={mediaSrc(item)} />
+                  <>
+                    <PdfThumbnail url={mediaSrc(item)} />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3 pt-12 flex flex-col items-center justify-end pointer-events-none transition-opacity">
+                      <span className="text-xs font-semibold text-white truncate w-full text-center">{item.caption || 'PDF Document'}</span>
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-white/70 mt-1">PDF</span>
+                    </div>
+                  </>
                 ) : item.mime_type?.includes('word') || item.mime_type?.includes('document') ? (
-                  <DocxThumbnail url={mediaSrc(item)} />
+                  <>
+                    <DocxThumbnail url={mediaSrc(item)} />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3 pt-12 flex flex-col items-center justify-end pointer-events-none transition-opacity">
+                      <span className="text-xs font-semibold text-white truncate w-full text-center">{item.caption || 'Word Document'}</span>
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-white/70 mt-1">DOCX</span>
+                    </div>
+                  </>
                 ) : (
                   <FallbackIcon mimeType={item.mime_type} caption={item.caption} />
                 )}
