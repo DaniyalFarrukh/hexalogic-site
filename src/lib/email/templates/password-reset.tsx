@@ -12,15 +12,14 @@ import {
 } from '@react-email/components';
 import { EmailTailwind, HEXALOGIC_LOGO, HEXALOGIC_URL } from './theme';
 
-interface ProjectCompleteEmailProps {
-  projectName: string;
-  portalLink: string;
+interface PasswordResetEmailProps {
+  // Use a fallback for local development preview, but in production this will be replaced by Supabase's templating engine
+  confirmationUrl?: string;
 }
 
-export const ProjectCompleteEmail = ({
-  projectName = 'Your Project',
-  portalLink = 'https://www.hexalogic.dev/portal',
-}: ProjectCompleteEmailProps) => {
+export const PasswordResetEmail = ({
+  confirmationUrl = '{{ .ConfirmationURL }}',
+}: PasswordResetEmailProps) => {
   return (
     <Html>
       <Head />
@@ -39,42 +38,32 @@ export const ProjectCompleteEmail = ({
 
             {/* Main Content Card */}
             <Section className="bg-white rounded-b-xl p-8 border border-t-0 border-gray-200">
-              <Text className="text-brand-secondary text-sm font-bold uppercase tracking-widest m-0 mb-2 text-center">
-                {projectName}
-              </Text>
               <Text className="text-brand-dark text-2xl font-bold m-0 mb-6 text-center">
-                Project Complete! 🎉
+                Reset Your Password
               </Text>
 
               <Text className="text-gray-600 text-base leading-relaxed m-0 mb-6 text-center">
-                We're thrilled to announce that all milestones for your project have been successfully completed. 
-                Thank you for partnering with HexaLogic!
+                We received a request to reset your password for your HexaLogic Portal account.
               </Text>
 
-              <Text className="text-gray-600 text-base leading-relaxed m-0 mb-8 text-center">
-                You can review all the final deliverables, documentation, and files in your client portal.
-              </Text>
-
-              <Section className="text-center">
+              <Section className="text-center mb-8">
                 <Button
-                  href={portalLink}
+                  href={confirmationUrl}
                   className="bg-brand-primary text-white font-bold text-base px-8 py-3.5 rounded-lg text-center cursor-pointer inline-block"
                 >
-                  View Final Project
+                  Reset Password
                 </Button>
               </Section>
+
+              <Text className="text-gray-500 text-sm leading-relaxed m-0 text-center">
+                If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.
+              </Text>
             </Section>
 
             {/* Footer */}
             <Section className="mt-8 text-center px-4">
               <Text className="text-gray-400 text-xs leading-relaxed m-0">
                 © {new Date().getFullYear()} HexaLogic. All rights reserved.
-              </Text>
-              <Text className="text-gray-400 text-xs leading-relaxed m-0 mt-1">
-                Manage your notifications at{' '}
-                <Link href={`${HEXALOGIC_URL}/portal/settings`} className="text-brand-primary underline">
-                  Portal Settings
-                </Link>
               </Text>
             </Section>
           </Container>
@@ -84,4 +73,4 @@ export const ProjectCompleteEmail = ({
   );
 };
 
-export default ProjectCompleteEmail;
+export default PasswordResetEmail;

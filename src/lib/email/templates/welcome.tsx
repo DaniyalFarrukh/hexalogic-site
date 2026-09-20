@@ -8,66 +8,81 @@ import {
   Text,
   Link,
   Img,
-  Button
+  Button,
 } from '@react-email/components';
-
-import { emailStyles as styles } from './styles';
+import { EmailTailwind, HEXALOGIC_LOGO, HEXALOGIC_URL } from './theme';
 
 interface WelcomeEmailProps {
   email: string;
-  tempPassword?: string;
-  portalLink?: string;
+  password?: string;
+  loginUrl: string;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-
 export const WelcomeEmail = ({
-  email,
-  tempPassword,
-  portalLink = `${baseUrl}/portal/login`,
+  email = 'client@example.com',
+  password = 'temporary-password',
+  loginUrl = 'https://www.hexalogic.dev/portal/login',
 }: WelcomeEmailProps) => {
   return (
     <Html>
       <Head />
-      <Body style={styles.main}>
-        <Container style={styles.container}>
-          <Section style={styles.card}>
-            <Img
-              src={`${baseUrl}/logo-email.png`}
-              width="150"
-              alt="HexaLogic"
-              style={styles.logo}
-            />
-            <Text style={styles.h1}>Welcome to the HexaLogic Portal</Text>
-            
-            <Text style={styles.text}>
-              Your account has been created. You can log in using the email address <span style={styles.bold}>{email}</span> and the temporary password below:
-            </Text>
-            
-            {tempPassword && (
-              <Text style={styles.code}>
-                {tempPassword}
-              </Text>
-            )}
-
-            <Text style={styles.text}>
-              You will be required to change your password upon your first login.
-            </Text>
-
-            <Section style={styles.buttonContainer}>
-              <Button href={portalLink} style={styles.button}>
-                Log In to Portal
-              </Button>
+      <EmailTailwind>
+        <Body className="bg-[#F8F9FB] font-sans m-0 p-0">
+          <Container className="mx-auto py-10 px-4 w-full max-w-[600px]">
+            {/* Header / Logo */}
+            <Section className="bg-white rounded-t-xl p-8 border border-b-0 border-gray-200 text-center">
+              <Img
+                src={HEXALOGIC_LOGO}
+                width="180"
+                alt="HexaLogic"
+                className="mx-auto"
+              />
             </Section>
-          </Section>
 
-          <Section style={styles.footer}>
-            <Text style={styles.footerText}>
-              Manage your notifications at <Link href={`${baseUrl}/portal/settings`} style={styles.footerLink}>Portal Settings</Link>
-            </Text>
-          </Section>
-        </Container>
-      </Body>
+            {/* Main Content Card */}
+            <Section className="bg-white rounded-b-xl p-8 border border-t-0 border-gray-200">
+              <Text className="text-brand-dark text-2xl font-bold m-0 mb-6 text-center">
+                Welcome to HexaLogic
+              </Text>
+
+              <Text className="text-gray-600 text-base leading-relaxed m-0 mb-6">
+                Your client portal account has been successfully created. You can log in using your email address <span className="font-bold text-brand-dark">{email}</span> and the temporary password below:
+              </Text>
+
+              {password && (
+                <Section className="bg-gray-50 rounded-lg p-6 mb-8 border border-gray-200 text-center">
+                  <Text className="text-brand-dark font-mono text-xl tracking-widest font-bold m-0">
+                    {password}
+                  </Text>
+                </Section>
+              )}
+
+              <Text className="text-gray-600 text-base leading-relaxed m-0 mb-8">
+                Please change this password immediately after logging in for the first time.
+              </Text>
+
+              <Section className="text-center">
+                <Button
+                  href={loginUrl}
+                  className="bg-brand-primary text-white font-bold text-base px-8 py-3.5 rounded-lg text-center cursor-pointer inline-block"
+                >
+                  Log In Now
+                </Button>
+              </Section>
+            </Section>
+
+            {/* Footer */}
+            <Section className="mt-8 text-center px-4">
+              <Text className="text-gray-400 text-xs leading-relaxed m-0">
+                © {new Date().getFullYear()} HexaLogic. All rights reserved.
+              </Text>
+              <Text className="text-gray-400 text-xs leading-relaxed m-0 mt-1">
+                If you didn't request this email, please ignore it or contact support.
+              </Text>
+            </Section>
+          </Container>
+        </Body>
+      </EmailTailwind>
     </Html>
   );
 };

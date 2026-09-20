@@ -6,55 +6,83 @@ import {
   Container,
   Section,
   Text,
+  Link,
   Img,
-  Button
+  Button,
 } from '@react-email/components';
-import { emailStyles as styles } from './styles';
+import { EmailTailwind, HEXALOGIC_LOGO, HEXALOGIC_URL } from './theme';
 
 interface NewCommentEmailProps {
-  clientName: string;
   projectName: string;
-  commentBody: string;
-  adminLink: string;
+  senderName: string;
+  commentPreview: string;
+  link: string;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-
 export const NewCommentEmail = ({
-  clientName,
-  projectName,
-  commentBody,
-  adminLink,
+  projectName = 'Your Project',
+  senderName = 'Someone',
+  commentPreview = 'Left a comment',
+  link = 'https://www.hexalogic.dev/portal',
 }: NewCommentEmailProps) => {
   return (
     <Html>
       <Head />
-      <Body style={styles.main}>
-        <Container style={styles.container}>
-          <Section style={styles.card}>
-            <Img
-              src={`${baseUrl}/logo-email.png`}
-              width="150"
-              alt="HexaLogic"
-              style={styles.logo}
-            />
-            <Text style={styles.h2}>{projectName}</Text>
-            <Text style={styles.h1}>New Comment from {clientName}</Text>
-            
-            <Section style={{ margin: '24px 0', padding: '16px', backgroundColor: '#F8F9FB', borderLeft: '4px solid #1BB8A3' }}>
-              <Text style={{ margin: 0, color: '#5B6B7C', fontSize: '15px', fontStyle: 'italic' }}>
-                &ldquo;{commentBody}&rdquo;
-              </Text>
+      <EmailTailwind>
+        <Body className="bg-[#F8F9FB] font-sans m-0 p-0">
+          <Container className="mx-auto py-10 px-4 w-full max-w-[600px]">
+            {/* Header / Logo */}
+            <Section className="bg-white rounded-t-xl p-8 border border-b-0 border-gray-200 text-center">
+              <Img
+                src={HEXALOGIC_LOGO}
+                width="180"
+                alt="HexaLogic"
+                className="mx-auto"
+              />
             </Section>
 
-            <Section style={styles.buttonContainer}>
-              <Button href={adminLink} style={styles.button}>
-                Reply in Admin Portal
-              </Button>
+            {/* Main Content Card */}
+            <Section className="bg-white rounded-b-xl p-8 border border-t-0 border-gray-200">
+              <Text className="text-brand-secondary text-sm font-bold uppercase tracking-widest m-0 mb-2 text-center">
+                {projectName}
+              </Text>
+              <Text className="text-brand-dark text-2xl font-bold m-0 mb-6 text-center">
+                New message from {senderName}
+              </Text>
+
+              <Section className="bg-gray-50 rounded-xl p-6 mb-8 border border-gray-100 relative">
+                {/* Quote styling */}
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-primary rounded-l-xl"></div>
+                <Text className="text-gray-600 text-base italic leading-relaxed m-0 whitespace-pre-wrap pl-4">
+                  "{commentPreview}"
+                </Text>
+              </Section>
+
+              <Section className="text-center">
+                <Button
+                  href={link}
+                  className="bg-brand-primary text-white font-bold text-base px-8 py-3.5 rounded-lg text-center cursor-pointer inline-block"
+                >
+                  Reply in Portal
+                </Button>
+              </Section>
             </Section>
-          </Section>
-        </Container>
-      </Body>
+
+            {/* Footer */}
+            <Section className="mt-8 text-center px-4">
+              <Text className="text-gray-400 text-xs leading-relaxed m-0">
+                © {new Date().getFullYear()} HexaLogic. All rights reserved.
+              </Text>
+              <Text className="text-gray-400 text-xs leading-relaxed m-0 mt-1">
+                Manage your notifications at{' '}
+                <Link href={`${HEXALOGIC_URL}/portal/settings`} className="text-brand-primary underline">
+                  Portal Settings
+                </Link>
+              </Text>
+            </Section>
+          </Container>
+        </Body>
+      </EmailTailwind>
     </Html>
   );
 };
