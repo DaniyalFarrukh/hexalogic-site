@@ -8,6 +8,7 @@ import { Download, Trash2, X, ChevronLeft, ChevronRight, Upload, FileText, PlayC
 import LocalTime from './LocalTime'
 import { getFileUploadUrl, saveFileRecord, deleteMediaRecord } from '@/app/portal/(authenticated)/[slug]/files/actions'
 import { formatBytes, kindFromMime } from '@/lib/media'
+import { PdfThumbnail, DocxThumbnail, FallbackIcon, OfficeViewer, PdfViewer } from './DocumentPreview'
 
 export type MediaItem = {
   id: string
@@ -199,12 +200,12 @@ export default function MediaGallery({ media, projectId, isAdmin }: { media: Med
                     <PlayCircle className="w-10 h-10 mb-2" aria-hidden="true" />
                     <span className="text-[10px] font-bold uppercase tracking-widest truncate w-full text-center">{item.caption || 'Video'}</span>
                   </div>
+                ) : item.mime_type?.includes('pdf') ? (
+                  <PdfThumbnail url={mediaSrc(item)} />
+                ) : item.mime_type?.includes('word') || item.mime_type?.includes('document') ? (
+                  <DocxThumbnail url={mediaSrc(item)} />
                 ) : (
-                  <div className="flex flex-col items-center justify-center w-full h-full text-gray-500 group-hover:text-brand-secondary p-4">
-                    <FileText className="w-10 h-10 mb-2" aria-hidden="true" />
-                    <span className="text-xs font-medium truncate w-full text-center px-2">{item.caption || 'Document'}</span>
-                    <span className="text-[9px] uppercase tracking-wider text-gray-400 mt-1">{item.mime_type?.split('/')[1] || 'FILE'}</span>
-                  </div>
+                  <FallbackIcon mimeType={item.mime_type} caption={item.caption} />
                 )}
               </button>
               {canManage && (
@@ -301,6 +302,10 @@ export default function MediaGallery({ media, projectId, isAdmin }: { media: Med
                   preload="metadata"
                   className="max-w-full max-h-[70vh] md:max-h-[80vh] rounded-lg shadow-2xl bg-black"
                 />
+              ) : activeMedia.mime_type?.includes('pdf') ? (
+                <PdfViewer url={mediaSrc(activeMedia)} />
+              ) : activeMedia.mime_type?.includes('word') || activeMedia.mime_type?.includes('document') || activeMedia.mime_type?.includes('excel') || activeMedia.mime_type?.includes('sheet') || activeMedia.mime_type?.includes('powerpoint') || activeMedia.mime_type?.includes('presentation') ? (
+                <OfficeViewer url={mediaSrc(activeMedia)} />
               ) : (
                 <div className="text-center p-8 sm:p-12 bg-white rounded-2xl max-w-md w-full">
                   <div className="w-20 h-20 mx-auto mb-6 text-brand-secondary bg-brand-secondary/10 flex items-center justify-center rounded-full">
