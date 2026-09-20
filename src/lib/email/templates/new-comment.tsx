@@ -33,12 +33,9 @@ export const NewCommentEmail = ({
           <Container className="mx-auto py-10 px-4 w-full max-w-[600px]">
             {/* Header / Logo */}
             <Section className="bg-white rounded-t-xl p-8 border border-b-0 border-gray-200 text-center">
-              <Img
-                src={HEXALOGIC_LOGO}
-                width="180"
-                alt="HexaLogic"
-                className="mx-auto"
-              />
+              <Text className="text-brand-dark text-2xl font-extrabold tracking-tight m-0 text-center">
+                HexaLogic Tech
+              </Text>
             </Section>
 
             {/* Main Content Card */}
