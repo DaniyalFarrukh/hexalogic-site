@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, ChevronDown, Plus, UploadCloud, ArrowRight, X } from "lucide-react";
+import { Phone, Mail, MapPin, ChevronDown, Plus, UploadCloud, ArrowRight, X, Calendar } from "lucide-react";
+import { PopupButton } from "react-calendly";
 import { COUNTRIES } from "@/constants/countries";
 import { CONTACT_EMAIL, CONTACT_LOCATION, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from "@/lib/site";
 
@@ -28,6 +29,7 @@ export default function ModernContact() {
   const [countrySearch, setCountrySearch] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [rootElement, setRootElement] = useState<HTMLElement | null>(null);
   const countryRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -40,6 +42,10 @@ export default function ModernContact() {
       c.code.includes(q)
     );
   }, [countrySearch]);
+
+  useEffect(() => {
+    setRootElement(document.body);
+  }, []);
 
   // Close the country picker on outside click or Escape
   useEffect(() => {
@@ -190,7 +196,7 @@ export default function ModernContact() {
                   <Phone className="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 font-medium mb-1">Call Us</p>
+                  <p className="text-sm text-gray-500 font-medium mb-1">Chat with our AI agent or call us</p>
                   <a href={`https://wa.me/${CONTACT_PHONE_TEL.replace('+', '')}`} target="_blank" rel="noopener noreferrer" className="text-lg sm:text-xl font-semibold text-white hover:text-blue-400 transition-colors">{CONTACT_PHONE_DISPLAY}</a>
                 </div>
               </div>
@@ -204,6 +210,19 @@ export default function ModernContact() {
                   <p className="text-lg sm:text-xl font-semibold text-white">{CONTACT_LOCATION}</p>
                 </div>
               </div>
+
+              {rootElement && (
+                <div className="pt-8 mt-8 border-t border-white/10">
+                  <h3 className="text-xl font-bold text-white mb-2">Ready to discuss your vision?</h3>
+                  <p className="text-gray-400 mb-6">Pick a time that works for you and let's make it happen.</p>
+                  <PopupButton
+                    url="https://calendly.com/hexalogict"
+                    rootElement={rootElement}
+                    text="📅 Schedule a Meeting"
+                    className="w-full sm:w-auto px-8 py-4 bg-brand-primary text-white font-bold rounded-xl text-lg shadow-[0_0_20px_rgba(255,115,36,0.3)] hover:bg-[#ff8947] hover:-translate-y-1 transition-all duration-300 inline-block text-center"
+                  />
+                </div>
+              )}
             </div>
           </motion.div>
 
