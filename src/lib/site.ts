@@ -39,6 +39,7 @@ export const PUBLIC_ROUTES: { path: string; priority: number; changeFrequency: '
   { path: '/case-studies/mystique-tech', priority: 0.7, changeFrequency: 'yearly' },
   { path: '/case-studies/scorlyn', priority: 0.7, changeFrequency: 'yearly' },
   { path: '/case-studies/estateiq-ai', priority: 0.7, changeFrequency: 'yearly' },
+  { path: '/case-studies/auxleds', priority: 0.7, changeFrequency: 'yearly' },
   { path: '/contact', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/privacy', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/terms', priority: 0.3, changeFrequency: 'yearly' },

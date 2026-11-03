@@ -50,6 +50,15 @@ const WEB_PROJECTS: Project[] = [
 
 const MOBILE_PROJECTS: Project[] = [
   {
+    slug: "auxleds",
+    title: "AUXLEDs",
+    tag: "Mobile App & IoT",
+    description: "A custom mobile application combining full Shopify storefront shopping with Bluetooth vehicle hardware integration, allowing car owners to manage garage profiles and control ambient interior lights and trims in real-time.",
+    image: "/images/case-studies/auxleds-card.png",
+    alt: "AUXLEDs mobile app and smart automotive ambient lighting controls",
+    accent: "brand",
+  },
+  {
     slug: "estateiq-ai",
     title: "EstateIQ AI",
     tag: "AI & Mobile App",

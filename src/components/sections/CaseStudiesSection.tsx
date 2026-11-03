@@ -7,6 +7,17 @@ import Link from "next/link";
 
 const caseStudies = [
   {
+    id: "auxleds",
+    title: "AUXLEDs",
+    category: "Mobile App & IoT",
+    description:
+      "A dual-purpose mobile app featuring full Shopify e-commerce synchronization alongside BLE hardware controls for automotive interior lighting, CarPlay integration, and interactive garage vehicle profiles.",
+    metric: "Shopify & Hardware Sync",
+    image: "/images/case-studies/auxleds-card.png",
+    tags: ["Mobile App", "IoT Hardware", "Shopify"],
+    link: "/case-studies/auxleds",
+  },
+  {
     id: "decornish",
     title: "Decornish",
     category: "Retail & E-Commerce",
