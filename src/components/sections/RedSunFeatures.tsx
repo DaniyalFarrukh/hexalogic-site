@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BrainCircuit, Rocket, Cloud, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, BrainCircuit, Rocket, Cloud, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -16,6 +16,7 @@ type Project = {
   alt: string
   accent: "brand" | "yellow"
   fit?: "cover" | "contain"
+  externalUrl?: string
 };
 
 const WEB_PROJECTS: Project[] = [
@@ -27,6 +28,7 @@ const WEB_PROJECTS: Project[] = [
     image: "/images/case-studies/decornish-frontend.png",
     alt: "Decornish decoration store homepage",
     accent: "brand",
+    externalUrl: "https://www.decornish.com",
   },
   {
     slug: "mystique-tech",
@@ -127,7 +129,20 @@ function ProjectCard({ project }: { project: Project }) {
         <span className={`${tagColor} text-xs font-bold tracking-wider uppercase`}>{project.tag}</span>
         <h3 className={`text-2xl font-bold text-white mt-2 mb-3 ${hover} transition-colors`}>{project.title}</h3>
         <p className="text-gray-400 text-sm leading-relaxed mb-6">{project.description}</p>
-        <div className="flex items-center justify-end pt-6 border-t border-white/5">
+        <div className="flex items-center justify-between pt-6 border-t border-white/5">
+          {project.externalUrl ? (
+            <a
+              href={project.externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-brand-primary hover:text-white transition-colors text-sm font-semibold min-h-[44px]"
+            >
+              <span>Visit Website</span>
+              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+            </a>
+          ) : (
+            <span />
+          )}
           <Link href={`/case-studies/${project.slug}`} className={`inline-flex items-center gap-1.5 text-white ${hover.replace("group-", "")} transition-colors text-sm font-bold min-h-[44px]`}>
             View details <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </Link>

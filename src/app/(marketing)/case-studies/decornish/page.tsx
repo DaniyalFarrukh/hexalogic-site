@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Settings, Mail, Tag, Package, Server, PenTool, TrendingUp, Zap, CheckCircle2, ArrowRight } from "lucide-react";
+import { ArrowLeft, Settings, Mail, Tag, Package, Server, PenTool, TrendingUp, Zap, CheckCircle2, ArrowRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import gsap from "gsap";
@@ -55,11 +55,20 @@ export default function DecornishCaseStudy() {
           transition={{ duration: 0.6 }}
           className="mb-20"
         >
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex flex-wrap items-center gap-3 mb-6">
             <span className="px-3 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-bold uppercase tracking-widest rounded-full">
               E-Commerce / Retail
             </span>
             <span className="text-gray-500 text-sm font-medium">2024</span>
+            <a
+              href="https://www.decornish.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-xs text-gray-300 hover:text-white transition-colors"
+            >
+              <span>decornish.com</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight">
             Decornish: Elevating Home Decor E-Commerce
