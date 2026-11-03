@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,6 +10,7 @@ const caseStudies = [
     id: "auxleds",
     title: "AUXLEDs",
     category: "Mobile App & IoT",
+    externalUrl: "https://www.auxleds.com",
     description:
       "A dual-purpose mobile app featuring full Shopify e-commerce synchronization alongside BLE hardware controls for automotive interior lighting, CarPlay integration, and interactive garage vehicle profiles.",
     metric: "Shopify & Hardware Sync",
@@ -21,6 +22,7 @@ const caseStudies = [
     id: "decornish",
     title: "Decornish",
     category: "Retail & E-Commerce",
+    externalUrl: "https://www.decornish.com",
     description:
       "A modern, elegant e-commerce platform designed for premium home decor. We integrated automated inventory management and an intuitive visual product catalog to replace their manual spreadsheets.",
     metric: "+60% Online Sales",
@@ -125,7 +127,20 @@ export default function CaseStudiesSection() {
                   {study.description}
                 </p>
 
-                <div className="flex items-center justify-end pt-6 border-t border-white/10">
+                <div className="flex items-center justify-between pt-6 border-t border-white/10">
+                  {"externalUrl" in study && study.externalUrl ? (
+                    <a
+                      href={study.externalUrl as string}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-brand-primary hover:text-white transition-colors text-sm font-semibold min-h-[44px]"
+                    >
+                      <span>Visit Website</span>
+                      <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                    </a>
+                  ) : (
+                    <span />
+                  )}
                   <Link href={study.link} className="inline-flex items-center gap-2 text-white hover:text-brand-primary transition-colors text-sm font-bold uppercase tracking-wide group/link min-h-[44px]">
                     Read Story
                     <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" aria-hidden="true" />

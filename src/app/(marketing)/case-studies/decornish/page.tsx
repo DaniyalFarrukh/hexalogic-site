@@ -94,8 +94,27 @@ export default function DecornishCaseStudy() {
             >
               <h2 className="text-3xl font-bold text-white mb-6">The Goal</h2>
               <p className="text-gray-400 leading-relaxed font-medium">
-                Decornish required a high-performance, visually stunning platform that reflected the elegance of their home decor products. Off-the-shelf solutions were too restrictive, and manual order processing was causing severe bottlenecks. They needed a fully custom-built ecosystem that automated their daily hurdles while providing a luxurious shopping experience for their customers.
+                <a
+                  href="https://www.decornish.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-amber-400 font-semibold underline underline-offset-4 hover:text-white"
+                >
+                  Decornish (decornish.com)
+                </a>{" "}
+                required a high-performance, visually stunning platform that reflected the elegance of their home decor products. Off-the-shelf solutions were too restrictive, and manual order processing was causing severe bottlenecks. They needed a fully custom-built ecosystem that automated their daily hurdles while providing a luxurious shopping experience for their customers.
               </p>
+              <div className="mt-4 mb-2">
+                <a
+                  href="https://www.decornish.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:text-white font-semibold text-sm transition-all"
+                >
+                  <span>Visit Live Store at decornish.com</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
             </motion.section>
 
             {/* Custom Admin Dashboard Image */}
@@ -243,6 +262,25 @@ export default function DecornishCaseStudy() {
                       <div className="text-xs text-gray-500">Founders</div>
                     </div>
                   </div>
+                </div>
+
+                {/* Client Website */}
+                <div className="mb-5 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+                  <span className="text-xs uppercase font-bold text-amber-400 tracking-wider block mb-1">
+                    Client Website
+                  </span>
+                  <a
+                    href="https://www.decornish.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-white hover:text-amber-400 font-bold text-base transition-colors"
+                  >
+                    <span>decornish.com</span>
+                    <ExternalLink className="w-4 h-4 text-amber-400" />
+                  </a>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Explore Decornish's live online home decor store.
+                  </p>
                 </div>
 
                 {/* Tech Stack */}
