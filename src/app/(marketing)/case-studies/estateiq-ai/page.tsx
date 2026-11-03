@@ -207,9 +207,9 @@ export default function EstateIqCaseStudy() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-1"
           >
-            <div className="sticky top-24 max-h-[calc(100vh-6rem)] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] rounded-[2rem]">
+            <div className="sticky top-24">
               {/* Premium Card Container */}
-              <div className="bg-[#0f0f12] border border-white/[0.08] rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
+              <div className="bg-[#0f0f12] border border-white/[0.08] rounded-[2rem] p-6 sm:p-7 shadow-2xl relative overflow-hidden">
                 {/* Subtle top gradient glow */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent opacity-50" />
                 
@@ -223,11 +223,11 @@ export default function EstateIqCaseStudy() {
                 </p>
 
                 {/* Tech Stack */}
-                <div className="mb-8">
-                  <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Core Technologies</h4>
+                <div className="mb-5">
+                  <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Core Technologies</h4>
                   <div className="flex flex-wrap gap-2">
                     {["React Native", "Expo", "TypeScript", "Supabase", "PostgreSQL + PostGIS", "OpenAI API", "Google Maps"].map((tech, i) => (
-                      <span key={i} className="px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] transition-colors border border-white/[0.05] rounded-full text-xs font-medium text-gray-300 cursor-default">
+                      <span key={i} className="px-2.5 py-1 bg-white/[0.04] hover:bg-white/[0.08] transition-colors border border-white/[0.05] rounded-full text-xs font-medium text-gray-300 cursor-default">
                         {tech}
                       </span>
                     ))}
@@ -246,8 +246,8 @@ export default function EstateIqCaseStudy() {
                 </div>
 
                 {/* CTA */}
-                <div className="pt-6 border-t border-white/[0.08]">
-                  <Link href="/contact" className="group flex items-center justify-center gap-2 w-full py-4 bg-white text-black hover:bg-gray-200 font-bold rounded-2xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                <div className="pt-4 border-t border-white/[0.08]">
+                  <Link href="/contact" className="group flex items-center justify-center gap-2 w-full py-3.5 bg-white text-black text-sm hover:bg-gray-200 font-bold rounded-2xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                     Start Your Mobile App
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Link>

@@ -195,7 +195,7 @@ export default function AuxledsCaseStudy() {
                     className="feature-card p-6 rounded-2xl bg-[#121214] border border-white/5 hover:border-brand-primary/30 transition-colors flex flex-col justify-between group"
                   >
                     <div>
-                      <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary mb-4 group-hover:scale-110 transition-transform">
+                      <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary mb-4 group-hover:scale-110 transition-transform">
                         <feature.icon className="w-6 h-6" />
                       </div>
                       <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
@@ -237,7 +237,7 @@ export default function AuxledsCaseStudy() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-1"
           >
-            <div className="sticky top-28 space-y-8">
+            <div className="sticky top-24">
               <div className="p-8 rounded-3xl bg-[#121214] border border-white/10 shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/10 blur-3xl rounded-full pointer-events-none" />
 
@@ -246,43 +246,43 @@ export default function AuxledsCaseStudy() {
                   Key Outcomes
                 </h3>
 
-                <div className="space-y-4 mb-8">
+                <div className="space-y-3 mb-5">
                   {/* Metric 1 */}
-                  <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.02] flex items-center gap-4 transition-colors hover:bg-white/[0.05]">
-                    <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center shrink-0">
+                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.02] flex items-center gap-4 transition-colors hover:bg-white/[0.05]">
+                    <div className="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center shrink-0">
                       <Zap className="w-5 h-5 text-brand-primary" />
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-white">Real-Time</div>
-                      <div className="text-sm text-gray-400 font-medium">BLE Hardware Sync</div>
+                      <div className="text-xl font-bold text-white">Real-Time</div>
+                      <div className="text-xs text-gray-400 font-medium">BLE Hardware Sync</div>
                     </div>
                   </div>
 
                   {/* Metric 2 */}
-                  <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.02] flex items-center gap-4 transition-colors hover:bg-white/[0.05]">
-                    <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
+                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.02] flex items-center gap-4 transition-colors hover:bg-white/[0.05]">
+                    <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
                       <ShoppingBag className="w-5 h-5 text-green-400" />
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-white">100% Sync</div>
-                      <div className="text-sm text-gray-400 font-medium">Shopify Web Storefront</div>
+                      <div className="text-xl font-bold text-white">100% Sync</div>
+                      <div className="text-xs text-gray-400 font-medium">Shopify Web Storefront</div>
                     </div>
                   </div>
 
                   {/* Metric 3 */}
-                  <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.02] flex items-center gap-4 transition-colors hover:bg-white/[0.05]">
-                    <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
+                  <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.02] flex items-center gap-4 transition-colors hover:bg-white/[0.05]">
+                    <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0">
                       <Car className="w-5 h-5 text-blue-400" />
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-white">Multi-Car</div>
-                      <div className="text-sm text-gray-400 font-medium">Virtual Garage Profiles</div>
+                      <div className="text-xl font-bold text-white">Multi-Car</div>
+                      <div className="text-xs text-gray-400 font-medium">Virtual Garage Profiles</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Client Link */}
-                <div className="mb-8 p-5 rounded-2xl bg-brand-primary/5 border border-brand-primary/20">
+                <div className="mb-5 p-4 rounded-2xl bg-brand-primary/5 border border-brand-primary/20">
                   <span className="text-xs uppercase font-bold text-brand-primary tracking-wider block mb-1">
                     Client Website
                   </span>
@@ -316,7 +316,7 @@ export default function AuxledsCaseStudy() {
                     ].map((tech, i) => (
                       <span
                         key={i}
-                        className="px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] transition-colors border border-white/[0.05] rounded-full text-xs font-medium text-gray-300 cursor-default"
+                        className="px-2.5 py-1 bg-white/[0.04] hover:bg-white/[0.08] transition-colors border border-white/[0.05] rounded-full text-xs font-medium text-gray-300 cursor-default"
                       >
                         {tech}
                       </span>
@@ -325,10 +325,10 @@ export default function AuxledsCaseStudy() {
                 </div>
 
                 {/* CTA */}
-                <div className="pt-6 border-t border-white/[0.08]">
+                <div className="pt-4 border-t border-white/[0.08]">
                   <Link
                     href="/contact"
-                    className="group flex items-center justify-center gap-2 w-full py-4 bg-brand-primary hover:bg-[#ff8947] text-white font-bold rounded-2xl transition-all shadow-[0_0_20px_rgba(255,115,36,0.25)]"
+                    className="group flex items-center justify-center gap-2 w-full py-3.5 bg-brand-primary text-sm hover:bg-[#ff8947] text-white font-bold rounded-2xl transition-all shadow-[0_0_20px_rgba(255,115,36,0.25)]"
                   >
                     Start Your Project
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -342,3 +342,4 @@ export default function AuxledsCaseStudy() {
     </div>
   );
 }
+
