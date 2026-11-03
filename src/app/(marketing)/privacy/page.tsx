@@ -9,59 +9,133 @@ export const metadata: Metadata = {
   alternates: { canonical: "/privacy" },
 };
 
-const LAST_UPDATED = "Nov 3, 2026";
+const LAST_UPDATED = "November 3, 2026";
 
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-surface-darkest text-white pt-28 sm:pt-32 pb-24 px-6 md:px-12 selection:bg-brand-primary selection:text-white">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
+        {/* Header - Clean title with NO dash */}
         <div className="mb-10">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-            HexaLogic Tech Solutions — <span className="text-brand-primary">Privacy Policy</span>
+            Privacy <span className="text-brand-primary">Policy</span>
           </h1>
           <p className="text-gray-400 text-sm mb-6">Last updated: {LAST_UPDATED}</p>
+          <p className="text-gray-300 text-base md:text-lg leading-relaxed font-normal">
+            Welcome to HexaLogic Tech Solutions. We respect your privacy and are committed to protecting your personal data across our website, our client portal, our software development projects, and our internal tools and integrations.
+          </p>
         </div>
 
-        {/* Quick Links Table of Contents */}
-        <nav aria-label="Table of Contents" className="mb-12 p-6 rounded-2xl bg-[#121214] border border-white/10">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-4 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-primary" aria-hidden="true" />
-            Table of Contents
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm text-gray-300">
-            <a href="#who-we-are" className="hover:text-brand-primary transition-colors">1. Who we are</a>
-            <a href="#data-we-collect" className="hover:text-brand-primary transition-colors">2. Data we collect</a>
-            <a href="#how-we-use-data" className="hover:text-brand-primary transition-colors">3. How &amp; why we use data</a>
-            <a href="#client-credentials" className="hover:text-brand-primary transition-colors">4. Client credentials &amp; data</a>
-            <a href="#cookies-analytics" className="hover:text-brand-primary transition-colors">5. Cookies &amp; analytics</a>
-            <a href="#who-we-share-with" className="hover:text-brand-primary transition-colors">6. Who we share data with</a>
-            <a href="#international-transfers" className="hover:text-brand-primary transition-colors">7. International data transfers</a>
-            <a href="#data-retention" className="hover:text-brand-primary transition-colors">8. How long we keep data</a>
-            <a href="#data-security" className="hover:text-brand-primary transition-colors">9. How we keep data secure</a>
-            <a href="#your-rights" className="hover:text-brand-primary transition-colors">10. Your rights</a>
-            <a href="#children" className="hover:text-brand-primary transition-colors">11. Children</a>
-            <a href="#policy-changes" className="hover:text-brand-primary transition-colors">12. Changes to this policy</a>
-            <a href="#contact-us" className="hover:text-brand-primary transition-colors">13. Contact us</a>
-            <a href="#pinterest-integration" className="text-brand-primary hover:underline font-semibold">14. Pinterest API Integration</a>
-          </div>
-        </nav>
+        {/* Quick Jump Pills */}
+        <div className="flex flex-wrap gap-2.5 mb-12 pb-6 border-b border-white/10 text-sm">
+          <a
+            href="#who-we-are"
+            className="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-brand-primary/10 hover:text-brand-primary text-gray-300 transition-colors border border-white/5"
+          >
+            Who We Are
+          </a>
+          <a
+            href="#pinterest-integration"
+            className="px-3.5 py-1.5 rounded-full bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary font-semibold transition-colors border border-brand-primary/30"
+          >
+            Pinterest Integration
+          </a>
+          <a
+            href="#data-we-collect"
+            className="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-brand-primary/10 hover:text-brand-primary text-gray-300 transition-colors border border-white/5"
+          >
+            Data We Collect
+          </a>
+          <a
+            href="#client-credentials"
+            className="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-brand-primary/10 hover:text-brand-primary text-gray-300 transition-colors border border-white/5"
+          >
+            Credentials &amp; Security
+          </a>
+          <a
+            href="#your-rights"
+            className="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-brand-primary/10 hover:text-brand-primary text-gray-300 transition-colors border border-white/5"
+          >
+            Your Rights
+          </a>
+          <a
+            href="#contact-us"
+            className="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-brand-primary/10 hover:text-brand-primary text-gray-300 transition-colors border border-white/5"
+          >
+            Contact
+          </a>
+        </div>
 
-        {/* Main Sections */}
+        {/* Body Content */}
         <div className="space-y-12 text-gray-300 leading-relaxed font-normal">
 
           {/* 1. Who we are */}
           <section id="who-we-are" className="scroll-mt-28">
             <h2 className="text-2xl font-bold text-white mb-4">1. Who we are</h2>
             <p className="mb-4">
-              HexaLogic Tech Solutions (&quot;HexaLogic&quot;, &quot;we&quot;, &quot;us&quot;) is a software and technology services company based in Pakistan. We serve clients in Pakistan, the European Union, the United Kingdom, the United States and Canada.
+              HexaLogic Tech Solutions (&quot;HexaLogic&quot;, &quot;we&quot;, &quot;us&quot;) is a software and technology services company based in Pakistan. We build custom software, web platforms, mobile applications, and automation tools for clients in Pakistan, the European Union, the United Kingdom, the United States, and Canada.
             </p>
             <p className="mb-4">
-              This policy explains what personal data we collect when you visit <span className="text-white font-medium">hexalogictechandsolutions.com</span>, use our client portal, or work with us on a project. It also explains how we use, share and protect that data, and the rights you have over it.
+              This policy explains what personal data we collect when you visit <span className="text-white font-medium">hexalogictechandsolutions.com</span>, use our client portal, or work with us on a project. It also explains how we use, share, and protect that data, and the rights you have over it.
             </p>
             <p className="text-gray-400">
-              For data covered by this policy, HexaLogic is the <strong className="text-white">data controller</strong>. When a client gives us data about their own customers or users as part of a project, we act as the client&apos;s <strong className="text-white">data processor</strong> and handle that data only on the client&apos;s instructions.
+              For data covered by this policy, HexaLogic is the <strong className="text-white">data controller</strong>. When a client provides us with data about their own customers or users as part of a project, we act as the client&apos;s <strong className="text-white">data processor</strong> and handle that data only on the client&apos;s instructions.
             </p>
+          </section>
+
+          {/* PINTEREST API INTEGRATION (PROMINENT DEDICATED CLAUSE) */}
+          <section
+            id="pinterest-integration"
+            className="scroll-mt-28 rounded-2xl bg-[#121214] border border-brand-primary/30 p-6 sm:p-8 relative overflow-hidden"
+          >
+            <div className="mb-5">
+              <span className="text-xs font-semibold uppercase tracking-wider text-brand-primary">Internal Tool Integration</span>
+              <h2 className="text-2xl font-bold text-white mt-1">Pinterest API Integration &amp; Publishing</h2>
+            </div>
+
+            <p className="mb-6 text-gray-200">
+              HexaLogic Tech Solutions operates an internal tool that connects to Pinterest through Pinterest’s official API to publish pins to Pinterest accounts owned by HexaLogic Tech Solutions and its brands.
+            </p>
+
+            <div className="space-y-5 text-gray-300">
+              <div className="border-t border-white/5 pt-4">
+                <h3 className="text-white font-semibold mb-1">Data we access</h3>
+                <p className="text-gray-400">
+                  With our own authorisation, the tool reads the list of boards on our account and creates pins (image, title, description, destination link). It does not access, collect or store data about other Pinterest users.
+                </p>
+              </div>
+
+              <div className="border-t border-white/5 pt-4">
+                <h3 className="text-white font-semibold mb-1">How it is stored</h3>
+                <p className="text-gray-400">
+                  Access tokens issued by Pinterest are stored securely on our own systems, are used only to publish our content, and are never shared with third parties. We keep a record of the pins we publish, for scheduling purposes only.
+                </p>
+              </div>
+
+              <div className="border-t border-white/5 pt-4">
+                <h3 className="text-white font-semibold mb-1">Affiliate links</h3>
+                <p className="text-gray-400">
+                  Some pins link to products on Amazon. As an Amazon Associate we earn from qualifying purchases. This is disclosed on each pin.
+                </p>
+              </div>
+
+              <div className="border-t border-white/5 pt-4">
+                <h3 className="text-white font-semibold mb-1">Revoking access</h3>
+                <p className="text-gray-400">
+                  Access can be revoked at any time from Pinterest’s settings under <span className="text-white font-medium">Security → Apps</span>, after which the tool can no longer reach the account.
+                </p>
+              </div>
+
+              <div className="border-t border-white/5 pt-4">
+                <h3 className="text-white font-semibold mb-1">Contact</h3>
+                <p className="text-gray-400">
+                  Privacy questions about this integration can be sent to{" "}
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="text-brand-primary hover:underline">
+                    {CONTACT_EMAIL}
+                  </a>.
+                </p>
+              </div>
+            </div>
           </section>
 
           {/* 2. Data we collect */}
@@ -436,61 +510,6 @@ export default function PrivacyPolicy() {
                   hexalogictechandsolutions.com/contact
                 </Link>
               </p>
-            </div>
-          </section>
-
-          {/* 14. Project Integrations & Pinterest API Publishing Tool */}
-          <section
-            id="pinterest-integration"
-            className="scroll-mt-28 rounded-2xl bg-[#121214] border border-brand-primary/20 p-6 sm:p-8"
-          >
-            <div className="mb-5">
-              <span className="text-xs font-semibold uppercase tracking-wider text-brand-primary">Project Integration Disclosures</span>
-              <h2 className="text-2xl font-bold text-white mt-1">14. Pinterest API Integration &amp; Publishing Tool</h2>
-            </div>
-
-            <p className="mb-6 text-gray-200">
-              HexaLogic Tech Solutions operates an internal tool that connects to Pinterest through Pinterest’s official API to publish pins to Pinterest accounts owned by HexaLogic Tech Solutions and its brands.
-            </p>
-
-            <div className="space-y-5 text-gray-300">
-              <div className="border-t border-white/5 pt-4">
-                <h3 className="text-white font-semibold mb-1">Data we access</h3>
-                <p className="text-gray-400">
-                  With our own authorisation, the tool reads the list of boards on our account and creates pins (image, title, description, destination link). It does not access, collect or store data about other Pinterest users.
-                </p>
-              </div>
-
-              <div className="border-t border-white/5 pt-4">
-                <h3 className="text-white font-semibold mb-1">How it is stored</h3>
-                <p className="text-gray-400">
-                  Access tokens issued by Pinterest are stored securely on our own systems, are used only to publish our content, and are never shared with third parties. We keep a record of the pins we publish, for scheduling purposes only.
-                </p>
-              </div>
-
-              <div className="border-t border-white/5 pt-4">
-                <h3 className="text-white font-semibold mb-1">Affiliate links</h3>
-                <p className="text-gray-400">
-                  Some pins link to products on Amazon. As an Amazon Associate we earn from qualifying purchases. This is disclosed on each pin.
-                </p>
-              </div>
-
-              <div className="border-t border-white/5 pt-4">
-                <h3 className="text-white font-semibold mb-1">Revoking access</h3>
-                <p className="text-gray-400">
-                  Access can be revoked at any time from Pinterest’s settings under <span className="text-white font-medium">Security → Apps</span>, after which the tool can no longer reach the account.
-                </p>
-              </div>
-
-              <div className="border-t border-white/5 pt-4">
-                <h3 className="text-white font-semibold mb-1">Contact</h3>
-                <p className="text-gray-400">
-                  Privacy questions about this integration can be sent to{" "}
-                  <a href={`mailto:${CONTACT_EMAIL}`} className="text-brand-primary hover:underline">
-                    {CONTACT_EMAIL}
-                  </a>.
-                </p>
-              </div>
             </div>
           </section>
 
