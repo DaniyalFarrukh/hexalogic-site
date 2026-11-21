@@ -74,7 +74,7 @@ export const WelcomeEmail = ({
                 © {new Date().getFullYear()} HexaLogic. All rights reserved.
               </Text>
               <Text className="text-gray-400 text-xs leading-relaxed m-0 mt-1">
-                If you didn't request this email, please ignore it or contact support.
+                If you didn&apos;t request this email, please ignore it or contact support.
               </Text>
             </Section>
           </Container>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 import { Phone, Mail, MapPin, ChevronDown, Plus, UploadCloud, ArrowRight, X } from "lucide-react";
 import { PopupButton } from "react-calendly";
@@ -35,7 +35,11 @@ export default function ModernContact() {
   const [countrySearch, setCountrySearch] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [rootElement, setRootElement] = useState<HTMLElement | null>(null);
+  const rootElement = useSyncExternalStore(
+    () => () => {},
+    () => document.body,
+    () => null
+  );
   const countryRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -49,10 +53,6 @@ export default function ModernContact() {
         c.code.includes(q)
     );
   }, [countrySearch]);
-
-  useEffect(() => {
-    setRootElement(document.body);
-  }, []);
 
   useEffect(() => {
     if (!isCountryOpen) return;

@@ -44,7 +44,7 @@ export const ProjectCompleteEmail = ({
               </Text>
 
               <Text className="text-gray-600 text-base leading-relaxed m-0 mb-6 text-center">
-                We're thrilled to announce that all milestones for your project have been successfully completed. 
+                We&apos;re thrilled to announce that all milestones for your project have been successfully completed. 
                 Thank you for partnering with HexaLogic!
               </Text>
 
