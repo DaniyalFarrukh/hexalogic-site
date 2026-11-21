@@ -2,29 +2,35 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, ChevronDown, Plus, UploadCloud, ArrowRight, X, Calendar } from "lucide-react";
+import { Phone, Mail, MapPin, ChevronDown, Plus, UploadCloud, ArrowRight, X } from "lucide-react";
 import { PopupButton } from "react-calendly";
 import { COUNTRIES } from "@/constants/countries";
 import { CONTACT_EMAIL, CONTACT_LOCATION, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from "@/lib/site";
+import { EASE_EDITORIAL, EASE_SNAP } from "@/components/motion/EditorialReveal";
 
 const MAX_FILE_BYTES = 2 * 1024 * 1024;
 const ACCEPTED_TYPES = [".pdf", ".doc", ".docx", ".png", ".jpg", ".jpeg", ".zip"];
 
-/** Small country-code badge; renders identically on every OS (flag emoji do not). */
-function CountryCode({ code }: { code: string }) {
-  return <span className="text-[10px] font-bold tracking-wider text-gray-300 bg-white/10 rounded px-1.5 py-0.5 leading-none">{code.toUpperCase()}</span>;
-}
-
 const inputClass =
-  "w-full px-5 py-4 bg-surface-darkest border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-brand-primary transition-all duration-300 placeholder:text-gray-500 hover:border-white/30";
+  "w-full px-4 py-3.5 bg-paper border border-line-strong rounded-xl text-sm text-ink focus:outline-none focus:border-accent transition-colors duration-200 placeholder:text-ink-muted hover:border-ink/35";
 
 export default function ModernContact() {
-  const [form, setForm] = useState({ helpType: "", name: "", email: "", phone: "", location: "", message: "", website: "" });
+  const [form, setForm] = useState({
+    helpType: "",
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
+    message: "",
+    website: "",
+  });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [fileError, setFileError] = useState("");
   const [showAttachments, setShowAttachments] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState(COUNTRIES.find(c => c.code === "pk") || COUNTRIES[0]);
+  const [selectedCountry, setSelectedCountry] = useState(
+    COUNTRIES.find((c) => c.code === "pk") || COUNTRIES[0]
+  );
   const [isCountryOpen, setIsCountryOpen] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -36,10 +42,11 @@ export default function ModernContact() {
   const filteredCountries = useMemo(() => {
     const q = countrySearch.trim().toLowerCase();
     if (!q) return COUNTRIES;
-    return COUNTRIES.filter(c =>
-      c.name.toLowerCase().includes(q) ||
-      c.dial.includes(q) ||
-      c.code.includes(q)
+    return COUNTRIES.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.dial.includes(q) ||
+        c.code.includes(q)
     );
   }, [countrySearch]);
 
@@ -47,11 +54,11 @@ export default function ModernContact() {
     setRootElement(document.body);
   }, []);
 
-  // Close the country picker on outside click or Escape
   useEffect(() => {
     if (!isCountryOpen) return;
     const onClick = (e: MouseEvent) => {
-      if (countryRef.current && !countryRef.current.contains(e.target as Node)) setIsCountryOpen(false);
+      if (countryRef.current && !countryRef.current.contains(e.target as Node))
+        setIsCountryOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsCountryOpen(false);
@@ -91,12 +98,13 @@ export default function ModernContact() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const toBase64 = (file: File) => new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = error => reject(error);
-  });
+  const toBase64 = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,7 +117,7 @@ export default function ModernContact() {
         fileData = {
           name: selectedFile.name,
           type: selectedFile.type,
-          data: await toBase64(selectedFile)
+          data: await toBase64(selectedFile),
         };
       }
 
@@ -130,7 +138,7 @@ export default function ModernContact() {
           email: form.email,
           message: fullMessage,
           website: form.website,
-          file: fileData
+          file: fileData,
         }),
       });
 
@@ -141,121 +149,161 @@ export default function ModernContact() {
       }
 
       setStatus("success");
-      setForm({ helpType: "", name: "", email: "", phone: "", location: "", message: "", website: "" });
+      setForm({
+        helpType: "",
+        name: "",
+        email: "",
+        phone: "",
+        location: "",
+        message: "",
+        website: "",
+      });
       removeFile();
       setShowAttachments(false);
 
       setTimeout(() => setStatus("idle"), 6000);
     } catch (err: unknown) {
       setStatus("error");
-      setErrorMessage(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setErrorMessage(
+        err instanceof Error ? err.message : "Something went wrong. Please try again."
+      );
     }
   };
 
   return (
-    <div className="min-h-screen bg-surface-darkest pt-28 sm:pt-32 pb-16 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-brand-primary/10 blur-[150px] rounded-full translate-x-1/3 -translate-y-1/4 pointer-events-none" aria-hidden="true" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/10 blur-[120px] rounded-full -translate-x-1/3 translate-y-1/3 pointer-events-none" aria-hidden="true" />
+    <div className="min-h-[100dvh] bg-paper text-ink pt-28 sm:pt-32 pb-20 relative overflow-x-clip">
+      <div className="absolute inset-0 ds-hairline-grid opacity-60 pointer-events-none" aria-hidden="true" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
-
+      <div className="max-w-7xl mx-auto px-[var(--ds-gutter)] relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.7, ease: EASE_EDITORIAL }}
             className="flex flex-col justify-center"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 w-fit mb-6">
-              <span className="w-2 h-2 rounded-full bg-brand-primary animate-pulse" aria-hidden="true" />
-              <span className="text-xs font-medium text-gray-300 uppercase tracking-wider">Contact Us</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-card border border-line w-fit mb-6">
+              <span className="w-2 h-2 rounded-full bg-accent" aria-hidden="true" />
+              <span className="ds-meta text-ink-soft">Contact Us</span>
             </div>
 
-            <h1 className="text-[clamp(2.5rem,5vw,3.75rem)] font-bold text-white mb-6 tracking-tight leading-tight text-balance">
-              Let&apos;s build something <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7324] to-[#ff9b66]">amazing</span> together.
+            <h1 className="text-[clamp(2.5rem,5vw,4rem)] ds-display text-ink mb-6 text-balance">
+              Let&apos;s build something <span className="text-accent">amazing</span> together.
             </h1>
 
-            <p className="text-gray-400 text-lg mb-12 max-w-lg leading-relaxed">
+            <p className="text-ink-soft text-base sm:text-lg mb-10 max-w-lg leading-relaxed">
               Whether you have a groundbreaking idea, need to modernize your infrastructure, or just want to say hi, our team is ready to hear from you.
             </p>
 
-            <div className="space-y-8">
-              <div className="flex items-start gap-4 group">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-brand-primary shrink-0">
+            <div className="space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-card border border-line flex items-center justify-center text-accent shrink-0 shadow-[var(--ds-shadow-card)]">
                   <Mail className="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 font-medium mb-1">Email Us</p>
-                  <a href={`mailto:${CONTACT_EMAIL}`} className="text-lg sm:text-xl font-semibold text-white hover:text-brand-primary transition-colors break-all">{CONTACT_EMAIL}</a>
+                  <p className="ds-meta text-ink-muted mb-1">Email Us</p>
+                  <a
+                    href={`mailto:${CONTACT_EMAIL}`}
+                    className="text-lg font-semibold text-ink hover:text-accent transition-colors break-all"
+                  >
+                    {CONTACT_EMAIL}
+                  </a>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 group">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 shrink-0">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-card border border-line flex items-center justify-center text-ink shrink-0 shadow-[var(--ds-shadow-card)]">
                   <Phone className="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 font-medium mb-1">Chat with our AI agent or call us</p>
-                  <a href={`https://wa.me/${CONTACT_PHONE_TEL.replace('+', '')}`} target="_blank" rel="noopener noreferrer" className="text-lg sm:text-xl font-semibold text-white hover:text-blue-400 transition-colors">{CONTACT_PHONE_DISPLAY}</a>
+                  <p className="ds-meta text-ink-muted mb-1">
+                    Chat with our AI agent or call us
+                  </p>
+                  <a
+                    href={`https://wa.me/${CONTACT_PHONE_TEL.replace("+", "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-lg font-semibold text-ink hover:text-accent transition-colors"
+                  >
+                    {CONTACT_PHONE_DISPLAY}
+                  </a>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 group">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400 shrink-0">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-card border border-line flex items-center justify-center text-ink shrink-0 shadow-[var(--ds-shadow-card)]">
                   <MapPin className="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 font-medium mb-1">Visit Us</p>
-                  <p className="text-lg sm:text-xl font-semibold text-white">{CONTACT_LOCATION}</p>
+                  <p className="ds-meta text-ink-muted mb-1">Visit Us</p>
+                  <p className="text-lg font-semibold text-ink">{CONTACT_LOCATION}</p>
                 </div>
               </div>
 
               {rootElement && (
-                <div className="pt-8 mt-8 border-t border-white/10">
-                  <h3 className="text-xl font-bold text-white mb-2">Ready to discuss your vision?</h3>
-                  <p className="text-gray-400 mb-6">Pick a time that works for you and let's make it happen.</p>
+                <div className="pt-8 mt-6 border-t border-line-strong">
+                  <h3 className="text-xl ds-heading text-ink mb-2">
+                    Ready to discuss your vision?
+                  </h3>
+                  <p className="text-ink-soft text-sm sm:text-base mb-5">
+                    Pick a time that works for you and let&apos;s make it happen.
+                  </p>
                   <PopupButton
                     url="https://calendly.com/hexalogict"
                     rootElement={rootElement}
                     text="📅 Schedule a Meeting"
-                    className="w-full sm:w-auto px-8 py-4 bg-brand-primary text-white font-bold rounded-xl text-lg shadow-[0_0_20px_rgba(255,115,36,0.3)] hover:bg-[#ff8947] hover:-translate-y-1 transition-all duration-300 inline-block text-center"
+                    className="ds-pill w-full sm:w-auto px-8 py-3.5 min-h-[48px] bg-accent text-white hover:bg-accent-hover text-sm font-semibold inline-flex items-center justify-center cursor-pointer"
                   />
                 </div>
               )}
             </div>
           </motion.div>
 
-          {/* Form */}
+          {/* Form Card */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-[#121214] border border-white/10 rounded-3xl p-6 sm:p-10 shadow-2xl relative"
+            transition={{ duration: 0.7, delay: 0.1, ease: EASE_EDITORIAL }}
+            className="bg-card border border-line-strong rounded-[var(--ds-radius-bento)] p-6 sm:p-9 shadow-[var(--ds-shadow-elevated)] relative"
           >
-            <div className="absolute top-0 left-0 w-full h-1 rounded-t-3xl bg-gradient-to-r from-[#FF7324] to-[#ff9b66]" aria-hidden="true" />
+            <div className="absolute top-0 left-0 w-full h-1 rounded-t-[var(--ds-radius-bento)] bg-accent" aria-hidden="true" />
 
-            <h2 className="text-2xl font-bold text-white mb-8">Send a Message</h2>
+            <h2 className="text-2xl ds-heading text-ink mb-7">Send a Message</h2>
 
-            <form onSubmit={handleSubmit} className="space-y-5" noValidate={false}>
-              {/* Honeypot: hidden from humans, filled by bots */}
+            <form onSubmit={handleSubmit} className="space-y-4" noValidate={false}>
+              {/* Honeypot */}
               <div className="absolute -left-[9999px] top-0" aria-hidden="true">
                 <label htmlFor="website">Website</label>
-                <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" value={form.website} onChange={(e) => setForm({ ...form, website: e.target.value })} />
+                <input
+                  id="website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={form.website}
+                  onChange={(e) => setForm({ ...form, website: e.target.value })}
+                />
               </div>
 
               <div className="relative">
-                <label htmlFor="helpType" className="sr-only">How can we help you?</label>
+                <label htmlFor="helpType" className="sr-only">
+                  How can we help you?
+                </label>
                 <select
                   id="helpType"
                   value={form.helpType}
                   onChange={(e) => setForm({ ...form, helpType: e.target.value })}
                   required
-                  className={`w-full px-5 py-4 appearance-none bg-surface-darkest rounded-xl text-sm focus:outline-none transition-all duration-300 border hover:border-white/30 ${
-                    form.helpType === "" ? "border-white/10 text-gray-400" : "border-white/20 text-white focus:border-brand-primary"
+                  className={`w-full px-4 py-3.5 appearance-none bg-paper rounded-xl text-sm focus:outline-none transition-colors border hover:border-ink/35 ${
+                    form.helpType === ""
+                      ? "border-line-strong text-ink-soft"
+                      : "border-line-strong text-ink focus:border-accent"
                   }`}
                 >
-                  <option value="" disabled>How can we help you? *</option>
+                  <option value="" disabled>
+                    How can we help you? *
+                  </option>
                   <option value="web-development">Web Development</option>
                   <option value="custom-software">Custom Software</option>
                   <option value="ui-ux-design">UI/UX Design</option>
@@ -264,78 +312,128 @@ export default function ModernContact() {
                   <option value="business-automation">Business Automation</option>
                   <option value="other">Something else</option>
                 </select>
-                <div className="absolute inset-y-0 right-5 flex items-center pointer-events-none text-gray-400">
+                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-ink-soft">
                   <ChevronDown className="w-4 h-4" aria-hidden="true" />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="name" className="sr-only">Your name</label>
-                  <input id="name" type="text" autoComplete="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your Name *" required maxLength={120} className={inputClass} />
+                  <label htmlFor="name" className="sr-only">
+                    Your name
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    autoComplete="name"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    placeholder="Your Name *"
+                    required
+                    maxLength={120}
+                    className={inputClass}
+                  />
                 </div>
                 <div>
-                  <label htmlFor="email" className="sr-only">Your email</label>
-                  <input id="email" type="email" autoComplete="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Your Email *" required className={inputClass} />
+                  <label htmlFor="email" className="sr-only">
+                    Your email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    placeholder="Your Email *"
+                    required
+                    className={inputClass}
+                  />
                 </div>
               </div>
 
               {/* Phone */}
-              <div className="flex bg-surface-darkest border border-white/10 rounded-xl focus-within:border-brand-primary transition-all duration-300 hover:border-white/30 group/phone">
-                <div className="relative shrink-0 border-r border-white/10" ref={countryRef}>
+              <div className="flex bg-paper border border-line-strong rounded-xl focus-within:border-accent transition-colors hover:border-ink/35">
+                <div className="relative shrink-0 border-r border-line-strong" ref={countryRef}>
                   <button
                     type="button"
                     onClick={() => setIsCountryOpen(!isCountryOpen)}
                     aria-haspopup="listbox"
                     aria-expanded={isCountryOpen}
                     aria-label={`Country code ${selectedCountry.dial}, ${selectedCountry.name}`}
-                    className="h-full flex items-center gap-2 px-4 sm:px-5 min-h-[56px] hover:bg-white/5 transition-colors rounded-l-xl"
+                    className="h-full flex items-center gap-2 px-3.5 sm:px-4 min-h-[50px] hover:bg-paper-alt transition-colors rounded-l-xl"
                   >
-                    <img src={`https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.4/flags/4x3/${selectedCountry.code.toLowerCase()}.svg`} alt="" className="w-5 h-auto rounded-[2px] object-cover" />
-                    <span className="text-base text-gray-300 font-medium">{selectedCountry.dial}</span>
-                    <ChevronDown className={`w-3.5 h-3.5 text-gray-500 transition-transform ${isCountryOpen ? "rotate-180" : ""}`} aria-hidden="true" />
+                    <img
+                      src={`https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.4/flags/4x3/${selectedCountry.code.toLowerCase()}.svg`}
+                      alt=""
+                      className="w-5 h-auto rounded-[2px] object-cover"
+                    />
+                    <span className="text-sm text-ink font-medium">{selectedCountry.dial}</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 text-ink-soft transition-transform ${
+                        isCountryOpen ? "rotate-180" : ""
+                      }`}
+                      aria-hidden="true"
+                    />
                   </button>
                   {isCountryOpen && (
-                    <div className="absolute top-full left-0 mt-2 w-[min(320px,calc(100vw-3rem))] bg-[#121214] border border-white/10 rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden">
-                      <div className="p-2 border-b border-white/10">
-                        <label htmlFor="country-search" className="sr-only">Search country</label>
+                    <div className="absolute top-full left-0 mt-2 w-[min(320px,calc(100vw-3rem))] bg-card border border-line-strong rounded-xl shadow-[var(--ds-shadow-elevated)] z-50 flex flex-col overflow-hidden">
+                      <div className="p-2 border-b border-line">
+                        <label htmlFor="country-search" className="sr-only">
+                          Search country
+                        </label>
                         <input
                           id="country-search"
                           type="text"
                           placeholder="Search country..."
                           value={countrySearch}
                           onChange={(e) => setCountrySearch(e.target.value)}
-                          className="w-full px-3 py-2 bg-surface-darkest border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-brand-primary transition-colors"
+                          className="w-full px-3 py-2 bg-paper border border-line rounded-lg text-sm text-ink focus:outline-none focus:border-accent transition-colors"
                           autoFocus
                         />
                       </div>
                       <ul className="max-h-60 overflow-y-auto overscroll-contain py-1" role="listbox">
-                        {filteredCountries.length > 0 ? filteredCountries.map((c) => (
-                          <li key={c.code} role="option" aria-selected={c.code === selectedCountry.code}>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedCountry(c);
-                                setIsCountryOpen(false);
-                                setCountrySearch("");
-                              }}
-                              className="w-full flex items-center justify-between px-4 py-3 min-h-[44px] hover:bg-white/5 text-sm text-left transition-colors"
+                        {filteredCountries.length > 0 ? (
+                          filteredCountries.map((c) => (
+                            <li
+                              key={c.code}
+                              role="option"
+                              aria-selected={c.code === selectedCountry.code}
                             >
-                              <span className="flex items-center gap-3 text-gray-300 truncate pr-2">
-                                <img src={`https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.4/flags/4x3/${c.code.toLowerCase()}.svg`} alt="" className="w-5 h-auto rounded-[2px] object-cover" />
-                                <span className="truncate">{c.name}</span>
-                              </span>
-                              <span className="text-gray-500 shrink-0">{c.dial}</span>
-                            </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedCountry(c);
+                                  setIsCountryOpen(false);
+                                  setCountrySearch("");
+                                }}
+                                className="w-full flex items-center justify-between px-4 py-2.5 min-h-[44px] hover:bg-paper-alt text-sm text-left transition-colors"
+                              >
+                                <span className="flex items-center gap-3 text-ink truncate pr-2">
+                                  <img
+                                    src={`https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.4/flags/4x3/${c.code.toLowerCase()}.svg`}
+                                    alt=""
+                                    className="w-5 h-auto rounded-[2px] object-cover"
+                                  />
+                                  <span className="truncate">{c.name}</span>
+                                </span>
+                                <span className="font-mono text-xs text-ink-soft shrink-0">
+                                  {c.dial}
+                                </span>
+                              </button>
+                            </li>
+                          ))
+                        ) : (
+                          <li className="px-4 py-3 text-sm text-ink-soft text-center">
+                            No countries found
                           </li>
-                        )) : (
-                          <li className="px-4 py-3 text-sm text-gray-500 text-center">No countries found</li>
                         )}
                       </ul>
                     </div>
                   )}
                 </div>
-                <label htmlFor="phone" className="sr-only">Phone number</label>
+                <label htmlFor="phone" className="sr-only">
+                  Phone number
+                </label>
                 <input
                   id="phone"
                   type="tel"
@@ -343,17 +441,30 @@ export default function ModernContact() {
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   placeholder="Phone"
-                  className="w-full flex-1 px-5 py-4 bg-transparent text-base tracking-wide text-white focus:outline-none placeholder:text-gray-500 min-w-0"
+                  className="w-full flex-1 px-4 py-3.5 bg-transparent text-sm text-ink focus:outline-none placeholder:text-ink-muted min-w-0"
                 />
               </div>
 
               <div>
-                <label htmlFor="location" className="sr-only">Location</label>
-                <input id="location" type="text" autoComplete="address-level2" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Location (City/Country) *" required className={inputClass} />
+                <label htmlFor="location" className="sr-only">
+                  Location
+                </label>
+                <input
+                  id="location"
+                  type="text"
+                  autoComplete="address-level2"
+                  value={form.location}
+                  onChange={(e) => setForm({ ...form, location: e.target.value })}
+                  placeholder="Location (City/Country) *"
+                  required
+                  className={inputClass}
+                />
               </div>
 
               <div>
-                <label htmlFor="message" className="sr-only">Tell us about your project</label>
+                <label htmlFor="message" className="sr-only">
+                  Tell us about your project
+                </label>
                 <textarea
                   id="message"
                   value={form.message}
@@ -367,31 +478,50 @@ export default function ModernContact() {
               </div>
 
               {/* Attachments */}
-              <div className="pt-2">
+              <div className="pt-1">
                 <button
                   type="button"
                   onClick={() => setShowAttachments(!showAttachments)}
                   aria-expanded={showAttachments}
-                  className="flex items-center gap-2 text-sm font-medium text-gray-400 hover:text-brand-primary transition-colors group min-h-[44px]"
+                  className="flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-accent transition-colors group min-h-[44px]"
                 >
-                  <span className={`w-5 h-5 rounded-md border border-gray-600 flex items-center justify-center transition-colors group-hover:border-brand-primary ${showAttachments ? "bg-brand-primary border-brand-primary text-white" : ""}`} aria-hidden="true">
-                    <Plus className={`w-3.5 h-3.5 transition-transform duration-300 ${showAttachments ? "rotate-45" : ""}`} />
+                  <span
+                    className={`w-5 h-5 rounded-md border border-line-strong flex items-center justify-center transition-colors group-hover:border-accent ${
+                      showAttachments ? "bg-accent border-accent text-white" : ""
+                    }`}
+                    aria-hidden="true"
+                  >
+                    <Plus
+                      className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                        showAttachments ? "rotate-45" : ""
+                      }`}
+                    />
                   </span>
                   Add project files / attachments
                 </button>
 
                 {showAttachments && (
                   <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    className="mt-4"
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.24, ease: EASE_SNAP }}
+                    className="mt-3"
                   >
                     <label
-                      onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        setIsDragging(true);
+                      }}
                       onDragLeave={() => setIsDragging(false)}
-                      onDrop={(e) => { e.preventDefault(); setIsDragging(false); acceptFile(e.dataTransfer.files?.[0]); }}
-                      className={`border border-dashed rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300 ${
-                        isDragging ? "border-brand-primary bg-brand-primary/10" : "border-white/20 hover:border-brand-primary/50 hover:bg-brand-primary/5"
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        setIsDragging(false);
+                        acceptFile(e.dataTransfer.files?.[0]);
+                      }}
+                      className={`border border-dashed rounded-xl p-7 flex flex-col items-center justify-center text-center cursor-pointer transition-colors ${
+                        isDragging
+                          ? "border-accent bg-accent/5"
+                          : "border-line-strong hover:border-accent/60 hover:bg-paper"
                       }`}
                     >
                       <input
@@ -401,35 +531,47 @@ export default function ModernContact() {
                         onChange={handleFileChange}
                         accept={ACCEPTED_TYPES.join(",")}
                       />
-                      <div className="mb-3 p-3 rounded-full bg-white/5 text-gray-400">
-                        <UploadCloud className="w-6 h-6" strokeWidth={1.5} aria-hidden="true" />
+                      <div className="mb-3 p-3 rounded-full bg-paper-alt text-ink-soft">
+                        <UploadCloud className="w-5 h-5" strokeWidth={1.5} aria-hidden="true" />
                       </div>
                       {selectedFile ? (
-                        <p className="text-sm font-semibold text-brand-primary break-all">{selectedFile.name}</p>
+                        <p className="text-sm font-semibold text-accent break-all">
+                          {selectedFile.name}
+                        </p>
                       ) : (
                         <>
-                          <p className="text-sm font-medium text-gray-300">Click to upload or drag and drop</p>
-                          <p className="text-xs text-gray-500 mt-1">PDF, Word, images or ZIP (max 2MB)</p>
+                          <p className="text-sm font-medium text-ink">
+                            Click to upload or drag and drop
+                          </p>
+                          <p className="text-xs text-ink-soft mt-1">
+                            PDF, Word, images or ZIP (max 2MB)
+                          </p>
                         </>
                       )}
                     </label>
                     {selectedFile && (
-                      <button type="button" onClick={removeFile} className="mt-2 inline-flex items-center gap-1 text-xs text-gray-400 hover:text-red-400 min-h-[36px]">
+                      <button
+                        type="button"
+                        onClick={removeFile}
+                        className="mt-2 inline-flex items-center gap-1 text-xs text-ink-soft hover:text-accent min-h-[44px]"
+                      >
                         <X className="w-3.5 h-3.5" aria-hidden="true" /> Remove file
                       </button>
                     )}
                     {fileError && (
-                      <p role="alert" className="mt-2 text-xs text-red-400">{fileError}</p>
+                      <p role="alert" className="mt-2 text-xs text-accent font-medium">
+                        {fileError}
+                      </p>
                     )}
                   </motion.div>
                 )}
               </div>
 
-              <div className="pt-4">
+              <div className="pt-3">
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="w-full py-4 min-h-[48px] bg-brand-primary text-white font-bold rounded-xl text-sm shadow-[0_0_20px_rgba(255,115,36,0.3)] hover:bg-[#ff8947] transition-all duration-300 disabled:opacity-70 flex items-center justify-center gap-2 group/btn"
+                  className="ds-pill w-full py-3.5 min-h-[48px] bg-ink hover:bg-accent text-paper hover:text-white text-sm font-semibold disabled:opacity-70 group/btn"
                 >
                   {status === "loading" ? (
                     "Sending..."
@@ -438,20 +580,25 @@ export default function ModernContact() {
                   ) : (
                     <>
                       Send Message
-                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" aria-hidden="true" />
+                      <ArrowRight
+                        className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"
+                        aria-hidden="true"
+                      />
                     </>
                   )}
                 </button>
               </div>
 
               {status === "error" && (
-                <div role="alert" className="text-red-400 text-sm font-medium p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-center">
+                <div
+                  role="alert"
+                  className="text-accent text-sm font-medium p-3 rounded-xl bg-accent/10 border border-accent/25 text-center"
+                >
                   {errorMessage}
                 </div>
               )}
             </form>
           </motion.div>
-
         </div>
       </div>
     </div>

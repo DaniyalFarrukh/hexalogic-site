@@ -1,261 +1,237 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { ArrowLeft, BrainCircuit, Map, Calculator, Calendar, Heart, Shield, Search, Smartphone, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  ArrowLeft,
+  BrainCircuit,
+  Map,
+  Calculator,
+  Calendar,
+  Heart,
+  Shield,
+  Search,
+  Smartphone,
+  ArrowRight,
+} from "lucide-react";
+import {
+  MobileAppReveal,
+  TitaniumPhoneFrame,
+} from "@/components/case-studies/MobileAppDetailLayout";
+
+const CORE_FEATURES = [
+  {
+    icon: BrainCircuit,
+    title: "AI Recommendations",
+    desc: "Analyzes user preferences, budget, and behavior to provide personalized recommendations and match scores (e.g., 98% Match).",
+  },
+  {
+    icon: Map,
+    title: "Interactive Map Search",
+    desc: "Discover properties directly on an interactive map. Search by location, view price markers, and apply smart filters.",
+  },
+  {
+    icon: Calculator,
+    title: "Mortgage Calculator",
+    desc: "Calculate estimated monthly payments, total interest, and amortization schedules instantly.",
+  },
+  {
+    icon: Calendar,
+    title: "Schedule Visits",
+    desc: "Select a property, date, and time to schedule physical or virtual visits without conflicting bookings.",
+  },
+  {
+    icon: Heart,
+    title: "Saved Searches",
+    desc: "Save properties into collections and receive smart notifications when prices change.",
+  },
+  {
+    icon: Search,
+    title: "Virtual Tours",
+    desc: "Explore 360° tours, high-quality videos, and floor plans to tour properties remotely.",
+  },
+];
+
+const CORE_TECH = [
+  "React Native",
+  "Expo",
+  "TypeScript",
+  "Supabase",
+  "PostgreSQL + PostGIS",
+  "OpenAI API",
+  "Google Maps",
+];
+
+const ROLES = [
+  "Buyers & Renters",
+  "Property Owners",
+  "Real Estate Agents",
+  "Administrators",
+];
 
 export default function EstateIqCaseStudy() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      // Staggered GSAP reveal for the feature cards
-      gsap.fromTo('.feature-card', 
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, 
-          y: 0, 
-          duration: 0.8, 
-          ease: "power3.out",
-          stagger: 0.15,
-          scrollTrigger: {
-            trigger: '.feature-grid',
-            start: "top 80%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <div ref={containerRef} className="pt-24 pb-32 bg-surface-darkest min-h-screen text-[#f4f4f5] font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+    <div className="pt-28 sm:pt-32 pb-28 bg-mm-bg min-h-[100dvh] text-mm-ink overflow-x-clip">
+      <div className="max-w-[1170px] mx-auto px-[var(--ds-gutter)]">
         {/* Back Button */}
-        <div className="mb-12">
-          <Link href="/case-studies" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-bold uppercase tracking-wide">
-            <ArrowLeft className="w-4 h-4" />
+        <div className="mb-10">
+          <Link
+            href="/case-studies"
+            className="inline-flex items-center gap-2 text-mm-soft hover:text-white transition-colors ds-meta min-h-[44px]"
+          >
+            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             Back to Case Studies
           </Link>
         </div>
 
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-20"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <span className="px-3 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-xs font-bold uppercase tracking-widest rounded-full">
+        {/* Centered Dark App-Landing Hero (Reference 3) */}
+        <MobileAppReveal className="text-center max-w-4xl mx-auto mb-14 sm:mb-20">
+          <div className="flex items-center justify-center gap-3 mb-7">
+            <span className="px-3.5 py-1.5 rounded-full bg-mm-card mm-card-border text-mm-accent ds-meta">
               Mobile App / AI
             </span>
-            <span className="text-gray-500 text-sm font-medium">2026</span>
+            <span className="text-mm-muted font-mono text-xs">2026</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+          <h1 className="text-[clamp(2.4rem,5.5vw,4.5rem)] ds-display text-white mb-6 text-balance">
             EstateIQ AI: The Future of Luxury Real Estate
           </h1>
-          <p className="text-lg sm:text-xl text-gray-400 max-w-3xl leading-relaxed">
+          <p className="text-base sm:text-lg text-mm-soft max-w-2xl mx-auto leading-relaxed">
             A modern, AI-powered mobile real estate platform designed to make discovering, evaluating, and scheduling property visits faster and more intelligent.
           </p>
-        </motion.div>
+        </MobileAppReveal>
 
-        {/* Feature Grid & Details */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-          
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-16">
-            
-            {/* The Challenge & Solution */}
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="prose prose-invert prose-lg max-w-none"
-            >
-              <h2 className="text-3xl font-bold text-white mb-6">The Vision</h2>
-              <p className="text-gray-400 leading-relaxed font-medium">
-                EstateIQ AI aims to transform real estate discovery from a traditional listing-and-search experience into an intelligent, personalized, and immersive mobile platform where users can discover properties, understand their financial options, explore properties virtually, communicate with professionals, and arrange visits—all from one application.
+        {/* Hero Titanium Phone Mockup */}
+        <MobileAppReveal delay={0.1} className="relative mb-20 sm:mb-28">
+          <div
+            aria-hidden="true"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[420px] h-[360px] rounded-full opacity-20 blur-[90px] pointer-events-none mm-iridescent-ring"
+          />
+          <div className="relative z-10">
+            <TitaniumPhoneFrame
+              src="/images/case-studies/main-page.jpeg"
+              alt="EstateIQ AI Home Screen"
+              caption='Home Screen: "Defining the future of luxury living" with AI Concierge.'
+              aspect="portrait"
+              priority
+            />
+          </div>
+        </MobileAppReveal>
+
+        {/* Bento Vision + User Experience / Tech Stack */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-20 sm:mb-24">
+          <MobileAppReveal className="lg:col-span-7 bg-mm-card mm-card-border rounded-[var(--ds-radius-bento)] p-7 sm:p-10">
+            <h2 className="text-2xl sm:text-3xl ds-heading text-white mb-5">The Vision</h2>
+            <p className="text-mm-soft leading-relaxed text-sm sm:text-base">
+              EstateIQ AI aims to transform real estate discovery from a traditional listing-and-search experience into an intelligent, personalized, and immersive mobile platform where users can discover properties, understand their financial options, explore properties virtually, communicate with professionals, and arrange visits—all from one application.
+            </p>
+            <p className="text-mm-soft leading-relaxed text-sm sm:text-base mt-4">
+              Designed primarily for <strong className="text-white">Android mobile devices</strong>, the platform uses a smooth, gesture-driven interface focused on speed, simplicity, and an engaging property-discovery experience with a premium black-and-gold aesthetic.
+            </p>
+          </MobileAppReveal>
+
+          <MobileAppReveal
+            delay={0.08}
+            className="lg:col-span-5 bg-mm-card mm-card-border rounded-[var(--ds-radius-bento)] p-7 sm:p-10 flex flex-col justify-between gap-6"
+          >
+            <div>
+              <h3 className="text-xl ds-heading text-white mb-4 flex items-center gap-2.5">
+                <Smartphone className="w-5 h-5 text-mm-accent" aria-hidden="true" />
+                User Experience
+              </h3>
+              <p className="text-sm text-mm-soft leading-relaxed mb-6">
+                Built with a mobile-first design philosophy. We used interactive cards, animated bottom sheets, swipeable galleries, and gesture-driven navigation powered by React Native Reanimated.
               </p>
-              <p className="text-gray-400 leading-relaxed font-medium mt-4">
-                Designed primarily for <strong>Android mobile devices</strong>, the platform uses a smooth, gesture-driven interface focused on speed, simplicity, and an engaging property-discovery experience with a premium black-and-gold aesthetic.
-              </p>
-            </motion.section>
 
-            {/* Custom UI Image 1 */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="rounded-3xl overflow-hidden border border-white/10 bg-[#121214] p-3 shadow-2xl"
-            >
-              <div className="relative w-full aspect-[9/16] max-w-[400px] mx-auto rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center">
-                 {/* Placeholder for Screenshot 1 */}
-                 <Image src="/images/case-studies/main-page.jpeg" alt="EstateIQ AI Home Screen" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
-              </div>
-              <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">Home Screen: &quot;Defining the future of luxury living&quot; with AI Concierge.</p>
-            </motion.div>
-
-            {/* Key Deliverables - Core Features */}
-            <div className="feature-grid pt-8">
-              <h2 className="text-3xl font-bold text-white mb-8">Core Features</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {[
-                  {
-                    icon: BrainCircuit,
-                    title: "AI Recommendations",
-                    desc: "Analyzes user preferences, budget, and behavior to provide personalized recommendations and match scores (e.g., 98% Match)."
-                  },
-                  {
-                    icon: Map,
-                    title: "Interactive Map Search",
-                    desc: "Discover properties directly on an interactive map. Search by location, view price markers, and apply smart filters."
-                  },
-                  {
-                    icon: Calculator,
-                    title: "Mortgage Calculator",
-                    desc: "Calculate estimated monthly payments, total interest, and amortization schedules instantly."
-                  },
-                  {
-                    icon: Calendar,
-                    title: "Schedule Visits",
-                    desc: "Select a property, date, and time to schedule physical or virtual visits without conflicting bookings."
-                  },
-                  {
-                    icon: Heart,
-                    title: "Saved Searches",
-                    desc: "Save properties into collections and receive smart notifications when prices change."
-                  },
-                  {
-                    icon: Search,
-                    title: "Virtual Tours",
-                    desc: "Explore 360° tours, high-quality videos, and floor plans to tour properties remotely."
-                  }
-                ].map((feature, idx) => (
-                  <div key={idx} className="feature-card bg-[#0f0f12] border border-white/[0.06] p-8 rounded-[2rem] hover:border-yellow-500/40 hover:bg-[#131316] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-yellow-500/10 group flex flex-col items-start">
-                    <div className="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                      <feature.icon className="w-7 h-7 text-yellow-500" />
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-3 tracking-wide">{feature.title}</h3>
-                    <p className="text-sm text-gray-400 leading-relaxed font-medium">{feature.desc}</p>
-                  </div>
+              <h4 className="ds-meta text-mm-muted mb-3">Core Technologies</h4>
+              <div className="flex flex-wrap gap-2">
+                {CORE_TECH.map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-3 py-1 bg-mm-card-2 mm-card-border rounded-full font-mono text-xs text-mm-ink"
+                  >
+                    {tech}
+                  </span>
                 ))}
               </div>
             </div>
+          </MobileAppReveal>
+        </div>
 
-            {/* Custom UI Image 2 */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="rounded-3xl overflow-hidden border border-white/10 bg-[#121214] p-3 shadow-2xl mt-16"
-            >
-              <div className="relative w-full aspect-[9/16] max-w-[400px] mx-auto rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center">
-                 {/* Placeholder for Screenshot 2 */}
-                 <Image src="/images/case-studies/estateiq-2.jpeg" alt="EstateIQ AI Property Listings" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
-              </div>
-              <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">Property Listings: Browsing through curated luxury architectural masterpieces.</p>
-            </motion.div>
-
-            {/* The AI Assistant Section */}
-            <motion.section
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="prose prose-invert prose-lg max-w-none mt-16"
-            >
-              <h2 className="text-3xl font-bold text-white mb-6">The AI Chatbot Concierge</h2>
-              <p className="text-gray-400 leading-relaxed font-medium">
-                The EstateIQ AI Assistant serves as a personal real estate concierge. Users can simply ask for recommendations—such as &quot;Give me the cheapest property in Allama Iqbal Town&quot;—and the conversational AI will instantly filter and respond with highly personalized, accurate property suggestions.
-              </p>
-            </motion.section>
-
-            {/* Custom UI Image 3 */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="rounded-3xl overflow-hidden border border-white/10 bg-[#121214] p-3 shadow-2xl mt-8"
-            >
-              <div className="relative w-full aspect-[9/16] max-w-[400px] mx-auto rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center">
-                 {/* Placeholder for Screenshot 3 */}
-                 <Image src="/images/case-studies/estateiq-3.jpeg" alt="EstateIQ AI Chatbot" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
-              </div>
-              <p className="text-center text-sm text-gray-500 mt-5 mb-3 font-medium">AI Concierge: Natural language search and personalized responses.</p>
-            </motion.div>
-
+        {/* Sticky Feature Blocks + Phone Showcase (Reference 3 .mm-feat) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start mb-20 sm:mb-24">
+          <div className="lg:col-span-7">
+            <MobileAppReveal className="mb-8">
+              <h2 className="text-3xl sm:text-4xl ds-display text-white">Core Features</h2>
+            </MobileAppReveal>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {CORE_FEATURES.map((feature, idx) => (
+                <MobileAppReveal
+                  key={feature.title}
+                  delay={idx * 0.05}
+                  className="bg-mm-card mm-card-border rounded-[var(--ds-radius-bento)] p-6 sm:p-7 hover:bg-mm-card-2 transition-colors flex flex-col items-start"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-white/[0.05] mm-card-border flex items-center justify-center mb-5 text-mm-accent">
+                    <feature.icon className="w-5 h-5" aria-hidden="true" />
+                  </div>
+                  <h3 className="text-lg ds-heading text-white mb-2">{feature.title}</h3>
+                  <p className="text-sm text-mm-soft leading-relaxed">{feature.desc}</p>
+                </MobileAppReveal>
+              ))}
+            </div>
           </div>
 
-          {/* Sidebar */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-1"
-          >
-            <div className="sticky top-24">
-              {/* Premium Card Container */}
-              <div className="bg-[#0f0f12] border border-white/[0.08] rounded-[2rem] p-6 sm:p-7 shadow-2xl relative overflow-hidden">
-                {/* Subtle top gradient glow */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent opacity-50" />
-                
-                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                  <Smartphone className="w-5 h-5 text-yellow-500" />
-                  User Experience
-                </h3>
-                
-                <p className="text-sm text-gray-400 mb-8 leading-relaxed font-medium">
-                  Built with a mobile-first design philosophy. We used interactive cards, animated bottom sheets, swipeable galleries, and gesture-driven navigation powered by React Native Reanimated.
-                </p>
+          <div className="lg:col-span-5 lg:sticky lg:top-28">
+            <MobileAppReveal>
+              <TitaniumPhoneFrame
+                src="/images/case-studies/estateiq-2.jpeg"
+                alt="EstateIQ AI Property Listings"
+                caption="Property Listings: Browsing through curated luxury architectural masterpieces."
+                aspect="portrait"
+              />
+            </MobileAppReveal>
+          </div>
+        </div>
 
-                {/* Tech Stack */}
-                <div className="mb-5">
-                  <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Core Technologies</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {["React Native", "Expo", "TypeScript", "Supabase", "PostgreSQL + PostGIS", "OpenAI API", "Google Maps"].map((tech, i) => (
-                      <span key={i} className="px-2.5 py-1 bg-white/[0.04] hover:bg-white/[0.08] transition-colors border border-white/[0.05] rounded-full text-xs font-medium text-gray-300 cursor-default">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+        {/* AI Concierge + Multi-Role Support + Final CTA */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-mm-card mm-card-border rounded-[28px] p-7 sm:p-10 lg:p-12">
+          <MobileAppReveal className="lg:col-span-7 space-y-6">
+            <h2 className="text-3xl sm:text-4xl ds-display text-white">
+              The AI Chatbot Concierge
+            </h2>
+            <p className="text-mm-soft leading-relaxed text-sm sm:text-base">
+              The EstateIQ AI Assistant serves as a personal real estate concierge. Users can simply ask for recommendations—such as &quot;Give me the cheapest property in Allama Iqbal Town&quot;—and the conversational AI will instantly filter and respond with highly personalized, accurate property suggestions.
+            </p>
 
-                {/* Users section */}
-                <div className="mb-8">
-                  <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Multi-Role Support</h4>
-                  <ul className="text-sm text-gray-400 space-y-2">
-                    <li className="flex items-center gap-2"><Shield className="w-4 h-4 text-gray-500"/> Buyers & Renters</li>
-                    <li className="flex items-center gap-2"><Shield className="w-4 h-4 text-gray-500"/> Property Owners</li>
-                    <li className="flex items-center gap-2"><Shield className="w-4 h-4 text-gray-500"/> Real Estate Agents</li>
-                    <li className="flex items-center gap-2"><Shield className="w-4 h-4 text-gray-500"/> Administrators</li>
-                  </ul>
-                </div>
-
-                {/* CTA */}
-                <div className="pt-4 border-t border-white/[0.08]">
-                  <Link href="/contact" className="group flex items-center justify-center gap-2 w-full py-3.5 bg-white text-black text-sm hover:bg-gray-200 font-bold rounded-2xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                    Start Your Mobile App
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
-              </div>
+            <div className="pt-4 border-t border-mm-divider">
+              <h4 className="ds-meta text-mm-muted mb-4">Multi-Role Support</h4>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-mm-ink">
+                {ROLES.map((role) => (
+                  <li key={role} className="flex items-center gap-2.5">
+                    <Shield className="w-4 h-4 text-mm-accent shrink-0" aria-hidden="true" />
+                    <span>{role}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </motion.div>
 
+            <div className="pt-4">
+              <Link
+                href="/contact"
+                className="ds-pill px-7 py-3.5 bg-white text-mm-bg hover:bg-mm-accent hover:text-mm-bg text-sm font-semibold"
+              >
+                Start Your Mobile App
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </Link>
+            </div>
+          </MobileAppReveal>
+
+          <MobileAppReveal delay={0.1} className="lg:col-span-5">
+            <TitaniumPhoneFrame
+              src="/images/case-studies/estateiq-3.jpeg"
+              alt="EstateIQ AI Chatbot"
+              caption="AI Concierge: Natural language search and personalized responses."
+              aspect="portrait"
+            />
+          </MobileAppReveal>
         </div>
       </div>
     </div>

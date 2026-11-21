@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
-/* ─── Design Tokens ─── */
+/* ─── Centralized Editorial Design System (Leather Studio + Glass Folder + Voice AI + Kestrine/Quillery) ─── */
 :root {
+  /* Legacy / Portal-Admin compatibility tokens */
   --white: #FFFFFF;
   --off-white: #F8F9FB;
   --navy: #0F2C4C;
@@ -9,8 +10,60 @@
   --teal: #1BB8A3;
   --slate: #5B6B7C;
 
-  --background: var(--white);
-  --foreground: var(--navy);
+  /* ── Editorial Light Palette (Reference 1: Leather Design Studio) ── */
+  --ds-paper: #f9f7f6;
+  --ds-paper-2: #f1eeec;
+  --ds-card: #ffffff;
+  --ds-ink: #141414;
+  --ds-soft: #6d6d6d;
+  --ds-mute: #9a9694;
+  --ds-accent: #e8463c;
+  --ds-accent-hover: #d1382e;
+  --ds-accent-soft: rgba(232, 70, 60, 0.1);
+  --ds-oxblood: #4a0b10;
+  --ds-oxblood-deep: #2a0609;
+  --ds-leather: #121212;
+  --ds-night: #0b0b0c;
+  --ds-night-card: #161618;
+  --ds-night-ink: #f1efee;
+  --ds-night-soft: #9a9a9a;
+  --ds-line: rgba(20, 20, 20, 0.08);
+  --ds-line-strong: rgba(20, 20, 20, 0.16);
+  --ds-line-dark: rgba(255, 255, 255, 0.09);
+  --ds-tick: #c2bdbb;
+
+  /* ── Mobile App Detail Scope (Reference 3: Voice AI App Dark) ── */
+  --mm-bg: #080808;
+  --mm-card: #101115;
+  --mm-card-2: #161820;
+  --mm-divider: #222226;
+  --mm-ink: #e4e4e7;
+  --mm-soft: #afafaf;
+  --mm-muted: #7d7d7d;
+  --mm-accent: #c39bf2;
+  --mm-accent-soft: rgba(195, 155, 242, 0.14);
+
+  /* ── Spacing, Radii & Shadows ── */
+  --ds-gutter: clamp(18px, 3.9vw, 56px);
+  --ds-radius-sm: 12px;
+  --ds-radius-card: 18px;
+  --ds-radius-bento: 22px;
+  --ds-radius-pill: 9999px;
+  --ds-shadow-card: 0 1px 2px rgba(20, 20, 20, 0.04), 0 12px 32px rgba(20, 20, 20, 0.05);
+  --ds-shadow-elevated: 0 2px 6px rgba(20, 20, 20, 0.05), 0 24px 60px rgba(20, 20, 20, 0.08);
+  --ds-shadow-pill: 0 1px 0 rgba(0, 0, 0, 0.04), 0 8px 24px rgba(20, 20, 20, 0.06);
+
+  /* ── Motion Curves & Durations (References 1, 2, 4) ── */
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snap: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-spring: cubic-bezier(0.34, 1.36, 0.5, 1);
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-folder: 750ms;
+  --dur-reveal: 850ms;
+
+  --background: var(--ds-paper);
+  --foreground: var(--ds-ink);
 }
 
 @theme inline {
@@ -24,8 +77,39 @@
   --color-teal: #1BB8A3;
   --color-teal-dark: #159c8a;
   --color-slate: #5B6B7C;
-  
-  /* Centralized Theme Tokens */
+
+  /* Editorial Design System Tokens */
+  --color-paper: var(--ds-paper);
+  --color-paper-alt: var(--ds-paper-2);
+  --color-card: var(--ds-card);
+  --color-ink: var(--ds-ink);
+  --color-ink-soft: var(--ds-soft);
+  --color-ink-muted: var(--ds-mute);
+  --color-accent: var(--ds-accent);
+  --color-accent-hover: var(--ds-accent-hover);
+  --color-oxblood: var(--ds-oxblood);
+  --color-oxblood-deep: var(--ds-oxblood-deep);
+  --color-leather: var(--ds-leather);
+  --color-night: var(--ds-night);
+  --color-night-card: var(--ds-night-card);
+  --color-night-ink: var(--ds-night-ink);
+  --color-night-soft: var(--ds-night-soft);
+  --color-line: var(--ds-line);
+  --color-line-strong: var(--ds-line-strong);
+  --color-line-dark: var(--ds-line-dark);
+  --color-tick: var(--ds-tick);
+
+  /* Mobile Detail View Tokens */
+  --color-mm-bg: var(--mm-bg);
+  --color-mm-card: var(--mm-card);
+  --color-mm-card-2: var(--mm-card-2);
+  --color-mm-divider: var(--mm-divider);
+  --color-mm-ink: var(--mm-ink);
+  --color-mm-soft: var(--mm-soft);
+  --color-mm-muted: var(--mm-muted);
+  --color-mm-accent: var(--mm-accent);
+
+  /* Centralized Brand / Surface compatibility tokens (portal/admin untouched) */
   --color-brand-primary: #FF7324;
   --color-brand-secondary: #FF7324;
   --color-surface-darkest: #0a0a0c;
@@ -36,8 +120,10 @@
   --color-surface-light: #F8FAFC;
   --color-surface-white: #FFFFFF;
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-mona-sans), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-mona-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-nike: "Futura Condensed Extra Bold", "Futura-CondensedExtraBold", var(--font-nike-fallback), Impact, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 }
 
 /* ─── Admin / Portal dark mode ───
@@ -174,7 +260,7 @@
 }
 
 html {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Native smooth scrolling only where Lenis is not driving the scroll */
@@ -188,7 +274,7 @@ body {
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
   /* Momentum scrolling for iOS */
   -webkit-overflow-scrolling: touch;
 }
@@ -325,9 +411,259 @@ html.lenis body {
 }
 
 .animate-marquee {
-  animation: marquee 25s linear infinite;
+  animation: marquee 28s linear infinite;
 }
 
 .animate-marquee-reverse {
-  animation: marquee-reverse 25s linear infinite;
+  animation: marquee-reverse 28s linear infinite;
+}
+
+/* ─── Safe-Area & Viewport Helpers (iOS & Android) ─── */
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.safe-x {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* ─── Editorial Theme Primitives (Reference 1: Leather Design Studio) ─── */
+.marketing-shell {
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+}
+
+/* Tactile SVG film grain overlay — GPU-friendly opacity layer, disabled in reduced motion */
+.ds-grainfx {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  opacity: 0.018;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* Subtle architectural vertical hairline grid */
+.ds-hairline-grid {
+  background-image: linear-gradient(to right, var(--ds-line) 1px, transparent 1px);
+  background-size: 25% 100%;
+}
+
+.ds-hairline-grid-dark {
+  background-image: linear-gradient(to right, var(--ds-line-dark) 1px, transparent 1px);
+  background-size: 25% 100%;
+}
+
+/* Editorial button press state (Reference 4: Kestrine / Quillery) */
+.ds-press {
+  transition: transform var(--dur-fast) var(--ease-snap),
+    background-color var(--dur-fast) var(--ease-snap),
+    border-color var(--dur-fast) var(--ease-snap),
+    color var(--dur-fast) var(--ease-snap),
+    opacity var(--dur-fast) var(--ease-snap);
+}
+
+.ds-press:active {
+  transform: scale(0.97);
+}
+
+/* Editorial CTA Pill with circular icon badge */
+.ds-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  border-radius: var(--ds-radius-pill);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  box-shadow: var(--ds-shadow-pill);
+  transition: transform var(--dur-fast) var(--ease-snap),
+    background-color var(--dur-fast) var(--ease-snap),
+    color var(--dur-fast) var(--ease-snap),
+    border-color var(--dur-fast) var(--ease-snap);
+}
+
+.ds-pill:active {
+  transform: scale(0.97);
+}
+
+/* Editorial typography helpers */
+.ds-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+}
+
+.ds-heading {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.04;
+}
+
+.ds-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Leather Studio Hero Ken Burns Drift & Pill Unroll (Reference 1) */
+@keyframes ds-drift {
+  0% {
+    transform: scale(1.03) translate3d(0%, 0%, 0);
+  }
+  100% {
+    transform: scale(1.1) translate3d(-1.5%, -1.5%, 0);
+  }
+}
+
+.ds-hero-drift {
+  animation: ds-drift 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes ds-unroll {
+  0% {
+    clip-path: inset(0 100% 0 0 round 999px);
+    opacity: 0;
+  }
+  100% {
+    clip-path: inset(0 0% 0 0 round 999px);
+    opacity: 1;
+  }
+}
+
+.ds-unroll {
+  animation: ds-unroll 0.95s var(--ease-editorial) both;
+}
+
+/* ─── Reference 2: Glass Folder Cards ─── */
+.gf-root {
+  --gf-hinge: 0deg;
+  --gf-lift: 28px;
+  --gf-spread: 0px;
+  --gf-fan: 0deg;
+  --gf-stack: 12px;
+  --gf-px: 0;
+  --gf-py: 0;
+  position: relative;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gf-root:hover,
+  .gf-root:focus-within {
+    --gf-hinge: -12deg;
+    --gf-lift: -26px;
+    --gf-spread: 10px;
+    --gf-fan: 2deg;
+    --gf-stack: 10px;
+  }
+}
+
+.gf-root[data-open="true"] {
+  --gf-hinge: -24deg;
+  --gf-lift: -84px;
+  --gf-spread: 34px;
+  --gf-fan: 5.5deg;
+  --gf-stack: 24px;
+}
+
+.gf-tilt {
+  transform: perspective(1400px) rotateX(calc(var(--gf-py) * -3deg)) rotateY(calc(var(--gf-px) * 4deg));
+  transition: transform 0.8s var(--ease-snap);
+  will-change: transform;
+}
+
+.gf-front-flap {
+  transform-origin: 50% 100%;
+  transform: perspective(760px) rotateX(var(--gf-hinge));
+  transition: transform 0.75s var(--ease-spring);
+  will-change: transform;
+}
+
+.gf-sheet {
+  transform-origin: 50% 100%;
+  transform: translate3d(
+      calc(var(--gf-slot, 0) * var(--gf-spread) + var(--gf-jx, 0px)),
+      calc(var(--gf-lift) - var(--gf-depth, 0) * var(--gf-stack)),
+      0
+    )
+    rotate(calc(var(--gf-slot, 0) * var(--gf-fan) + var(--gf-jr, 0deg)));
+  transition: transform 0.72s var(--ease-spring) calc(var(--gf-depth, 0) * 40ms),
+    opacity 0.45s var(--ease-editorial);
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gf-root[data-open="true"] .gf-sheet:hover {
+    transform: translate3d(
+        calc(var(--gf-slot, 0) * var(--gf-spread) + var(--gf-jx, 0px)),
+        calc(var(--gf-lift) - var(--gf-depth, 0) * var(--gf-stack) - 16px),
+        0
+      )
+      rotate(calc((var(--gf-slot, 0) * var(--gf-fan) + var(--gf-jr, 0deg)) * 0.5));
+    transition-delay: 0ms;
+    z-index: 25;
+  }
+}
+
+/* ─── Reference 3: Mobile App Dark Detail Primitives ─── */
+.mm-titanium-bezel {
+  background: linear-gradient(150deg, #7c808d 0%, #24252b 24%, #0e0e11 52%, #2c2d34 78%, #8a8d99 100%);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.75), inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+.mm-card-border {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+@property --mm-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes mm-ring-spin {
+  to {
+    --mm-angle: 360deg;
+  }
+}
+
+.mm-iridescent-ring {
+  background: conic-gradient(
+    from var(--mm-angle),
+    #7c5cff,
+    #d18cff,
+    #e8463c,
+    #ffd36e,
+    #5b8cff,
+    #7c5cff
+  );
+  animation: mm-ring-spin 7s linear infinite;
+}
+
+/* ─── Reduced Motion Overrides ─── */
+@media (prefers-reduced-motion: reduce) {
+  .ds-grainfx {
+    display: none;
+  }
+  .gf-tilt,
+  .gf-front-flap,
+  .gf-sheet,
+  .mm-iridescent-ring,
+  .ds-hero-drift,
+  .ds-unroll {
+    animation: none !important;
+    transition: none !important;
+  }
 }

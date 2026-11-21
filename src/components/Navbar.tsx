@@ -22,6 +22,12 @@ export default function Navbar() {
   const megaTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
   const pathname = usePathname();
 
+  const isDarkSurface =
+    !mobileOpen &&
+    ((pathname === "/" && !scrolled) ||
+      pathname === "/case-studies/auxleds" ||
+      pathname === "/case-studies/estateiq-ai");
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     onScroll();
@@ -72,11 +78,15 @@ export default function Navbar() {
 
   const isActive = (href: string) => pathname === href || (href !== "/" && pathname.startsWith(href + "/"));
 
-  // The navbar sits over dark hero content on every marketing page, so it is
-  // transparent until the user scrolls.
-  const navBackground = scrolled || mobileOpen
-    ? "bg-surface-darkest/90 backdrop-blur-md border-b border-white/10 shadow-sm"
-    : "bg-transparent";
+  const navBackground = mobileOpen
+    ? "bg-surface-darkest"
+    : isDarkSurface
+      ? scrolled
+        ? "bg-night/90 backdrop-blur-md border-b border-white/10 shadow-sm"
+        : "bg-transparent"
+      : scrolled
+        ? "bg-paper/95 backdrop-blur-md border-b border-line shadow-sm"
+        : "bg-paper/85 backdrop-blur-sm border-b border-line/60";
 
   return (
     <>
@@ -85,26 +95,31 @@ export default function Navbar() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBackground}`}
       >
         <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 lg:h-24">
-            {/* Logo */}
+          <div className="flex items-center justify-between lg:grid lg:grid-cols-[1fr_auto_1fr] h-20 lg:h-22 gap-4">
+            {/* Brand Logo */}
             <Link
               href="/"
               onClick={closeAll}
-              className="flex items-center shrink-0 transition-transform duration-300 hover:scale-[1.02] relative z-50"
+              className="inline-flex items-center shrink-0 justify-self-start transition-opacity duration-200 hover:opacity-85 relative z-50"
               aria-label="HexaLogic Tech Solutions home"
             >
               <Image
-                src="/hexalogic-logo.png"
+                src="/images/hexalogic-navbar-logo.png"
                 alt="HexaLogic Tech Solutions"
-                width={360}
+                width={96}
                 height={96}
-                className="h-14 sm:h-16 lg:h-20 w-auto object-contain"
+                unoptimized
                 priority
+                className={`h-16 sm:h-20 w-auto object-contain ${
+                  isDarkSurface
+                    ? "brightness-[2.2] contrast-125 drop-shadow-[0_2px_12px_rgba(115,217,255,0.25)]"
+                    : ""
+                }`}
               />
             </Link>
 
-            {/* Desktop Nav */}
-            <div className="hidden lg:flex items-center gap-2">
+            {/* Desktop Nav — Centered Relay-style clean spacing */}
+            <div className="hidden lg:flex items-center justify-center gap-1">
               {navLinks.map((link) =>
                 link.megaMenu ? (
                   <div
@@ -120,13 +135,19 @@ export default function Navbar() {
                       onFocus={handleMegaEnter}
                       aria-haspopup="true"
                       aria-expanded={megaOpen}
-                      className={`px-4 py-2.5 text-sm font-medium transition-colors duration-200 flex items-center gap-1.5 rounded-lg min-h-[44px] ${
-                        megaOpen || isActive(link.href) ? "text-brand-primary bg-white/10" : "text-white hover:text-brand-primary hover:bg-white/5"
+                      className={`px-3.5 py-2 font-nike text-base uppercase tracking-[0.04em] font-extrabold transition-colors duration-200 flex items-center gap-1.5 rounded-lg min-h-[44px] ${
+                        megaOpen || isActive(link.href)
+                          ? isDarkSurface
+                            ? "text-white bg-white/12"
+                            : "text-accent bg-paper-alt"
+                          : isDarkSurface
+                            ? "text-white/80 hover:text-white hover:bg-white/10"
+                            : "text-ink/80 hover:text-accent hover:bg-paper-alt"
                       }`}
                     >
                       {link.label}
                       <svg
-                        className={`w-4 h-4 transition-transform duration-200 ${megaOpen ? "rotate-180" : ""}`}
+                        className={`w-3.5 h-3.5 transition-transform duration-200 ${megaOpen ? "rotate-180" : ""}`}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -196,18 +217,32 @@ export default function Navbar() {
                     href={link.href}
                     onClick={closeAll}
                     aria-current={isActive(link.href) ? "page" : undefined}
-                    className={`px-4 py-2.5 text-sm font-medium transition-colors duration-200 rounded-lg min-h-[44px] flex items-center ${
-                      isActive(link.href) ? "text-brand-primary bg-white/10" : "text-white hover:text-brand-primary hover:bg-white/5"
+                    className={`px-3.5 py-2 font-nike text-base uppercase tracking-[0.04em] font-extrabold transition-colors duration-200 rounded-lg min-h-[44px] flex items-center ${
+                      isActive(link.href)
+                        ? isDarkSurface
+                          ? "text-white bg-white/12"
+                          : "text-accent bg-paper-alt"
+                        : isDarkSurface
+                          ? "text-white/80 hover:text-white hover:bg-white/10"
+                          : "text-ink/80 hover:text-accent hover:bg-paper-alt"
                     }`}
                   >
                     {link.label}
                   </Link>
                 )
               )}
+            </div>
+
+            {/* Right CTA */}
+            <div className="hidden lg:flex items-center justify-self-end">
               <Link
                 href="/contact"
                 onClick={closeAll}
-                className="ml-4 px-6 py-3 bg-brand-primary text-white text-sm font-bold rounded-xl hover:bg-[#ff8947] transition-all duration-200 hover:shadow-lg hover:shadow-brand-primary/25 hover:-translate-y-0.5 min-h-[44px] flex items-center justify-center"
+                className={`px-5 py-2.5 font-nike text-base uppercase tracking-[0.05em] font-extrabold transition-colors duration-200 min-h-[44px] flex items-center justify-center ${
+                  isDarkSurface
+                    ? "bg-[#2340ff] hover:bg-white text-white hover:text-[#2340ff]"
+                    : "bg-ink hover:bg-accent text-paper hover:text-white rounded-full"
+                }`}
               >
                 Get Started
               </Link>
@@ -217,15 +252,17 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2.5 rounded-lg hover:bg-white/10 transition-colors duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center relative z-50"
+              className={`lg:hidden p-2.5 rounded-lg transition-colors duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center relative z-50 ${
+                isDarkSurface || mobileOpen ? "hover:bg-white/10" : "hover:bg-paper-alt"
+              }`}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
               aria-controls="mobile-menu"
             >
               <div className="w-6 h-5 flex flex-col justify-between" aria-hidden="true">
-                <span className={`block h-0.5 rounded transition-all duration-300 bg-white ${mobileOpen ? "rotate-45 translate-y-2.5" : ""}`} />
-                <span className={`block h-0.5 rounded transition-all duration-300 bg-white ${mobileOpen ? "opacity-0" : ""}`} />
-                <span className={`block h-0.5 rounded transition-all duration-300 bg-white ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+                <span className={`block h-0.5 rounded transition-all duration-300 ${isDarkSurface || mobileOpen ? "bg-white" : "bg-ink"} ${mobileOpen ? "rotate-45 translate-y-2.5" : ""}`} />
+                <span className={`block h-0.5 rounded transition-all duration-300 ${isDarkSurface || mobileOpen ? "bg-white" : "bg-ink"} ${mobileOpen ? "opacity-0" : ""}`} />
+                <span className={`block h-0.5 rounded transition-all duration-300 ${isDarkSurface || mobileOpen ? "bg-white" : "bg-ink"} ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
               </div>
             </button>
           </div>

@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function CaseStudiesPage() {
   return (
-    <div className="pt-20 lg:pt-24 bg-surface-darkest min-h-screen">
+    <div className="pt-20 lg:pt-24 bg-paper min-h-[100dvh]">
       <CaseStudiesSection />
     </div>
   );

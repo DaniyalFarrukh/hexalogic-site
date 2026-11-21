@@ -8,10 +8,12 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col bg-surface-darkest text-[#f4f4f5]">
+    <div className="marketing-shell min-h-[100dvh] flex flex-col bg-paper text-ink relative selection:bg-accent selection:text-white">
+      {/* Subtle tactile film-grain overlay (Reference 1: Leather Design Studio) */}
+      <div className="ds-grainfx" aria-hidden="true" />
       <SmoothScrollProvider>
         <Navbar />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 relative z-10">{children}</main>
         <Footer />
       </SmoothScrollProvider>
     </div>

@@ -1,9 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { EditorialReveal } from "@/components/motion/EditorialReveal";
 
 const caseStudies = [
   {
@@ -68,72 +68,76 @@ const caseStudies = [
 
 export default function CaseStudiesSection() {
   return (
-    <section className="py-20 sm:py-32 bg-surface-darkest text-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-24 bg-paper text-ink relative overflow-x-clip">
+      <div className="absolute inset-0 ds-hairline-grid opacity-60 pointer-events-none" aria-hidden="true" />
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center mb-16 sm:mb-20"
-        >
-          <p className="text-sm font-bold text-brand-primary uppercase tracking-[0.2em] mb-4">Client Stories</p>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 text-balance">
-            Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7324] to-orange-400">Case Studies</span>
+      <div className="max-w-7xl mx-auto px-[var(--ds-gutter)] relative z-10">
+        <EditorialReveal className="max-w-3xl mb-14 sm:mb-18">
+          <p className="ds-meta text-accent mb-4">Client Stories</p>
+          <h1 className="text-[clamp(2.5rem,5.5vw,4.25rem)] ds-display text-ink mb-5 text-balance">
+            Our <span className="text-accent">Case Studies</span>
           </h1>
-          <div className="w-24 h-1 bg-gradient-to-r from-[#FF7324] to-orange-400 mx-auto rounded-full mb-6" aria-hidden="true" />
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-ink-soft leading-relaxed">
             Discover how we have transformed businesses with innovative technology, scalable architectures, and beautiful digital experiences.
           </p>
-        </motion.div>
+        </EditorialReveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-7 sm:gap-8">
           {caseStudies.map((study, index) => (
-            <motion.article
+            <EditorialReveal
               key={study.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: Math.min(index, 1) * 0.15, ease: "easeOut" }}
-              className="bg-[#121214] border border-white/5 rounded-3xl overflow-hidden hover:border-brand-primary/30 hover:bg-[#16161a] transition-all duration-300 group flex flex-col"
+              delay={Math.min(index, 2) * 0.08}
+              className="bg-card border border-line hover:border-line-strong rounded-[var(--ds-radius-bento)] overflow-hidden shadow-[var(--ds-shadow-card)] hover:shadow-[var(--ds-shadow-elevated)] transition-shadow duration-300 group flex flex-col"
             >
-              <Link href={study.link} className="relative w-full aspect-[16/10] bg-[#0b0b0e] overflow-hidden block" aria-label={`Read the ${study.title} case study`}>
+              <Link
+                href={study.link}
+                className="relative w-full aspect-[16/10] bg-paper-alt overflow-hidden block"
+                aria-label={`Read the ${study.title} case study`}
+              >
                 <Image
                   src={study.image}
                   alt={`${study.title} project screenshot`}
                   fill
-                  className={`${("fit" in study && study.fit === "contain") ? "object-contain p-4" : "object-cover object-top"} group-hover:scale-105 transition-transform duration-700 ease-in-out opacity-90 group-hover:opacity-100`}
+                  className={`${
+                    "fit" in study && study.fit === "contain"
+                      ? "object-contain p-4 bg-night"
+                      : "object-cover object-top"
+                  } group-hover:scale-[1.04] transition-transform duration-500 ease-out`}
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
-                <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 backdrop-blur text-[11px] font-bold uppercase tracking-wider text-white">{study.category}</span>
+                <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-card/90 backdrop-blur-sm border border-line font-mono text-[10px] font-medium uppercase tracking-wider text-ink">
+                  {study.category}
+                </span>
               </Link>
 
               <div className="p-6 sm:p-8 flex-1 flex flex-col">
                 <div className="flex flex-wrap gap-2 mb-4">
                   {study.tags.map((tag) => (
-                    <span key={tag} className="px-3 py-1 bg-white/5 text-gray-300 text-[11px] font-semibold uppercase tracking-wider rounded-md border border-white/5">
+                    <span
+                      key={tag}
+                      className="px-2.5 py-1 bg-paper text-ink-soft font-mono text-[10px] uppercase tracking-wider rounded-full border border-line"
+                    >
                       {tag}
                     </span>
                   ))}
                 </div>
 
-                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 group-hover:text-brand-primary transition-colors">
+                <h2 className="text-2xl sm:text-3xl ds-heading text-ink mb-2 group-hover:text-accent transition-colors">
                   {study.title}
                 </h2>
-                <p className="text-sm font-semibold text-brand-primary mb-4">{study.metric}</p>
+                <p className="font-mono text-xs font-medium text-accent mb-4">{study.metric}</p>
 
-                <p className="text-gray-400 text-base leading-relaxed mb-8 flex-1">
+                <p className="text-ink-soft text-sm sm:text-base leading-relaxed mb-7 flex-1">
                   {study.description}
                 </p>
 
-                <div className="flex items-center justify-between pt-6 border-t border-white/10">
+                <div className="flex items-center justify-between pt-5 border-t border-line">
                   {"externalUrl" in study && study.externalUrl ? (
                     <a
                       href={study.externalUrl as string}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-brand-primary hover:text-white transition-colors text-sm font-semibold min-h-[44px]"
+                      className="inline-flex items-center gap-1.5 text-accent hover:text-ink transition-colors text-sm font-semibold min-h-[44px]"
                     >
                       <span>Visit Website</span>
                       <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
@@ -141,16 +145,21 @@ export default function CaseStudiesSection() {
                   ) : (
                     <span />
                   )}
-                  <Link href={study.link} className="inline-flex items-center gap-2 text-white hover:text-brand-primary transition-colors text-sm font-bold uppercase tracking-wide group/link min-h-[44px]">
+                  <Link
+                    href={study.link}
+                    className="inline-flex items-center gap-2 text-ink hover:text-accent transition-colors text-sm font-semibold group/link min-h-[44px]"
+                  >
                     Read Story
-                    <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" aria-hidden="true" />
+                    <ArrowRight
+                      className="w-4 h-4 group-hover/link:translate-x-1 transition-transform"
+                      aria-hidden="true"
+                    />
                   </Link>
                 </div>
               </div>
-            </motion.article>
+            </EditorialReveal>
           ))}
         </div>
-
       </div>
     </section>
   );
