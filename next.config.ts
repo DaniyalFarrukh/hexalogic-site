@@ -15,6 +15,20 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '6mb',
     },
   },
+  async rewrites() {
+    return [
+      {
+        source: '/',
+        has: [
+          {
+            type: 'host',
+            value: 'dialer.hexalogictechandsolutions.com',
+          },
+        ],
+        destination: '/dialer',
+      },
+    ];
+  },
   async headers() {
     const noIndex = [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }];
     return [
