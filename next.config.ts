@@ -16,18 +16,20 @@ const nextConfig: NextConfig = {
     },
   },
   async rewrites() {
-    return [
-      {
-        source: '/',
-        has: [
-          {
-            type: 'host',
-            value: 'dialer.hexalogictechandsolutions.com',
-          },
-        ],
-        destination: '/dialer',
-      },
-    ];
+    return {
+      beforeFiles: [
+        {
+          source: '/',
+          has: [
+            {
+              type: 'host',
+              value: 'dialer.hexalogictechandsolutions.com',
+            },
+          ],
+          destination: '/dialer',
+        },
+      ],
+    };
   },
   async headers() {
     const noIndex = [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }];

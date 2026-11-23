@@ -3,6 +3,11 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl
+  const host = (request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? '').toLowerCase()
+
+  if (pathname === '/' && host.startsWith('dialer.')) {
+    return NextResponse.rewrite(new URL('/dialer', request.url))
+  }
 
   // Intercept Supabase Auth redirects that fell back to the Site URL.
   if (pathname === '/' && searchParams.has('code')) {

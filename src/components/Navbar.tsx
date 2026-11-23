@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -14,6 +14,8 @@ const navLinks = [
   { label: "Contact Us", href: "/contact" },
 ];
 
+const subscribeNoop = () => () => {};
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -21,9 +23,15 @@ export default function Navbar() {
   const megaRef = useRef<HTMLDivElement>(null);
   const megaTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
   const pathname = usePathname();
+  const isDialerHost = useSyncExternalStore(
+    subscribeNoop,
+    () => window.location.hostname.startsWith("dialer."),
+    () => false
+  );
 
   const isDarkSurface =
     !mobileOpen &&
+    !isDialerHost &&
     ((pathname === "/" && !scrolled) ||
       pathname === "/case-studies/auxleds" ||
       pathname === "/case-studies/estateiq-ai");
