@@ -5,52 +5,12 @@
   align-items: center;
   justify-content: center;
   padding: 7.5rem 1.25rem 4rem;
-  gap: 1.5rem;
-}
-
-.heroIntro {
-  text-align: center;
-  max-width: 520px;
-}
-
-.heroMeta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ds-soft);
-  margin-bottom: 0.5rem;
-}
-
-.heroMetaDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 9999px;
-  background: var(--ds-cobalt, #2340ff);
-}
-
-.heroTitle {
-  font-size: clamp(1.75rem, 3.2vw, 2.35rem);
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
-  color: var(--ds-ink);
-}
-
-.heroTitleAccent {
-  background: linear-gradient(135deg, #2340ff 0%, #1bb8a3 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  font-family: var(--font-mona-sans), var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .card {
   width: 100%;
-  max-width: 376px;
+  max-width: 440px;
   border-radius: var(--ds-radius-card);
   background: var(--ds-card);
   color: var(--ds-ink);
@@ -59,22 +19,19 @@
 }
 
 .cardBody {
-  padding: 1.45rem;
+  padding: 1.75rem;
 }
 
 .fieldGroup {
-  margin-bottom: 0.95rem;
+  margin-bottom: 1.15rem;
 }
 
 .label {
   display: block;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.6875rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ds-soft);
-  margin-bottom: 0.4rem;
+  color: var(--ds-ink);
+  margin-bottom: 0.45rem;
 }
 
 .phoneAnchor {
@@ -97,28 +54,13 @@
   box-shadow: 0 0 0 3px rgba(35, 64, 255, 0.12);
 }
 
-.countrySelect {
-  max-width: 118px;
-  border: none;
-  border-right: 1px solid var(--ds-line);
-  background: transparent;
-  padding: 0.7rem 0.45rem 0.7rem 0.7rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--ds-ink);
-  text-overflow: ellipsis;
-  outline: none;
-  cursor: pointer;
-}
-
 .phoneInput {
   flex: 1;
   min-width: 0;
   border: none;
   background: transparent;
-  padding: 0.7rem 0.8rem 0.7rem 0.55rem;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.98rem;
+  padding: 0.85rem 0.9rem 0.85rem 0.65rem;
+  font-size: 1.05rem;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   color: var(--ds-ink);
@@ -133,8 +75,8 @@
 .selectField {
   width: 100%;
   box-sizing: border-box;
-  padding: 0.65rem 0.8rem;
-  font-size: 0.875rem;
+  padding: 0.8rem 0.9rem;
+  font-size: 0.95rem;
   font-weight: 500;
   color: var(--ds-ink);
   background: var(--ds-paper);
@@ -153,8 +95,8 @@
 .keypad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
-  margin: 1.05rem 0;
+  gap: 0.65rem;
+  margin: 1.3rem 0;
 }
 
 .key {
@@ -162,7 +104,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 54px;
+  height: 64px;
   border: 1px solid var(--ds-line);
   border-radius: var(--ds-radius-sm);
   background: var(--ds-paper);
@@ -184,18 +126,17 @@
 }
 
 .keyDigit {
-  font-size: 1.18rem;
+  font-size: 1.35rem;
   font-weight: 600;
   line-height: 1.1;
 }
 
 .keySub {
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.58rem;
+  font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   color: var(--ds-mute);
-  margin-top: 0.15rem;
+  margin-top: 0.18rem;
 }
 
 .key:hover .keySub {
@@ -205,37 +146,31 @@
 .buttonStack {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0.65rem;
 }
 
 .statusBar {
   width: 100%;
   box-sizing: border-box;
   text-align: center;
-  padding: 0.55rem 0.75rem;
+  padding: 0.7rem 0.85rem;
   border-radius: var(--ds-radius-sm);
   background: var(--ds-paper-2);
   border: 1px solid var(--ds-line);
   color: var(--ds-soft);
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .secondaryBtn {
   width: 100%;
-  height: 40px;
+  height: 44px;
   border-radius: var(--ds-radius-sm);
   border: 1px solid rgba(15, 44, 76, 0.25);
   background: rgba(15, 44, 76, 0.06);
   color: var(--navy, #0f2c4c);
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.78rem;
+  font-size: 0.92rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
@@ -248,16 +183,13 @@
 
 .callBtn {
   width: 100%;
-  height: 44px;
+  height: 50px;
   border: none;
   border-radius: var(--ds-radius-pill);
   background: var(--ds-cobalt, #2340ff);
   color: #ffffff;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.82rem;
+  font-size: 1rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.2s var(--ease-editorial), transform 0.12s ease;
 }
@@ -279,16 +211,13 @@
 
 .hangupBtn {
   width: 100%;
-  height: 44px;
+  height: 50px;
   border: none;
   border-radius: var(--ds-radius-pill);
   background: var(--ds-accent);
   color: #ffffff;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.82rem;
+  font-size: 1rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
@@ -299,20 +228,17 @@
 
 .deleteBtn {
   width: 100%;
-  height: 38px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
   border: 1px solid var(--ds-line-strong);
   border-radius: var(--ds-radius-sm);
   background: transparent;
   color: var(--ds-soft);
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
@@ -328,12 +254,12 @@
 }
 
 .errorBox {
-  margin-top: 0.85rem;
-  padding: 0.65rem 0.8rem;
+  margin-top: 0.9rem;
+  padding: 0.7rem 0.85rem;
   border-radius: var(--ds-radius-sm);
   background: var(--ds-accent-soft);
   border: 1px solid rgba(232, 70, 60, 0.3);
   color: var(--ds-accent-hover);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   line-height: 1.4;
 }

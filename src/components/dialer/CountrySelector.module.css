@@ -34,8 +34,7 @@
 }
 
 .dialCode {
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: var(--ds-ink);
@@ -130,8 +129,7 @@
 }
 
 .optionCode {
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 500;
   color: var(--ds-soft);
   font-variant-numeric: tabular-nums;

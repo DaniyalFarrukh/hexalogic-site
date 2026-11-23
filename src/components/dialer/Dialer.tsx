@@ -197,16 +197,6 @@ export default function Dialer({ dialerKey }: DialerProps) {
 
   return (
     <div className={styles.page}>
-      <div className={styles.heroIntro}>
-        <div className={styles.heroMeta}>
-          <span className={styles.heroMetaDot} />
-          <span>HEXALOGIC CLOUD COMMUNICATIONS</span>
-        </div>
-        <h1 className={styles.heroTitle}>
-          Enterprise Voice <span className={styles.heroTitleAccent}>Dialer</span>
-        </h1>
-      </div>
-
       <div className={styles.card}>
         <div className={styles.cardBody}>
           <div className={styles.fieldGroup}>
